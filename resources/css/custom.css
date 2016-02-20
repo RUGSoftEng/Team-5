@@ -1,0 +1,37 @@
+/* fonts */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,400italic);
+
+/* aligns */
+.left { float: left; }
+.right { float: right; }
+.clear { clear: both; }
+
+nav { }
+  nav .btn-group { padding: 8px 15px; }
+  nav .navbar-header { width: 100%; }
+  nav p.timer { float: left; margin: 0; margin-left: 40%; font-size: 22px; line-height: 50px; }
+
+#content { margin-top: 100px; }
+  .input-group { margin-bottom: 30px; }
+  /* RESPONSIVE RESET/CHANGE */
+
+  @media (max-width: 768px) {
+  	/* MOBILE RESPONSIVE */
+
+  }
+
+  @media (max-width: 992px) {
+  	/* IPAD AND MOBILE RESPONSIVE */
+    nav p.timer { margin-left: 30%; }
+  }
+
+  @media (min-width: 768px) and (max-width: 992px) {
+  	/* IPAD RESPONSIVE */
+
+
+  }
+
+  @media (min-width: 1200px) {
+  	/* RESPONSIVE LARGE SCREEN */
+
+  }
