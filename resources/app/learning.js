@@ -33,20 +33,22 @@ const ALLOWED_MARGIN_OF_ERROR = 0.2; // Scale 0:1
 var i = 0;
 var inTutorial = true;
 
+startTimer(600);
+
 function showProgress() {
 	$( "#progress-number" ).html( "<p>" + (TOTAL_LENGTH - items.length) + "/" + TOTAL_LENGTH + " words</p>" );
-	
+
 	var percentage = Math.round((TOTAL_LENGTH - items.length) / TOTAL_LENGTH * 100);
 	$( "#progress-bar" ).html(percentage + "%").attr("aria-valuenow", percentage).css("width", percentage+"%");
 }
 
 function showQuestion() {
 	var question = items[i].question
-	
+
 	if (inTutorial) {
 		question += "<br><b>Type the answer:</b> " + items[i].answer;
 	}
-	
+
 	$( "#question" ).html( question );
 }
 
@@ -58,12 +60,12 @@ window.onload=function() {
 $("form").bind("keypress", function (e) {
 	if (e.keyCode == 13) {
 		checkAnswer();
-		
+
 		if (inTutorial && i == NUMBER_OF_TUTORIAL_QUESTIONS) {
 			i = 0;
 			inTutorial = false;
 		}
-		
+
 		showQuestion();
 		return false;
 	}
@@ -72,11 +74,10 @@ $("form").bind("keypress", function (e) {
 function checkAnswer() {
 	var input=  document.getElementById("answer").value;
 	var answer = items[i].answer;
-	
+
 	var difference = levenshtein(input,answer);
 	if(difference == 0){
-		$( ".alert" ).css("background-color", "green");
-		$( ".alert" ).html( "Well done!" );
+		show( "Well done!", "success" );
 		if (!inTutorial) {
 			items.splice(i,1);
 			i %= items.length;
@@ -84,19 +85,17 @@ function checkAnswer() {
 			i++;
 		}
 	} else if (difference <= (answer.length * ALLOWED_MARGIN_OF_ERROR)) {
-		$( ".alert" ).css("background-color", "orange");
-		$( ".alert" ).html( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)" );
+		show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning");
 		i = (i + 1) % items.length;
 	} else {
-		$( ".alert" ).css("background-color", "red");
-		$( ".alert" ).html( "Wrong answer! Expected answer: " + answer );
+		show( "Wrong answer! Expected answer: " + answer , "danger");
 		i = (i + 1) % items.length;
 	}
 
 	$( "#answer" ).val( "" );
-	
+
 	showProgress();
-	
+
 	if (items.length == 0) {
 		alert("Done!");
 	}

@@ -12,6 +12,15 @@ nav { }
   nav p.timer { float: left; margin: 0; margin-left: 40%; font-size: 22px; line-height: 50px; }
 
 #content { margin-top: 100px; }
+  #content h2 span { font-size: 16px; }
+  #content .icon { float: left; width: 50px; margin: 0 50px 0 0; height: 50px; }
+  #content .icon .glyphicon { font-size: 50px; }
+  .jumbotron { position: relative; padding-bottom: 120px; }
+    .jumbotron p { font-size: 25px; }
+  #show { position: absolute; bottom: 0; left: 0; width: 100%; margin: 0; overflow: hidden; }
+  #hint { display: none; }
+    #show .message, #hint .message { float: left; width: 80%; font-size: 18px; }
+  .stats { margin: 0 0 50px 0; }
   .input-group { margin-bottom: 30px; }
   /* RESPONSIVE RESET/CHANGE */
 

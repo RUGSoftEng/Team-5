@@ -12,7 +12,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">SlimStampen</a>
-        <p class="timer"><span class="glyphicon glyphicon-time"></span>&nbsp; 05:15 / 10:00</p>
+        <p class="timer"><span class="glyphicon glyphicon-time"></span>&nbsp; <span class="current" data-seconds="0"></span> / <span class="max"></span></p>
         <div class="btn-group right">
           <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
@@ -30,20 +30,6 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <div class="jumbotron">
-              <form action="#" method="post" onsubmit="return false;">
-                <div id="question"></div>
-                <div class="input-group input-group-lg">
-                  <input type="text" id="answer" class="form-control" placeholder="Type here your answer..." aria-label="...">
-                  <div class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-info-sign"></span></button>
-                  </div>
-                </div>
-                <div class="clear"></div>
-                <div class="alert" role="alert"></div>
-              </form>
-            </div>
-
             <div class="stats">
               <div class="row">
                 <div class="col-md-2"></div>
@@ -65,15 +51,37 @@
                 </div>
               </div>
             </div>
+            <div class="jumbotron">
+              <form action="#" method="post" onsubmit="return false;">
+                <div id="question"></div>
+                <div class="input-group input-group-lg">
+                  <input type="text" id="answer" class="form-control" placeholder="Type here your answer..." aria-label="...">
+                  <div class="input-group-btn">
+                    <button onclick="showHint('This is a very handy hint to answer this question that you see above.')" class="btn btn-default" type="button"><span class="glyphicon glyphicon-info-sign"></span></button>
+                  </div>
+                </div>
+                <div class="clear"></div>
+                <div id="show" class="alert" role="alert">
+                  <div class="icon"><div class="glyphicon"></div></div>
+                  <div class="message"></div>
+                </div>
+              </form>
+            </div>
+
+            <div id="hint" class="alert alert-info" role="alert">
+              <div class="icon"><div class="glyphicon glyphicon-question-sign"></div></div>
+              <div class="message"></div>
+              <div class="clear"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-	
-	<script src="./resources/js/jquery.min.js"></script>
+
+  	<script src="./resources/js/jquery.min.js"></script>
     <script>window.$ = window.jQuery = require('./resources/js/jquery.min.js');</script>
-    <script src="./resources/js/bootstrap.min.js"></script>
-    <script src="./resources/app/levenstein.js"></script>
+    <script src="./resources/app/functions.js"></script>
+    <script src="./resources/js/jquery.simple.timer.js"></script>
     <script src="./resources/app/learning.js"></script>
   </body>
 </html>
