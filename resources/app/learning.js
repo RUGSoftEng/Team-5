@@ -1,12 +1,12 @@
 
 $("form").bind("keypress", function (e) {
-if (e.keyCode == 13) {
-	checkAnswer();
-	return false;
-}
+	if (e.keyCode == 13) {
+		checkAnswer();
+		return false;
+	}
 });
 
-function checkAnswer(){
+function checkAnswer() {
 	var input=  document.getElementById("answer").value;
 	var value = "goodmorning";
 	var difference = levenshtein(input,value);
@@ -20,7 +20,7 @@ function checkAnswer(){
 		$('.alert').css("background-color", "red");
 		$( '.alert' ).html( 'Wrong answer!' );
 	}
-	
+
 	$('#answer').val('');
 
 }

@@ -5,9 +5,6 @@
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="./resources/js/jquery.min.js"> </script>
-	<script type="text/javascript" src="./resources/js/levenstein.js"> </script>
-	<script type="text/javascript" src="./resources/js/learning.js"> </script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
   </head>
@@ -34,16 +31,16 @@
         <div class="row">
           <div class="col-md-12">
             <div class="jumbotron">
-              <form action="#" method="post">
+              <form action="#" method="post" onsubmit="return false;">
                 <p>Biongiorno</p>
                 <div class="input-group input-group-lg">
-                  <input type="text" class="form-control" placeholder="Type here your answer..." aria-label="...">
+                  <input type="text" id="answer" class="form-control" placeholder="Type here your answer..." aria-label="...">
                   <div class="input-group-btn">
                     <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-info-sign"></span></button>
                   </div>
                 </div>
                 <div class="clear"></div>
-				<div class="alert" role="alert"></div>
+                <div class="alert" role="alert"></div>
               </form>
             </div>
 
@@ -75,8 +72,9 @@
       </div>
     </div>
 
-    <!-- Include all Javascript libraries -->
-    <!--script>window.$ = window.jQuery = require('./resources/js/jquery.min.js');</script>
-    <script src="./resources/js/bootstrap.min.js"></script-->
+    <script>window.$ = window.jQuery = require('./resources/js/jquery.min.js');</script>
+    <script src="./resources/js/bootstrap.min.js"></script>
+    <script src="./resources/app/levenstein.js"></script>
+    <script src="./resources/app/learning.js"></script>
   </body>
 </html>
