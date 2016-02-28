@@ -1,0 +1,28 @@
+{
+  "name": "language-learning",
+  "version": "1.0.0",
+  "description": "An application for learning all kinds of subjects",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RUGSoftEng/Team-5"
+  },
+  "keywords": [
+    "language",
+    "learning",
+    "slimstampen"
+  ],
+  "author": "Language Learning team",
+  "license": "ISC",
+  "homepage": "https://github.com/RUGSoftEng/Team-5#readme",
+  "devDependencies": {
+    "electron-packager": "^5.2.1",
+    "electron-prebuilt": "^0.36.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
