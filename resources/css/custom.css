@@ -22,6 +22,7 @@ nav { }
     #show .message, #hint .message { float: left; width: 80%; font-size: 18px; }
   .stats { margin: 0 0 50px 0; }
   .input-group { margin-bottom: 30px; }
+  #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
   /* RESPONSIVE RESET/CHANGE */
 
   @media (max-width: 768px) {
