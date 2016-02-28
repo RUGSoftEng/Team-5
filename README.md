@@ -22,6 +22,7 @@ Clost the Properties window and execute the file SlimStampen.
 In case you use the Terminal, use the following commands after changing directories:
 
 chmod u+x ./SlimStampen
+
 ./SlimStampen
 
 # Contributers
