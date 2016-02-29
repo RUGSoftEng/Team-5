@@ -2,35 +2,42 @@
 The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
 
 # How to run guide
-In order to download the SlimStampen app, clone this repository using the following command in a Git bash, or download the directory with the executable for your platform of choice from the Github website:
+In order to start the SlimStampen app, you can download the directory with the executable for your platform of choice from the Github website. 
 
-git clone https://github.com/RUGSoftEng/Team-5
+### Windows
+Download the files (as ZIP) from /executables/SlimStampen-win32-ia32/ on GitHub, unzip the files on your computer and run the file SlimStampen.exe.
 
-Next, follow the steps of your preference:
+### Apple Mac OSX
+Download the files (as ZIP) from /executables/SlimStampen-darwin-x64/ on GitHub, unzip the files on your computer and run the file SlimStampen.app.
 
-## Run app without Electron
-Open the file index.html in the main folder, using the web browser of your preference.
-
-## Run app with Electron: Windows
-Change directory to \executables\SlimStampen-win32-ia32 and run the file SlimStampen.exe
-
-## Run app with Electron: Linux
-Change directory to /executables/SlimStampen-linux-ia32 and right-click on the file SlimStampen and open Properties.
+### Linux
+Download the files (as ZIP) from /executables/SlimStampen-linux-ia32, unzip the files on your computer and right-click on the file SlimStampen and open Properties.
 In the Permissions tab, check the box to allow the file to run as a program.
-Clost the Properties window and execute the file SlimStampen.
+Close the Properties window and execute the file SlimStampen.
 
 In case you use the Terminal, use the following commands after changing directories:
 
+```
 chmod u+x ./SlimStampen
-
 ./SlimStampen
+```
 
-## Run app with Electron: Mac OSX
-Change directory to \executables\SlimStampen-darwin-x64 and run the file SlimStampen.app
+# Download source files
+Another method is to download all files from GitHub and run the program in Electron by following these steps:
+## Clone the repository
+Clone this repository using the following command in a Git bash and run it in Electron.
 
-## How to compile the code
-To compile the code NodeJS (https://nodejs.org/en/) has to be installed. In the directory with the cloned source code, run npm install and npm start to compile and run the program.
+```
+git clone https://github.com/RUGSoftEng/Team-5
+```
 
+## Compile the code
+In order to compile the code, you need NodeJS (https://nodejs.org/en/) to be installed. We recommend using the Node Package Manager (npm). In the directory with the cloned source code, run the following commands to start the program in Electron.
+
+```
+npm install
+npm start
+```
 
 # Contributers
 Hichem Bouakaz, Sander de Jong, Sibren van Vliet & Enrico Werkema
