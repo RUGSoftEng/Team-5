@@ -5,10 +5,10 @@ The problem of learning facts is that this process is boring, and that the learn
 In order to start the SlimStampen app, you can download the directory with the executable for your platform of choice from the Github website. 
 
 ### Windows
-Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-win32-ia32/_ and to run the file SlimStampen.exe.
+Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-win32-ia32/_ and run the file SlimStampen.exe.
 
 ### Apple Mac OSX
-Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-darwin-x64/_ and to run the file SlimStampen.app.
+Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-darwin-x64/_ and run the file SlimStampen.app.
 
 ### Linux
 Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-linux-ia32/_ and right-click on the file SlimStampen and open Properties.
