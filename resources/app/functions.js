@@ -12,77 +12,81 @@
  * The message is included as html and a class with the corresponding type is
  * added. Within the switch statement the icon is added.
  */
-
 function show(message, type) {
-  $("#show .message").html(message);
-  $("#show").removeClass("alert-success").removeClass("alert-danger").removeClass("alert-warning").addClass("alert-"+type);
-  $("#show .icon .glyphicon").removeClass("glyphicon-ok-sign glyphicon-remove-sign glyphicon-exclamation-sign")
-  switch (type) {
-    case 'success':
-      $("#show .icon .glyphicon").addClass("glyphicon-ok-sign");
-      break;
-    case 'danger':
-      $("#show .icon .glyphicon").addClass("glyphicon-remove-sign");
-      break;
-    case 'warning':
-      $("#show .icon .glyphicon").addClass("glyphicon-exclamation-sign");
-      break;
-    default:
-      $("#show .icon .glyphicon").addClass("glyphicon-ok-sign");
-      break;
-  }
+	$("#show .message").html(message);
+	
+	$("#show").removeClass("alert-success");
+	$("#show").removeClass("alert-danger");
+	$("#show").removeClass("alert-warning");
+	$("#show").addClass("alert-"+type);
+	
+	$("#show .icon .glyphicon").removeClass("glyphicon-ok-sign glyphicon-remove-sign glyphicon-exclamation-sign");
+	
+	switch (type) {
+		case 'success':
+			$("#show .icon .glyphicon").addClass("glyphicon-ok-sign");
+			break;
+		case 'danger':
+			$("#show .icon .glyphicon").addClass("glyphicon-remove-sign");
+			break;
+		case 'warning':
+			$("#show .icon .glyphicon").addClass("glyphicon-exclamation-sign");
+			break;
+		default:
+			$("#show .icon .glyphicon").addClass("glyphicon-ok-sign");
+			break;
+	}
 }
 
-/* Functions showHint, showProgress and showQuestion are used to update the hint,
- * the progress bar and the question box respectively.
- */
+// Functions showHint, showProgress and showQuestion are used to update the hint,
+// the progress bar and the question box respectively.
+function showHint(message) {
+	$("#hint").show();
+	$("#hint .message").html(message);
+}
 
-  function showHint(message) {
-    $("#hint").show();
-    $("#hint .message").html(message);
-  }
+// TODO: add a hideHint function too (?)
 
-  function showProgress() {
-  	$( "#progress-number" ).html( "<p>" + (TOTAL_LENGTH - items.length) + "/" + TOTAL_LENGTH + " words</p>" );
-  	var percentage = Math.round((TOTAL_LENGTH - items.length) / TOTAL_LENGTH * 100);
-  	$( "#progress-bar" ).html(percentage + "%").attr("aria-valuenow", percentage).css("width", percentage+"%");
-  }
+function showProgress() {
+	$( "#progress-number" ).html( "<p>" + (TOTAL_LENGTH - items.length) + "/" + TOTAL_LENGTH + " words</p>" );
+	var percentageVal = percentage(TOTAL_LENGTH - items.length, TOTAL_LENGTH);
+	$( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
+}
 
-  function showQuestion() {
-  	var question = items[i].question
+function showQuestion() {
+	var question = items[currentItemIndex].question
 
-  	if (inTutorial) {
-  		question += "<br><b>Type the answer:</b> " + items[i].answer;
-  	}
+	if (inTutorial) {
+		question += "<br><b>Type the answer:</b> " + items[currentItemIndex].answer;
+	}
 
-  	$( "#question" ).html( question );
-  }
+	$( "#question" ).html( question );
+}
+
+// Calculate the percentage of 'part out of total'
+function percentage(part, total) {
+	return Math.round(part / total * 100);
+}
 
 /* Check answer checks the provided answer of the user. When the levenshtein
  * difference is equal to zero than the answer is correct. When the difference
  * is smaller that the allowed margin of error, then the user gets the feedback
  * that it was almost correct.
  */
-
  function checkAnswer() {
  	var input = document.getElementById("answer").value;
- 	var answer = items[i].answer;
+ 	var answer = items[currentItemIndex].answer;
 
  	var difference = levenshtein(input,answer);
  	if (difference == 0) {
  		show( "Well done!", "success" );
- 		if (!inTutorial) {
- 			items.splice(i,1);
- 			i %= items.length;
- 		} else {
- 			i++;
- 		}
+ 		nextQuestion();
  	} else if (difference <= (answer.length * ALLOWED_MARGIN_OF_ERROR)) {
  		show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning");
- 		i = (i + 1) % items.length;
+ 		currentItemIndex = (currentItemIndex + 1) % items.length;
  	} else {
  		show( "Wrong answer! Expected answer: " + answer , "danger");
- 		i = (i + 1) % items.length;
+ 		currentItemIndex = (currentItemIndex + 1) % items.length;
  	}
 
  	$( "#answer" ).val( "" );
@@ -93,20 +97,22 @@ function show(message, type) {
  		alert("Done!");
  	}
  }
-
-/* Timer functions that initiates and updates the timer. TimeFormat makes sure
- * that time below 10 is always displayed with an extra preceding 0.
- */
-
-function timeFormat(time) {
-  return time < 10 ? "0"+time : time;
+ 
+// Handle how to move to the next question
+// depending on the tutorial status.
+function nextQuestion() {
+	if (!inTutorial) {
+		items.splice(currentItemIndex,1);
+		currentItemIndex %= items.length;
+	} else {
+		currentItemIndex++;
+	}
 }
 
+// Timer functions that initiates and updates the timer.
 function startTimer(max_seconds) {
   timer = setInterval(function() { updateTimer(max_seconds); }, 1000);
-  minutes = Math.floor(max_seconds/60);
-  seconds = max_seconds%60;
-  $(".timer .max").html(timeFormat(minutes)+":"+timeFormat(seconds));
+  $(".timer .max").html(timeToString(max_seconds));
   $(".timer .current").html("00:00");
 }
 
@@ -114,9 +120,7 @@ function updateTimer(max_seconds) {
   currentTime = $(".timer .current").data("seconds");
   currentTime++;
   $(".timer .current").data("seconds", currentTime);
-  minutes = Math.floor(currentTime/60);
-  seconds = currentTime%60;
-  $(".timer .current").html(timeFormat(minutes)+":"+timeFormat(seconds));
+  $(".timer .current").html(timeToString(currentTime));
   if (currentTime>=max_seconds) {
     clearInterval(timer);
     show("You have run out of time!", 'danger');
@@ -124,10 +128,20 @@ function updateTimer(max_seconds) {
   }
 }
 
-/* levenshtein determines the amount of characters that are different between
- * two strings.
- */
+// TimeFormat makes sure that time below 10 is always displayed with an extra preceding 0.
+function timeFormat(time) {
+  return time < 10 ? "0"+time : time;
+}
 
+// Create a string representation of time (mm:ss) for easy display
+function timeToString(time) {
+	minutes = Math.floor(time/60);
+	seconds = time%60;
+	return timeFormat(minutes)+":"+timeFormat(seconds);
+}
+
+// Levenshtein determines the amount of characters 
+// that are different between two strings.
 function levenshtein(str1, str2) {
 	str1 = str1.toLowerCase();
 	str2 = str2.toLowerCase();
