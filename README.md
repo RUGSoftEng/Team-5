@@ -2,7 +2,26 @@
 The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
 
 # How to run guide
-In order to start the SlimStampen app, you can download the directory with the executable for your platform of choice from the Github website. 
+
+# Download source files
+To run the program you have to download all files from GitHub and run the program in Electron by following these steps:
+## Clone the repository or download the source code
+Clone this repository using the following command in a Git bash and run it in Electron.
+
+```
+git clone https://github.com/RUGSoftEng/Team-5
+```
+You can also download the source code as a zipfile from Github and extract it in a directory.
+
+## Compile the code
+In order to compile the code, you need NodeJS (https://nodejs.org/en/) to be installed. We recommend using the Node Package Manager (npm). In the directory with the cloned source code, run the following commands to start the program in Electron.
+
+```
+npm install
+npm start
+```
+# Downloading executables
+When we make the executables available as downloads, you can download the zipfile with the executable for your platform of choice from the Github website and install the app this way. 
 
 ### Windows
 Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-win32-ia32/_ and run the file SlimStampen.exe.
@@ -21,24 +40,6 @@ In case you use the Terminal, use the following commands after changing director
 chmod u+x ./SlimStampen
 ./SlimStampen
 ```
-
-# Download source files
-Another method is to download all files from GitHub and run the program in Electron by following these steps:
-## Clone the repository
-Clone this repository using the following command in a Git bash and run it in Electron.
-
-```
-git clone https://github.com/RUGSoftEng/Team-5
-```
-
-## Compile the code
-In order to compile the code, you need NodeJS (https://nodejs.org/en/) to be installed. We recommend using the Node Package Manager (npm). In the directory with the cloned source code, run the following commands to start the program in Electron.
-
-```
-npm install
-npm start
-```
-
 # Contributers
 Hichem Bouakaz, Sander de Jong, Sibren van Vliet & Enrico Werkema
 
