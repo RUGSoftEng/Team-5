@@ -38,6 +38,3 @@ var items = [
 const TOTAL_LENGTH = items.length;
 const NUMBER_OF_TUTORIAL_QUESTIONS = 3;
 const ALLOWED_MARGIN_OF_ERROR = 0.2; // Scale 0:1
-
-var currentItemIndex = 0;
-var inTutorial = true;

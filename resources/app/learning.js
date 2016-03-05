@@ -7,6 +7,9 @@
  * Main script for initiating the app. Constants and variables are loaded
  * in from config.js and the functions from functions.js.
  */
+ 
+var currentItemIndex = 0;
+var inTutorial = true;
 
 // Start timer on top of the page (total time of the learning session in seconds)
 startTimer(600); // TODO: Magic number 600; in the future, user will choose time in main menu.
