@@ -5,13 +5,13 @@
 // directory.
 requirejs.config({
     baseUrl: 'lib',
+    shim : {
+        "bootstrap" : { "deps" :['jquery'] }
+    },
     paths: {
         "app": "../app",
         "jquery" : "../lib/jquery.min",
-        "jquery.bootstrap" :  "../lib/bootstrap.min"
-    },
-    shim : {
-        "jquery.bootstrap" : { "deps" :['jquery'] }
+        "bootstrap" :  "../lib/bootstrap.min"
     }
 });
 
