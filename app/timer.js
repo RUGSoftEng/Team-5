@@ -1,4 +1,3 @@
-
 define(['jquery'], function($) {
   function updateTimer(max_seconds) {
       currentTime = $(".timer .current").data("seconds");
@@ -7,7 +6,7 @@ define(['jquery'], function($) {
       $(".timer .current").html(timeToString(currentTime));
       if (currentTime>=max_seconds) {
         clearInterval(timer);
-        show("You have run out of time!", 'danger');
+        alert("You have run out of time!");
         $('.timer').css("color", "red");
       }
   }
