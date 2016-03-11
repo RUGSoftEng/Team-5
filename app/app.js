@@ -11,10 +11,21 @@ requirejs.config({
     paths: {
         "app": "../app",
         "jquery" : "../lib/jquery.min",
-        "bootstrap" :  "../lib/bootstrap.min"
+        "bootstrap" :  "../lib/bootstrap.min",
+        "cpexcel" : "../lib/xlsx/dist/cpexcel",
+        "xlsx" : "../lib/xlsx/xlsx",
+        "shim" : "../lib/xlsx/shim",
+        "jszip" : "../lib/xlsx/jszip",
+        "ods": "../lib/xlsx/dist/ods",
+        "exceltojson": "../exceltojson",
+        "fs" : "../lib/fs"
     }
+
 });
+
+
+
 
 // Start loading the main app file. Put all of
 // your application logic in there.
-requirejs(['app/learning']);
+//requirejs(['app/learning']);
