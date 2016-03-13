@@ -11,7 +11,6 @@ define(['sqlite'], function (sqlite) {
 	// Initiate DB and check if there is an existing user DB
 	var read_database;
 	if (database_exists("./database/user.sqlite")) {
-		console.log("heuj");
 		read_database = fs.readFileSync("./database/user.sqlite");
 	} else {
 		read_database = fs.readFileSync("./database/slimstampen.sqlite");
