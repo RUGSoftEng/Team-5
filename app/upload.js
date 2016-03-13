@@ -64,15 +64,9 @@ define(['app/database'], function (db) {
 	function process_wb(wb) {
 		var output = "";
 		output = JSON.stringify(to_json(wb), 2, 2);
-		var link = "datasets/my_file.json";
-		var stream = fs.createWriteStream(link);
-
-		stream.once('open', function (fd) {
-			stream.write(output);
-			stream.end();
-		});
-		//database.insertRecord('datasets', link, 'test');
-		window.location = "learn.html";
+		console.log(output);
+		db.close();
+		// window.location = "learn.html";
 	}
 
 	var drop = document.getElementById('drop');
