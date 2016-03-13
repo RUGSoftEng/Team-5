@@ -2,6 +2,6 @@
 // your application logic in there.
 
 //Load common code that includes config, then load the app logic for this page.
-requirejs(['./app'], function (app) {
+requirejs(['./common'], function (common) {
   requirejs(['./app/learning']);
 });

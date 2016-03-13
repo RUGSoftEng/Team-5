@@ -39,7 +39,7 @@ define(function (require) {
 		TOTAL_LENGTH: items.length,
 		AMOUNT_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
-		TUTORIAL_MODE: false
+		TUTORIAL_MODE: true
 	};
 
 	return {
