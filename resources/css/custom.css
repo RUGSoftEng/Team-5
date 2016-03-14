@@ -25,6 +25,8 @@ nav { }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
   /* RESPONSIVE RESET/CHANGE */
 
+
+
   @media (max-width: 768px) {
   	/* MOBILE RESPONSIVE */
 
@@ -45,3 +47,4 @@ nav { }
   	/* RESPONSIVE LARGE SCREEN */
 
   }
+
