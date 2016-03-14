@@ -5,7 +5,8 @@
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script data-main="app/app" src="lib/require.js"></script>
+    <script type="text/javascript">var fs = require("fs");</script>
+    <script data-main="app/indexpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
     <!-- Javascript libraries are added before the </body> tag  -->
@@ -28,11 +29,11 @@
           <button type="button" class="btn btn-default" title="Open a dataset">
             <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
           </button>
-          <button type="button" class="btn btn-default" onclick="location.href='upload.html';" title="Upload a dataset">
+          <button type="button" class="btn btn-default" title="Download a dataset">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
           </button>
-          <button type="button" class="btn btn-default" title="Export a dataset">
-            <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
+          <button type="button" class="btn btn-default" onclick="location.href='upload.html';" title="Import a dataset">
+            <span class="glyphicon glyphicon-open" aria-hidden="true" style="color: red;"></span>
           </button>
         </div>
 

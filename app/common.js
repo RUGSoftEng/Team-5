@@ -4,16 +4,20 @@
 // except for 'app' ones, which are in a sibling
 // directory.
 requirejs.config({
-    baseUrl: 'lib',
+    baseUrl: 'node_modules',
     shim : {
-        "bootstrap" : { "deps" :['jquery'] }
+        xlsx: {
+            deps: ['jszip'],
+            exports: "XLSX"
+        }
     },
     paths: {
-        "app": "../app",
-        "jquery" : "jquery.min",
-        "bootstrap" :  "bootstrap.min",
-        "fs" : "fs",
-        "sqlite" : "sql"
+        app: "../app",
+        jquery : "jquery/dist/jquery.min",
+        bootstrap :  "../lib/bootstrap.min",
+        sqlite : "../lib/sql",
+        xlsx : "xlsx/xlsx",
+        jszip : "xlsx/jszip"
     }
 
 });
