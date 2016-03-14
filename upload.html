@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>SlimStampen Learning App</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="lib/xlsx/xlsx.full.min.js"></script>
+		<script type="text/javascript">var fs = require("fs");</script>
+		<script data-main="app/uploadpage" src="lib/require.js"></script>
+    <link rel="stylesheet" href="./resources/css/bootstrap.css">
+    <link rel="stylesheet" href="./resources/css/custom.css">
+    <!-- Javascript libraries are added before the </body> tag  -->
+  </head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-header" style="display:flex;justify-content:space-between">
+				<a class="navbar-brand" href="#" style="display:flex;position:absolute;left:0px;">SlimStampen</a>
+
+				<div class="btn-group" role="group" style="display:flex">
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>Example Username
+					</button>
+				</div>
+
+				<div class="btn-group" role="group" style="display:flex">
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-open" aria-hidden="true"></span>
+					</button>
+				</div>
+
+				<div class="btn-group" role="group" style="display:flex;position:absolute;right:0px;">
+					<button type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+					</button>
+					<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-right">
+						<li><a href="#">Pause lesson</a></li>
+						<li><a href="#">Quit lesson</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#">Help</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div id="content">
+      <div class="container">
+				<div class="row">
+					<div class="col-md-6">
+						<h1>Upload a new dataset</h1>
+						<div id="drop">Drop an XLSX / XLSM / XLSB / ODS / XLS / XML file here</div>
+						<input type="file" name="xlfile" id="xlf" />
+					</div>
+					<div class="col-md-6">
+						<h1>Enter the dataset information</h1>
+						<div class="input-group">
+						  <span class="input-group-addon" id="basic-addon1">Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						  <input type="text" class="form-control" placeholder="Name of the dataset*" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+						  <span class="input-group-addon" id="basic-addon2">Language:</span>
+						  <input type="text" class="form-control" placeholder="Select a language*" aria-describedby="basic-addon2">
+						</div>
+						<div class="input-group">
+						  <span class="input-group-addon" id="basic-addon3">Subject:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						  <input type="text" class="form-control" placeholder="Select a subject*" aria-describedby="basic-addon3">
+						</div>
+						<button type="button" class="btn btn-lg btn-success right">Save dataset</button>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,4 +1,4 @@
-define(['app/database'], function (db) {
+define(['app/database', 'jquery'], function (db, $) {
 	var X = XLSX;
 	var XW = {
 		/* worker message */
@@ -62,9 +62,16 @@ define(['app/database'], function (db) {
 	}
 
 	function process_wb(wb) {
-		var output = "";
-		output = JSON.stringify(to_json(wb), 2, 2);
-		console.log(output);
+		var output = to_json(wb);
+		var sheetName = Object.keys(output)[0];
+
+		$.each(output[sheetName], function (i, item) {
+			var question = output[sheetName][i].question;
+			var answer = output[sheetName][i].answer;
+
+			console.log("Question: "+question+", answer: "+answer);
+		})
+
 		db.close();
 		// window.location = "learn.html";
 	}

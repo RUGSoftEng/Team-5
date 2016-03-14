@@ -1,3 +1,14 @@
+/* file: database.js
+ * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
+ * date: 13/3/2016
+ * version 1.1
+ *
+ * Description:
+ * Module for loading the database. This file contains all the functions that
+ * update or retrieve information from the database. The dependancy for this
+ * module is sqlite.
+ */
+
 define(['sqlite'], function (sqlite) {
 	// Check if SQL.js has been loaded through AMD
 	var sql;
@@ -27,6 +38,11 @@ define(['sqlite'], function (sqlite) {
 	}
 
 	var database = {
+		save:function () {
+			var data = db.export();
+			var buffer = new Buffer(data);
+			fs.writeFileSync("./database/user.sqlite", buffer);
+		},
 		close:function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
