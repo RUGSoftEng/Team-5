@@ -68,8 +68,8 @@ define(['app/database', 'jquery'], function (db, $) {
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
-
-			console.log("Question: "+question+", answer: "+answer);
+			db.excuteQuery(0, ['datasets1', question, answer, 'hint']);
+			console.log("Question: " + question + ", answer: " + answer);
 		})
 
 		db.close();
@@ -82,13 +82,19 @@ define(['app/database', 'jquery'], function (db, $) {
 		e.stopPropagation();
 		e.preventDefault();
 		e.dataTransfer.dropEffect = 'copy';
-		if (drop.addEventListener) {
+	}
+	if (drop.addEventListener) {
 			drop.addEventListener('dragenter', handleDragover, false);
 			drop.addEventListener('dragover', handleDragover, false);
 			drop.addEventListener('drop', handleDrop, false);
-		}
 	}
 
+	function handleDrop(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		var files = e.dataTransfer.files;
+		readFile(files, e);
+	}
 
 	function handleFile(e) {
 		var files = e.target.files;
@@ -96,18 +102,18 @@ define(['app/database', 'jquery'], function (db, $) {
 	}
 
 	function readFile(files, e) {
-		use_worker = true;
+		console.log('readfile');
 		var f = files[0];
 		var reader = new FileReader();
 		var name = f.name;
 		reader.onload = function (e) {
 			if (typeof console !== 'undefined') {
-				console.log("onload", new Date(),true, use_worker);
+				console.log("onload", new Date(), true, true);
 			}
 			var data = e.target.result;
 			xw_xfer(data, process_wb);
 		};
-			reader.readAsBinaryString(f);
+		reader.readAsBinaryString(f);
 	}
 
 	var xlf = document.getElementById('xlf');
