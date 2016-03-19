@@ -1,3 +1,5 @@
 node_modules
 .gitignore
 database/user.sqlite
+.DS_Store
+
