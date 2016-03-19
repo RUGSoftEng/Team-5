@@ -9,7 +9,10 @@
 nav { }
   nav .btn-group { padding: 8px 15px; }
   nav .navbar-header { width: 100%; }
-  nav p.timer { float: left; margin: 0; margin-left: 40%; font-size: 22px; line-height: 50px; }
+  nav .timer { margin: 0; font-size: 22px; display:flex; line-height: 50px;}
+    nav .timer .glyphicon { line-height: 50px;}
+  nav .center-menu { display:flex; justify-content: center; }
+  nav .right-menu { display:flex;position:absolute;right:0px;top:0px; }
 
 #content { margin-top: 100px; }
   #content h1 { margin-bottom: 30px; }

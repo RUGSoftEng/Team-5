@@ -1,7 +1,4 @@
-define(function (require) {
-  var messages = require('./messages');
-  // Include config variables
-  var config = require('./config');
+define(['app/messages', 'app/config'], function (messages,config) {
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
   var items = config.items();
