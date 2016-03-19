@@ -1,4 +1,4 @@
-define(['app/database', 'jquery'], function (db, $) {
+define(['app/database', 'jquery', 'bootstrap'], function (db, $, bootstrap) {
 	var X = XLSX;
 	var XW = {
 		/* worker message */

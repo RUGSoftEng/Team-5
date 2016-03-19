@@ -7,7 +7,7 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, db, messages, question, timer) {
+define(['jquery', 'bootstrap', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, bootstrap, db, messages, question, timer) {
   timer.startTimer(600); // TODO: Magic number 600; in the future, user will choose time in main menu.
 
   // Disable autocomplete that provides suggestions when typing words
