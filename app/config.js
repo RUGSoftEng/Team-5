@@ -1,7 +1,7 @@
 /* file: config.js
- * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 28/02/2016
- * version 1.0
+ * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
+ * date: 19/03/2016
+ * version 1.1
  *
  * Description:
  * Initialization of variables and constants.

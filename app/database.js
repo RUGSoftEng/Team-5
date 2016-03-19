@@ -1,7 +1,7 @@
 /* file: database.js
- * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 13/3/2016
- * version 1.1
+ * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
+ * date: 19/03/2016
+ * version 1.2
  *
  * Description:
  * Module for loading the database. This file contains all the functions that
@@ -41,12 +41,12 @@ define(['sqlite'], function (sqlite) {
 		save:function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
-			fs.writeFileSync("./database/user.sqlite", buffer);
+			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 		},
 		close:function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
-			fs.writeFileSync("./database/user.sqlite", buffer);
+			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		}
 	}
