@@ -1,7 +1,7 @@
 /* file: database.js
- * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 13/3/2016
- * version 1.1
+ * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
+ * date: 19/03/2016
+ * version 1.2
  *
  * Description:
  * Module for loading the database. This file contains all the functions that
@@ -35,6 +35,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 	}
 	var db = new sql.Database(read_database);
 
+<<<<<<< HEAD
 	function database_exists(path) {
 		try {
 			fs.accessSync(path, fs.F_OK);
@@ -42,6 +43,21 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		} catch (e) {
 			return false;
 		}
+	}
+=======
+  function database_exists(path) {
+    try {
+      fs.accessSync(path, fs.F_OK);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+>>>>>>> sprint3
+
+	// Function for Handeling query Error
+	function onError(tx, error) {
+		console.log("this error " + error.message);
 	}
 
 	var database = {

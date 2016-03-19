@@ -9,7 +9,7 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config'], function (sqlite, config) {
+define(['sqlite'], function (sqlite) {
 	// Check if SQL.js has been loaded through AMD
 	var sql;
 	var queries = [
@@ -28,10 +28,10 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 
 	// Initiate DB and check if there is an existing user DB
 	var read_database;
-	if (database_exists(config.constant("DATABASE_USER"))) {
-		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
+	if (database_exists("./database/user.sqlite")) {
+		read_database = fs.readFileSync("./database/user.sqlite");
 	} else {
-		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
+		read_database = fs.readFileSync("./database/slimstampen.sqlite");
 	}
 	var db = new sql.Database(read_database);
 
@@ -44,16 +44,21 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		}
 	}
 
+	// Function for Handeling query Error
+	function onError(tx, error) {
+		console.log("this error " + error.message);
+	}
+
 	var database = {
 		save : function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
-			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
+			fs.writeFileSync("./database/user.sqlite", buffer);
 		},
 		close : function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
-			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
+			fs.writeFileSync("./database/user.sqlite", buffer);
 			console.log("Closed connection");
 		},
 

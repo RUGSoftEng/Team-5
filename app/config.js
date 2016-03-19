@@ -1,7 +1,7 @@
 /* file: config.js
- * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 28/02/2016
- * version 1.0
+ * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
+ * date: 19/03/2016
+ * version 1.1
  *
  * Description:
  * Initialization of variables and constants.
@@ -34,20 +34,20 @@ define(function (require) {
 		{question: "Domani", answer: "Tomorrow"},
 		{question: "Buon compleanno!", answer: "Happy Birthday!"}
 		];
-
+  
 	var constants = {
 		TOTAL_LENGTH: items.length,
-		AMOUNT_TUTORIAL_QUESTIONS: 3,
+		NUMBER_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
-		TUTORIAL_MODE: true
+		TUTORIAL_MODE: true,
+    TIME_LIMIT: 600,
+    DATABASE_USER: "./database/user.sqlite",
+    DATABASE_SLIMSTAMPEN: "./database/slimstampen.sqlite"
 	};
 
 	return {
 		items: function() {
 			return items;
-		},
-		constants: function() {
-			return constants
 		},
 		constant: function(name) {
 			return constants[name];

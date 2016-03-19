@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 define(['app/messages', 'app/config'], function (messages,config) {
+=======
+define(['app/config', 'app/messages'], function (config, messages) {
+>>>>>>> sprint3
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
   var items = config.items();

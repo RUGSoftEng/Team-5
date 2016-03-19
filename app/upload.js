@@ -87,6 +87,7 @@ define(['app/database', 'jquery', 'bootstrap', 'app/forms'], function (db, $, bo
 			drop.addEventListener('dragenter', handleDragover, false);
 			drop.addEventListener('dragover', handleDragover, false);
 			drop.addEventListener('drop', handleDrop, false);
+		}
 	}
 
 	function handleDrop(e) {

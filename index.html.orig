@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+      <meta charset="UTF-8">
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+<<<<<<< HEAD
     <script data-main="app/welcomepage" src="lib/require.js"></script>
 
+=======
+    <script type="text/javascript">var fs = require("fs");</script>
+    <script data-main="app/indexpage" src="lib/require.js"></script>
+>>>>>>> sprint3
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
 	<link rel="stylesheet" href="./resources/css/custom.css">
 	<link rel="stylesheet" href="./resources/css/index.css">
@@ -14,9 +19,6 @@
     <!-- Javascript libraries are added before the </body> tag  -->
   </head>
   <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-header" style="display:flex;justify-content:space-between">
-        <a class="navbar-brand" href="#" style="display:flex;position:absolute;left:0px;">SlimStampen</a>
 
      <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-header" >
@@ -33,11 +35,19 @@
           <button type="button" class="btn btn-default">
             <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; Open
           </button>
+<<<<<<< HEAD
           <button type="button" class="btn btn-default">
             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
           </button>
           <button type="button" class="btn btn-default" onclick="location.href='upload.html';">
             <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> Upload
+=======
+          <button type="button" class="btn btn-default" title="Download a dataset">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default" onclick="location.href='upload.html';" title="Import a dataset">
+            <span class="glyphicon glyphicon-open" aria-hidden="true" style="color: red;"></span>
+>>>>>>> sprint3
           </button>
         </div>
 
