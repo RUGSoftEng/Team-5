@@ -15,7 +15,7 @@ define(function (require) {
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
     if (inTutorial && config.constant("TUTORIAL_MODE")) {
-      if (currentItemIndex == config.constant("AMOUNT_TUTORIAL_QUESTIONS")) {
+      if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
         currentItemIndex = 0;
       } else {
         return true;

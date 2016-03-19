@@ -37,7 +37,7 @@ define(function (require) {
 
 	var constants = {
 		TOTAL_LENGTH: items.length,
-		AMOUNT_TUTORIAL_QUESTIONS: 3,
+		NUMBER_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true
 	};
