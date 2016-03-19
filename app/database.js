@@ -16,7 +16,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		"INSERT OR IGNORE INTO tblitems (item_dataset,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		"INSERT OR IGNORE INTO tbluser_items (item_dataset,item_question,item_answer,item_hint) VALUES (?, ?, ?)",
 		"INSERT OR IGNORE INTO tblsubjects  (subject_id, subject_name, VALUES (?, ?)",
-		"INSERT OR IGNORE INTO tbldatasets  ( dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date ) VALUES (?, ?, ?, ?, ?, ?, ?)",	
+		"INSERT OR IGNORE INTO tbldatasets  ( dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date ) VALUES (?, ?, ?, ?, ?, ?, ?)",
 	];
 
 	if (typeof sqlite !== 'object') {
@@ -42,6 +42,10 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		} catch (e) {
 			return false;
 		}
+	}
+
+	function onError(db,error) {
+		console.log("this error"+error.message)
 	}
 
 	var database = {

@@ -17,7 +17,9 @@ requirejs.config({
         bootstrap :  "../lib/bootstrap.min",
         sqlite : "../lib/sql",
         xlsx : "xlsx/xlsx",
-        jszip : "xlsx/jszip"
+        jszip : "xlsx/jszip",
+        parsley : "parsleyjs/dist/parsley.min",
+        "bootstrap-select": "bootstrap-select/dist/js/bootstrap-select.min"
     }
 
 });

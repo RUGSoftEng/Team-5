@@ -1,10 +1,10 @@
-define(['app/database', 'jquery', 'bootstrap', 'app/forms'], function (db, $, bootstrap, form) {
+define(['app/database', 'jquery', 'bootstrap', 'app/uploadform', 'xlsx'], function (db, $, bootstrap, form, XLSX) {
 	var X = XLSX;
 	var XW = {
 		/* worker message */
 		msg : 'xlsx',
 		/* worker scripts */
-		rABS : './lib/xlsx/xlsxworker.js',
+		rABS : './node_modules/xlsx/xlsxworker2.js',
 	};
 
 	var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
@@ -33,8 +33,10 @@ define(['app/database', 'jquery', 'bootstrap', 'app/forms'], function (db, $, bo
 		worker.onmessage = function (e) {
 			switch (e.data.t) {
 			case 'ready':
+				form.validateUpload(1);
 				break;
 			case 'e':
+				form.validateUpload(0);
 				console.error(e.data.d);
 				break;
 			default:
@@ -74,27 +76,6 @@ define(['app/database', 'jquery', 'bootstrap', 'app/forms'], function (db, $, bo
 
 		db.close();
 		// window.location = "learn.html";
-	}
-
-	var drop = document.getElementById('drop');
-
-	function handleDragover(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		e.dataTransfer.dropEffect = 'copy';
-	}
-	if (drop.addEventListener) {
-			drop.addEventListener('dragenter', handleDragover, false);
-			drop.addEventListener('dragover', handleDragover, false);
-			drop.addEventListener('drop', handleDrop, false);
-		}
-	}
-
-	function handleDrop(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		var files = e.dataTransfer.files;
-		readFile(files, e);
 	}
 
 	function handleFile(e) {

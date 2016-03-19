@@ -7,7 +7,7 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, config, db, messages, question, timer) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, bootstrap, config, db, messages, question, timer) {
   timer.startTimer(config.constant("TIME_LIMIT"));
 
   // Disable autocomplete that provides suggestions when typing words

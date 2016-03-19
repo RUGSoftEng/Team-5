@@ -9,6 +9,8 @@
 		<script data-main="app/uploadpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
+    <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
     <!-- Javascript libraries are added before the </body> tag  -->
   </head>
 	<body>
@@ -56,27 +58,51 @@
 		<div id="content">
       <div class="container">
 				<div class="row">
-          <form action="#" onclick="return validateForm();">
+          <div class="alert alert-danger bs-callout-warning hidden" role="alert">
+            You have not entered all fields!
+          </div>
+          <form id="uploadForm" data-parsley-validate="">
             <div class="col-md-6">
   						<h1>Upload a new dataset</h1>
-  						<div id="drop">Drop an XLSX / XLSM / XLSB / ODS / XLS / XML file here</div>
-  						<input type="file" name="xlfile" id="xlf" />
+  						<p>Drop a XLSX / XLSM / XLSB / ODS / XLS / XML file below:</p>
+  						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
   					</div>
   					<div class="col-md-6">
   						<h1>Enter the dataset information</h1>
-  						<div class="input-group">
-  						  <span class="input-group-addon" id="basic-addon1">Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-  						  <input type="text" class="form-control" placeholder="Name of the dataset*" aria-describedby="basic-addon1">
-  						</div>
-  						<div class="input-group">
-  						  <span class="input-group-addon" id="basic-addon2">Language:</span>
-  						  <input type="text" class="form-control" placeholder="Select a language*" aria-describedby="basic-addon2">
-  						</div>
-  						<div class="input-group">
-  						  <span class="input-group-addon" id="basic-addon3">Subject:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-  						  <input type="text" class="form-control" placeholder="Select a subject*" aria-describedby="basic-addon3">
-  						</div>
-  						<button type="button" class="btn btn-lg btn-success right">Save dataset</button>
+						  <label for="name">Name:</label>
+						  <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" />
+
+						  <label for="language">Language:</label>
+              <select class="selectpicker hello" name="language" required="" data-live-search="true">
+                <option value="en" selected>English</option>
+                <option value="nl">Dutch</option>
+              </select>
+              <div class="clear"></div>
+
+						  <label for="subject">Subject:</label>
+              <select class="selectpicker" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
+                <optgroup label="Languages">
+                  <option>Dutch</option>
+                  <option>Swahili</option>
+                  <option>German</option>
+                </optgroup>
+                <optgroup label="High School">
+                  <option>Geography</option>
+                  <option>History</option>
+                  <option>Biology</option>
+                </optgroup>
+                <optgroup label="High School2">
+                  <option>Geography</option>
+                  <option>History</option>
+                  <option>Biology</option>
+                </optgroup>
+                <optgroup label="High School3">
+                  <option>Geography</option>
+                  <option>History</option>
+                  <option>Biology</option>
+                </optgroup>
+              </select>
+              <input type="submit" name="upload" class="btn btn-lg btn-success right" value="Save dataset" />
   						<div class="clear"></div>
             </div>
           </form>

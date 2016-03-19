@@ -3,15 +3,15 @@
   position:absolute;
   left:0px;
 }
-	  
+
 #content {
 	margin-top: 60px;
 }
-	
+
 .container{
 	width: 100%;
 }
-	
+
 .datasets{
 	margin-top: 20px;
 }
@@ -19,27 +19,27 @@
 .progress{
 	height: 10px;
 }
-	  
+
  .navbar-header{
 	 display:flex;
-	 justify-content:space-between;  
+	 justify-content:space-between;
 }
  .col-md-3{
 	 min-width: 310px;
 }
-	
+
  .mybutton {
 	width:100%;
 	margin-bottom:40px;
 	background-color: #222222;
 	border-color: #191919;
   }
-  
+
  .mybutton:hover {
 	color: #fff;
 	background-color: #000;
   }
-  
+
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
