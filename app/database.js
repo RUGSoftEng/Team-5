@@ -9,7 +9,7 @@
  * module is sqlite.
  */
 
-define(['sqlite'], function (sqlite) {
+define(['sqlite', 'app/config'], function (sqlite, config) {
 	// Check if SQL.js has been loaded through AMD
 	var sql;
 	if (typeof sqlite !== 'object') {

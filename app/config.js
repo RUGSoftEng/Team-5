@@ -34,12 +34,13 @@ define(function (require) {
 		{question: "Domani", answer: "Tomorrow"},
 		{question: "Buon compleanno!", answer: "Happy Birthday!"}
 		];
-
+  
 	var constants = {
 		TOTAL_LENGTH: items.length,
 		NUMBER_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true,
+    TIME_LIMIT: 600,
     DATABASE_USER: "./database/user.sqlite",
     DATABASE_SLIMSTAMPEN: "./database/slimstampen.sqlite"
 	};
