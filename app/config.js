@@ -46,9 +46,6 @@ define(function (require) {
 		items: function() {
 			return items;
 		},
-		constants: function() {
-			return constants
-		},
 		constant: function(name) {
 			return constants[name];
 		}
