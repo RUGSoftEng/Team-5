@@ -21,10 +21,10 @@ define(['sqlite'], function (sqlite) {
 
 	// Initiate DB and check if there is an existing user DB
 	var read_database;
-	if (database_exists("./database/user.sqlite")) {
-		read_database = fs.readFileSync("./database/user.sqlite");
+	if (database_exists(config.constant("DATABASE_USER"))) {
+		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
 	} else {
-		read_database = fs.readFileSync("./database/slimstampen.sqlite");
+		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
 	}
 	var db = new sql.Database(read_database);
 

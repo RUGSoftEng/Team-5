@@ -39,7 +39,9 @@ define(function (require) {
 		TOTAL_LENGTH: items.length,
 		NUMBER_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
-		TUTORIAL_MODE: true
+		TUTORIAL_MODE: true,
+    DATABASE_USER: "./database/user.sqlite",
+    DATABASE_SLIMSTAMPEN: "./database/slimstampen.sqlite"
 	};
 
 	return {
