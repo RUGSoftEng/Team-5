@@ -28,14 +28,14 @@ define(['sqlite'], function (sqlite) {
 	}
 	var db = new sql.Database(read_database);
 
-	function database_exists(path) {
-		try {
-	    fs.accessSync(path, fs.F_OK);
-	    return true;
-		} catch (e) {
-		  return false;
-		}
-	}
+  function database_exists(path) {
+    try {
+      fs.accessSync(path, fs.F_OK);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
 	var database = {
 		save:function () {
