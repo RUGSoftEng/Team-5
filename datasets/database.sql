@@ -1,0 +1,163 @@
+CREATE TABLE IF NOT EXISTS `tbldatasets` (
+  `dataset_id` int UNSIGNED NOT NULL PRIMARY KEY,
+  `dataset_user` int UNSIGNED NOT NULL,
+  `dataset_name` varchar NOT NULL,
+  `dataset_language` int UNSIGNED NOT NULL,
+  `dataset_subject` int UNSIGNED NOT NULL,
+  `dataset_official` tinyint NOT NULL,
+  `dataset_published` tinyint NOT NULL,
+  `dataset_online_id` int UNSIGNED NOT NULL,
+  `dataset_date` datetime NOT NULL,
+  `dataset_lastedited` datetime NOT NULL
+) ;
+
+CREATE TABLE IF NOT EXISTS `tblitems` (
+  `item_id` int UNSIGNED NOT NULL PRIMARY KEY,
+  `item_dataset` int UNSIGNED NOT NULL,
+  `item_online_id` int UNSIGNED NOT NULL,
+  `item_question` text NOT NULL,
+  `item_answer` text  NOT NULL,
+  `item_hint` text  NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `tbllanguages` (
+  `language_id` int UNSIGNED NOT NULL PRIMARY KEY,
+  `language_name` text NOT NULL,
+  `language_short` text NOT NULL
+) ;
+
+CREATE TABLE IF NOT EXISTS `tblsubjects` (
+  `subject_id` int NOT NULL,
+  `subject_name` varchar NOT NULL
+); 
+
+
+CREATE TABLE IF NOT EXISTS `tblusers` (
+  `user_id` int NOT NULL,
+  `user_email` varchar NOT NULL,
+  `user_firstname` varchar NOT NULL,
+  `user_lastname` varchar NOT NULL,
+  `user_password` int NOT NULL,
+  `user_createdate` date NOT NULL,
+  `user_modified_date` datetime NOT NULL,
+  `user_language` int UNSIGNED NOT NULL
+) ;
+
+
+CREATE TABLE IF NOT EXISTS `tbluser_items` (
+  `user_item_id` int UNSIGNED NOT NULL PRIMARY KEY,
+  `user_item_user` int UNSIGNED NOT NULL ,
+  `user_item_strength` REAL NOT NULL
+) ;
+
+INSERT OR IGNORE INTO  `tbllanguages` (`language_id`, `language_name`, `language_short`) VALUES
+(1, 'English', 'en'),
+(2, 'German', 'de'),
+(3, 'French', 'fr'),
+(4, 'Dutch', 'nl'),
+(5, 'Italian', 'it'),
+(6, 'Spanish', 'es'),
+(7, 'Polish', 'pl'),
+(8, 'Russian', 'ru'),
+(9, 'Japanese', 'ja'),
+(10, 'Portuguese', 'pt'),
+(11, 'Swedish', 'sv'),
+(12, 'Chinese', 'zh'),
+(13, 'Catalan', 'ca'),
+(14, 'Ukrainian', 'uk'),
+(15, 'Norwegian (Bokmål)', 'no'),
+(16, 'Finnish', 'fi'),
+(17, 'Vietnamese', 'vi'),
+(18, 'Czech', 'cs'),
+(19, 'Hungarian', 'hu'),
+(20, 'Korean', 'ko'),
+(21, 'Indonesian', 'id'),
+(22, 'Turkish', 'tr'),
+(23, 'Romanian', 'ro'),
+(24, 'Persian', 'fa'),
+(25, 'Arabic', 'ar'),
+(26, 'Danish', 'da'),
+(27, 'Esperanto', 'eo'),
+(28, 'Serbian', 'sr'),
+(29, 'Lithuanian', 'lt'),
+(30, 'Slovak', 'sk'),
+(31, 'Malay', 'ms'),
+(32, 'Hebrew', 'he'),
+(33, 'Bulgarian', 'bg'),
+(34, 'Slovenian', 'sl'),
+(35, 'Volapük', 'vo'),
+(36, 'Kazakh', 'kk'),
+(37, 'Waray-Waray', 'war'),
+(38, 'Basque', 'eu'),
+(39, 'Croatian', 'hr'),
+(40, 'Hindi', 'hi'),
+(41, 'Estonian', 'et'),
+(42, 'Azerbaijani', 'az'),
+(43, 'Galician', 'gl'),
+(44, 'Simple English', 'simple'),
+(45, 'Norwegian (Nynorsk)', 'nn'),
+(46, 'Thai', 'th'),
+(47, 'Newar / Nepal Bhasa', 'new'),
+(48, 'Greek', 'el'),
+(49, 'Aromanian', 'roa-rup'),
+(50, 'Latin', 'la'),
+(51, 'Occitan', 'oc'),
+(52, 'Tagalog', 'tl'),
+(53, 'Haitian', 'ht'),
+(54, 'Macedonian', 'mk'),
+(55, 'Georgian', 'ka'),
+(56, 'Serbo-Croatian', 'sh'),
+(57, 'Telugu', 'te'),
+(58, 'Piedmontese', 'pms'),
+(59, 'Cebuano', 'ceb'),
+(60, 'Tamil', 'ta'),
+(61, 'Belarusian (Taraškievica)', 'be-x-old'),
+(62, 'Breton', 'br'),
+(63, 'Latvian', 'lv'),
+(64, 'Javanese', 'jv'),
+(65, 'Albanian', 'sq'),
+(66, 'Belarusian', 'be'),
+(67, 'Marathi', 'mr'),
+(68, 'Welsh', 'cy'),
+(69, 'Luxembourgish', 'lb'),
+(70, 'Icelandic', 'is'),
+(71, 'Bosnian', 'bs'),
+(72, 'Yoruba', 'yo'),
+(73, 'Malagasy', 'mg'),
+(74, 'Aragonese', 'an'),
+(75, 'Bishnupriya Manipuri', 'bpy'),
+(76, 'Lombard', 'lmo'),
+(77, 'West Frisian', 'fy'),
+(78, 'Bengali', 'bn'),
+(79, 'Ido', 'io'),
+(80, 'Swahili', 'sw'),
+(81, 'Gujarati', 'gu'),
+(82, 'Malayalam', 'ml'),
+(83, 'Western Panjabi', 'pnb'),
+(84, 'Afrikaans', 'af'),
+(85, 'Low Saxon', 'nds'),
+(86, 'Sicilian', 'scn'),
+(87, 'Urdu', 'ur'),
+(88, 'Kurdish', 'ku'),
+(89, 'Cantonese', 'zh-yue'),
+(90, 'Armenian', 'hy'),
+(91, 'Quechua', 'qu'),
+(92, 'Sundanese', 'su'),
+(93, 'Nepali', 'ne'),
+(94, 'Zazaki', 'diq'),
+(95, 'Asturian', 'ast'),
+(96, 'Tatar', 'tt'),
+(97, 'Neapolitan', 'nap'),
+(98, 'Irish', 'ga'),
+(99, 'Chuvash', 'cv'),
+(100, 'Samogitian', 'bat-smg'),
+(101, 'Walloon', 'wa'),
+(102, 'Amharic', 'am'),
+(103, 'Kannada', 'kn'),
+(104, 'Alemannic', 'als'),
+(105, 'Buginese', 'bug'),
+(106, 'Burmese', 'my'),
+(107, 'Interlingua', 'ia')
+
+
+

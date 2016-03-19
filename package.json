@@ -23,6 +23,9 @@
     "electron-prebuilt": "^0.36.0"
   },
   "dependencies": {
-    "bootstrap": "^3.3.6"
+    "bootstrap": "^3.3.6",
+    "jquery": "^2.2.2",
+    "sqlite": "0.0.4",
+    "xlsx": "^0.8.0"
   }
 }

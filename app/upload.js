@@ -68,8 +68,9 @@ define(['app/database', 'jquery', 'bootstrap'], function (db, $, bootstrap) {
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
-			db.excuteQuery(0, ['datasets1', question, answer, 'hint']);
-			console.log("Question: " + question + ", answer: " + answer);
+			db.excuteQuery('addDatasetItem' , ['datasets1', question, answer, 'hint']);
+			//db.selectQuery('addDatasetItem' ,['datasets1']);
+			//console.log("Question: " + question + ", answer: " + answer);
 		})
 
 		db.close();
