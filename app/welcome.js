@@ -7,8 +7,8 @@
  * Main script for initiating the welcome  page.
  */
  
- define([ 'jquery'], function ($) {
-	
+ define([ 'jquery', 'bootstrap'], function ($, bootstrap) {
+
 	$("#menu-toggle").click(function(e) {
 		e.preventDefault();
 		$("#wrapper").toggleClass("toggled");
