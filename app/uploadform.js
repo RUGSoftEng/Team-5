@@ -1,4 +1,5 @@
-define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select'], function ($,messages,config, parsley, select) {
+define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select', 'app/upload'], function ($,messages,config, parsley, select, upload) {
+  console.log(upload);
   $(function () {
     $(".selectpicker").selectpicker();
     window.Parsley.on('field:error', function() {
@@ -24,6 +25,10 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select'], f
       var ok = $('.parsley-error').length === 0;
       $('.bs-callout-info').toggleClass('hidden', !ok);
       $('.bs-callout-warning').toggleClass('hidden', ok);
+      if (ok) {
+        upload.saveToDatabase();
+        // window.location = 'index.html';
+      }
     })
     .on('form:submit', function() {
       return false; // Don't submit form
@@ -34,8 +39,6 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select'], f
 
   window.Parsley.addValidator('fileXlsx', {
     validateString: function(_value, maxSize, parsleyInstance) {
-      // var files = parsleyInstance.$element[0].files;
-      // return files.length != 1  || files[0].size <= maxSize * 1024;
       return correctUpload;
     },
     requirementType: 'integer',
@@ -45,9 +48,4 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select'], f
     }
   });
 
-  return {
-    validateUpload: function(result) {
-      correctUpload = (result==true) ? true : false;
-    }
-  }
 });

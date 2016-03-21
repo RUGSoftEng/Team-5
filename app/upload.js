@@ -1,5 +1,56 @@
-define(['app/database', 'jquery', 'bootstrap', 'app/uploadform', 'xlsx'], function (db, $, bootstrap, form, XLSX) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select'], function (db, $, bootstrap, XLSX, parsley, select) {
 	var X = XLSX;
+	var saveData;
+	var correctUpload = false;
+
+	// Script for evaluating the input of the upload form
+	$(function () {
+		$(".selectpicker").selectpicker();
+		window.Parsley.on('field:error', function() {
+				if (this.$element.is("select")) {
+						this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
+				}
+		});
+		window.Parsley.on('field:success', function() {
+				if (this.$element.is("select")) {
+						this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+				}
+		});
+		$('select').on('changed.bs.select', function (e) {
+			$(this).selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+			$(this).parent().children(".parsley-errors-list").html("");
+		});
+		$('select').on('rendered.bs.select', function (e) {
+			$(this).parent().removeClass("parsley-error");
+		});
+
+		// Initiate form error handling
+		$('#uploadForm').parsley().on('field:validated', function() {
+			var ok = $('.parsley-error').length === 0;
+			$('.bs-callout-info').toggleClass('hidden', !ok);
+			$('.bs-callout-warning').toggleClass('hidden', ok);
+		})
+		.on('form:submit', function() {
+			return false; // Don't submit form
+		})
+		.on('form:success', function() {
+			console.log("done");
+			process_wb(JSON.parse(saveData));
+			// window.location = 'index.html';
+		});
+	});
+
+	window.Parsley.addValidator('fileXlsx', {
+		validateString: function(_value, maxSize, parsleyInstance) {
+			return correctUpload;
+		},
+		requirementType: 'integer',
+		messages: {
+			en: 'This file is not supported.',
+			fr: "Ce fichier est plus grand que %s Kb."
+		}
+	});
+
 	var XW = {
 		/* worker message */
 		msg : 'xlsx',
@@ -33,16 +84,14 @@ define(['app/database', 'jquery', 'bootstrap', 'app/uploadform', 'xlsx'], functi
 		worker.onmessage = function (e) {
 			switch (e.data.t) {
 			case 'ready':
-				form.validateUpload(1);
+				correctUpload = true;
 				break;
 			case 'e':
-				form.validateUpload(0);
+				correctUpload = false;
 				console.error(e.data.d);
 				break;
 			default:
-				xx = ab2str(e.data).replace(/\n/g, "\\n").replace(/\r/g, "\\r");
-				console.log("done");
-				cb(JSON.parse(xx));
+				saveData = ab2str(e.data).replace(/\n/g, "\\n").replace(/\r/g, "\\r");
 				break;
 			}
 		};
@@ -70,13 +119,11 @@ define(['app/database', 'jquery', 'bootstrap', 'app/uploadform', 'xlsx'], functi
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
-			db.excuteQuery('addDatasetItem' , ['datasets1', question, answer, 'hint']);
+			db.executeQuery('addDatasetItem' , ['datasets1', question, answer, 'hint']);
 			//db.selectQuery('addDatasetItem' ,['datasets1']);
 			//console.log("Question: " + question + ", answer: " + answer);
 		})
-
 		db.close();
-		// window.location = "learn.html";
 	}
 
 	function handleFile(e) {
@@ -104,4 +151,9 @@ define(['app/database', 'jquery', 'bootstrap', 'app/uploadform', 'xlsx'], functi
 		xlf.addEventListener('change', handleFile, false);
 	}
 
+	return {
+		saveToDatabase: function() {
+			console.log(saveData);
+		}
+	}
 });
