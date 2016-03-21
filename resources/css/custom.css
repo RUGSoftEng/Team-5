@@ -12,6 +12,7 @@ nav { }
   nav p.timer { float: left; margin: 0; margin-left: 40%; font-size: 22px; line-height: 50px; }
 
 #content { margin-top: 100px; }
+  #content h1 { margin-bottom: 30px; }
   #content h2 span { font-size: 16px; }
   #content .icon { float: left; width: 50px; margin: 0 50px 0 0; height: 50px; }
   #content .icon .glyphicon { font-size: 50px; }
@@ -23,6 +24,17 @@ nav { }
   .stats { margin: 0 0 50px 0; }
   .input-group { margin-bottom: 30px; }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
+
+    #drop{
+      border:2px dashed #bbb;
+      -moz-border-radius:5px;
+      -webkit-border-radius:5px;
+      border-radius:5px;
+      margin: 0 0 30px 0;
+      padding:25px;
+      text-align:center;
+      font:20pt bold;color:#fff
+    }
   /* RESPONSIVE RESET/CHANGE */
 
   @media (max-width: 768px) {

@@ -1,7 +1,4 @@
-define(function (require) {
-  var messages = require('./messages');
-  // Include config variables
-  var config = require('./config');
+define(['app/config', 'app/messages'], function (config, messages) {
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
   var items = config.items();
@@ -15,7 +12,7 @@ define(function (require) {
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
     if (inTutorial && config.constant("TUTORIAL_MODE")) {
-      if (currentItemIndex == config.constant("AMOUNT_TUTORIAL_QUESTIONS")) {
+      if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
         currentItemIndex = 0;
       } else {
         return true;
