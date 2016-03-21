@@ -36,7 +36,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		.on('form:success', function() {
 			console.log("done");
 			process_wb(JSON.parse(saveData));
-			// window.location = 'index.html';
+			window.location = 'index.html';
 		});
 	});
 
