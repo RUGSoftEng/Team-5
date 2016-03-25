@@ -1,4 +1,4 @@
-define(['app/messages', 'app/config'], function (messages,config) {
+define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) {
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
   var items = config.items();
@@ -47,11 +47,9 @@ define(['app/messages', 'app/config'], function (messages,config) {
   }
 
   function showProgress() {
-    requirejs(['jquery'], function( $ ) {
-      $( "#progress-number" ).html( "<p>" + (config.constant("TOTAL_LENGTH") - items.length) + "/" + config.constant("TOTAL_LENGTH") + " words</p>" );
-      var percentageVal = percentage(config.constant("TOTAL_LENGTH") - items.length, config.constant("TOTAL_LENGTH"));
-      $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
-    });
+    $( "#progress-number" ).html( "<p>" + (config.constant("TOTAL_LENGTH") - items.length) + "/" + config.constant("TOTAL_LENGTH") + " words</p>" );
+    var percentageVal = percentage(config.constant("TOTAL_LENGTH") - items.length, config.constant("TOTAL_LENGTH"));
+    $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
 
   // Handle how to move to the next question
@@ -75,9 +73,7 @@ define(['app/messages', 'app/config'], function (messages,config) {
       }
 
       showProgress();
-      requirejs(['jquery'], function( $ ) {
-        $( "#question" ).html( question );
-      });
+      $( "#question" ).html( question );
     },
     checkAnswer: function() {
       /* Check answer checks the provided answer of the user. When the levenshtein
@@ -89,20 +85,17 @@ define(['app/messages', 'app/config'], function (messages,config) {
       var answer = items[currentItemIndex].answer;
 
       var difference = levenstein(input,answer);
-
+      
       if (difference == 0) {
-        messages.show( "Well done!", "success" );
+        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
         nextQuestion();
       } else if (difference <= (answer.length * config.constant("MARGIN_OF_ERROR"))) {
-        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning");
+        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       } else {
-        messages.show( "Wrong answer! Expected answer: " + answer , "danger");
+        messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       }
-      requirejs(['jquery'], function( $ ) {
-        $( "#answer" ).val( "" );
-      });
       showProgress();
 
       if (items.length == 0) {

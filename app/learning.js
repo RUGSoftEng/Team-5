@@ -1,14 +1,15 @@
 /* file: learning.js
- * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 5/3/2016
- * version 1.1
+ * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
+ * date: 25/3/2016
+ * version 1.2
  *
  * Description:
  * Main script for initiating the learning app.
  */
 
 define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, bootstrap, config, db, messages, question, timer) {
-  timer.startTimer(config.constant("TIME_LIMIT"));
+  timer.startTimer(".timer", config.constant("TIME_LIMIT"));
+  var waitingForEnter = false;
 
   // Disable autocomplete that provides suggestions when typing words
   $('input').attr('autocomplete', 'off');
@@ -24,10 +25,27 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
 
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
-  $("form").bind("keypress", function (e) {
+  $(document).bind("keypress", function (e) {
   	if (e.keyCode == 13) {
-  		question.checkAnswer();
-  		question.show();
+      if (waitingForEnter) {
+        nextQuestion();
+      } else {
+        $( "#answer" ).prop("disabled", true);
+        question.checkAnswer();
+        waitingForEnter = true;
+        timeout = setTimeout(nextQuestion, config.constant("FEEDBACK_DELAY"));
+      }
   	}
   });
+  
+  function nextQuestion() {
+    clearTimeout(timeout);
+    timer.clearCountdown();
+    messages.clear();
+    $( "#answer" ).prop("disabled", false);
+    $( "#answer" ).val( "" );
+    $( "#answer" ).focus();
+    question.show();
+    waitingForEnter = false;
+  }
 });
