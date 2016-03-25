@@ -6,6 +6,10 @@
 .right { float: right; }
 .clear { clear: both; }
 
+.createdataset{
+	 margin-top: 15px; 	
+}
+
 nav { }
   nav .btn-group { padding: 8px 15px; }
   nav .navbar-header { width: 100%; }
@@ -28,8 +32,8 @@ nav { }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
 
   form { }
-    form input[type="submit"], form button { margin-top: 15px; }
-    form label { margin: 15px 0 0; }
+   /* form input[type="submit"], form button {}
+    form label { margin: 15px 0 0; }*/
     form #xlf { border: 2px dashed #bbb; width: 100%; padding: 25px; }
     .bootstrap-select { width: 100% !important; }
     .dropdown-header { color: #555 !important;  }
@@ -49,6 +53,8 @@ nav { }
       text-align:center;
       font:20pt bold;color:#fff
     }
+	
+
   /* RESPONSIVE RESET/CHANGE */
 
   @media (max-width: 768px) {

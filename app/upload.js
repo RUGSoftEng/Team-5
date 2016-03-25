@@ -119,6 +119,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
+			console.log('called');
 			db.executeQuery('addDatasetItem' , ['datasets1', question, answer, 'hint']);
 			//db.selectQuery('addDatasetItem' ,['datasets1']);
 			//console.log("Question: " + question + ", answer: " + answer);

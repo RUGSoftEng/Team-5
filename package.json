@@ -24,7 +24,9 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "bootstrap-select": "^1.10.0",
     "jquery": "^2.2.2",
+    "parsleyjs": "^2.3.7",
     "sqlite": "0.0.4",
     "xlsx": "^0.8.0"
   }
