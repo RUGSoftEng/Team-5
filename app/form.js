@@ -4,32 +4,37 @@
  * version 1.1
  *
  * Description:
- 
+
  */
 
-define(['app/database', 'jquery'], function (db, $) {
-	 var numberOfFormItems = 2;
-
+define(['app/database', 'jquery', 'bootstrap', 'parsley', 'bootstrap-select'], function (db, $, bootstrap, parsley, select) {
+	 var numberOfFormItems = 1;
+   $(".selectpicker").selectpicker();
 	 $(".add").click(function(add) {
-	   $('.itemform > :nth-child(2)').clone(true).insertBefore(".itemform > p:last-child");
-	   numberOfFormItems++;
-	   return false;
+     numberOfFormItems++;
+	   var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
+     newElement.children("td:nth-child(1)").html(numberOfFormItems);
+     newElement.children("td:nth-child(2) input").attr("name", "question"+numberOfFormItems).addClass("question"+numberOfFormItems);
+     newElement.children("td:nth-child(3) input").attr("name", "answer"+numberOfFormItems).addClass("answer"+numberOfFormItems);
+     newElement.children("td:nth-child(4) input").attr("name", "hint"+numberOfFormItems).addClass("hint"+numberOfFormItems);
+
+     return false;
 	 });
 
 	 $(".remove").click(function() {
-	  if (numberOfFormItems != 2) {
-	  		$(this).parent().remove();	
-	  	numberOfFormItems--;
+	  if (numberOfFormItems != 1) {
+	  		$(this).parents("tr").remove();
+	  	  numberOfFormItems--;
+        console.log($(this).parents("table").children().length);
+
 	  	}
 	 });
 
- 	if (document.activeElement == ($('.itemform').children[(numberOfFormItems-1)].children[5])) {
+ 	if (document.activeElement == ($('#newForm').children[(numberOfFormItems-1)].children[5])) {
 	   $('#hint').keydown(function (e) {
 	   	if (e.keyCode == 9) {
 	  		console.log("gfgdg");
 	  	}
 	  });
- 	};  	
+ 	};
 });
-
-

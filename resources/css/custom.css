@@ -28,12 +28,16 @@ nav { }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
 
   form { }
-    form input[type="submit"] { margin-top: 15px; }
+    form input[type="submit"], form button { margin-top: 15px; }
     form label { margin: 15px 0 0; }
     form #xlf { border: 2px dashed #bbb; width: 100%; padding: 25px; }
     .bootstrap-select { width: 100% !important; }
     .dropdown-header { color: #555 !important;  }
     .bootstrap-select .dropdown-menu li.disabled:hover { background: #8a94a6; }
+    #item-layout { display: none; }
+    #items { }
+      #items .table td { line-height: 30px; }
+      #items .remove { color: red; font-size:30px; cursor: pointer; }
 
     #drop{
       border:2px dashed #bbb;
