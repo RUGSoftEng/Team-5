@@ -13,89 +13,125 @@
     <!-- Javascript libraries are added before the </body> tag  -->
   </head>
   <body>
-     <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-header" >
-    	  <ul class="nav navbar-nav " id="nav-left">
-    		  <li><a  href="#menu-toggle"  id="menu-toggle" ><span class="glyphicon glyphicon-menu-hamburger" ></span></a></li>
-    		  <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" >SlimStampen</a></li>
-    	  </ul>
-
-
-        <div class="btn-group center-menu" role="group">
-          <button type="button" class="btn btn-default" onclick="location.href='new.html'">
-            <span class="glyphicon glyphicon-file" aria-hidden="true"></span> New
-          </button>
-          <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; Open
-          </button>
-          <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
-          </button>
-          <button type="button" class="btn btn-default" onclick="location.href='upload.html';">
-            <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> Upload
-          </button>
-        </div>
-
-        <div class="btn-group right-menu" role="group">
-          <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Hedderik
-          </button>
-          <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-right">
-            <li><a href="#">Pause lesson</a></li>
-            <li><a href="#">Quit lesson</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-        </div>
+   <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-header" >
+      <ul class="nav navbar-nav " id="nav-left">
+        <li><a  href="#menu-toggle"  id="menu-toggle" ><span class="glyphicon glyphicon-menu-hamburger" ></span></a></li>
+        <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" >SlimStampen</a></li>
+      </ul>
+      
+      <div class="btn-group center-menu" role="group">
+        <button type="button" class="btn btn-default" onclick="location.href='new.html'">
+          <span class="glyphicon glyphicon-file" aria-hidden="true"></span> New
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; Open
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
+        </button>
+        <button type="button" class="btn btn-default" onclick="location.href='upload.html';">
+          <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> Upload
+        </button>
       </div>
-    </nav>
 
-    <div id="wrapper">
+      <div class="btn-group right-menu" role="group">
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Hedderik
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a href="#">Pause lesson</a></li>
+          <li><a href="#">Quit lesson</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-            <li class="active"><a href="#">
-              Italian <br>
-              <span class="sidebar_item" >for English speakers</span>
-            </a></li>
-            <li><a href="#">
-              English <br>
-              <span class="sidebar_item" >for Dutch speakers</span>
-            </a></li>
-            <li><a href="#">
-              Biology <br>
-              <span class="sidebar_item" >for Dutch speakers</span>
-            </a></li>
-            <li><a href="#">
-              International law <br>
-              <span class="sidebar_item" >for English speakers</span>
-            </a></li>
-            <li><a href="#">
-              family names <br>
-              <span class="sidebar_item" >(custom module)</span>
-            </a></li>
-            <li><a href="#">
-              Really unnecessarily  <br>
-              <span class="sidebar_item" >(custom module)</span>
-            </a></li>
-            <li><a href="#">
-              abcdefghijklmnopqrtuvwxyz <br>
-              <span class="sidebar_item">(custom module)</span>
-            </a></li>
-            <li><a href="#">
-              Swedish <br>
-              <span class="sidebar_item" >for English speakers</span>
-            </a></li>
-            </ul>
-        </div>
-        <!-- /#sidebar-wrapper -->
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar-nav">
+        <li class="active"><a href="#">
+          Italian <br>
+          <span class="sidebar_item" >for English speakers</span>
+        </a></li>
+        <li><a href="#">
+          English <br>
+          <span class="sidebar_item" >for Dutch speakers</span>
+        </a></li>
+        <li><a href="#">
+          Biology <br>
+          <span class="sidebar_item" >for Dutch speakers</span>
+        </a></li>
+        <li><a href="#">
+          International law <br>
+          <span class="sidebar_item" >for English speakers</span>
+        </a></li>
+        <li><a href="#">
+          family names <br>
+          <span class="sidebar_item" >(custom module)</span>
+        </a></li>
+        <li><a href="#">
+          Really unnecessarily  <br>
+          <span class="sidebar_item" >(custom module)</span>
+        </a></li>
+        <li><a href="#">
+          abcdefghijklmnopqrtuvwxyz <br>
+          <span class="sidebar_item">(custom module)</span>
+        </a></li>
+        <li><a href="#">
+          Swedish <br>
+          <span class="sidebar_item" >for English speakers</span>
+        </a></li>
+        <li class="active"><a href="#">
+          Italian <br>
+          <span class="sidebar_item" >for English speakers</span>
+        </a></li>
+        <li><a href="#">
+          English <br>
+          <span class="sidebar_item" >for Dutch speakers</span>
+        </a></li>
+        <li><a href="#">
+          Biology <br>
+          <span class="sidebar_item" >for Dutch speakers</span>
+        </a></li>
+        <li><a href="#">
+          International law <br>
+          <span class="sidebar_item" >for English speakers</span>
+        </a></li>
+        <li><a href="#">
+          family names <br>
+          <span class="sidebar_item" >(custom module)</span>
+        </a></li>
+        <li><a href="#">
+          Really unnecessarily  <br>
+          <span class="sidebar_item" >(custom module)</span>
+        </a></li>
+        <li><a href="#">
+          abcdefghijklmnopqrtuvwxyzmmmmmmmmmmmmmmmmmmmmmmmmmm <br>
+          <span class="sidebar_item">(custom module)</span>
+        </a></li>
+        <li><a href="#">
+          Swedish <br>
+          <span class="sidebar_item" >for English speakers</span>
+        </a></li>
+      </ul>
+    </div>
+    
+    <div id="sidebar-logos">
+      <img src="testlogo.png" />
+      <br>
+      <img src="testlogo.png" />
+    </div>
+    <!-- /#sidebar-wrapper -->
 
    <div id="content" class="main">
       <div class="container"  >
