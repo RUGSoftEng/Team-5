@@ -69,37 +69,17 @@
   					<div class="col-md-6">
   						<h1>Enter the dataset information</h1>
 						  <label for="name">Name:</label>
-						  <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" />
+						  <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
 
 						  <label for="language">Language:</label>
-              <select class="selectpicker hello" name="language" required="" data-live-search="true">
-                <option value="en" selected>English</option>
-                <option value="nl">Dutch</option>
+              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
+                <!-- Items are loaded in selectLanguage.js  -->
               </select>
               <div class="clear"></div>
 
 						  <label for="subject">Subject:</label>
-              <select class="selectpicker" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
-                <optgroup label="Languages">
-                  <option>Dutch</option>
-                  <option>Swahili</option>
-                  <option>German</option>
-                </optgroup>
-                <optgroup label="High School">
-                  <option>Geography</option>
-                  <option>History</option>
-                  <option>Biology</option>
-                </optgroup>
-                <optgroup label="High School2">
-                  <option>Geography</option>
-                  <option>History</option>
-                  <option>Biology</option>
-                </optgroup>
-                <optgroup label="High School3">
-                  <option>Geography</option>
-                  <option>History</option>
-                  <option>Biology</option>
-                </optgroup>
+              <select class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
+                <!-- Items are loaded in selectSubject.js -->
               </select>
               <input type="submit" name="upload" class="btn btn-lg btn-success right" value="Save dataset" />
   						<div class="clear"></div>

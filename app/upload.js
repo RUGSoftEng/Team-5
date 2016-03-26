@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select'], function (db, $, bootstrap, XLSX, parsley, select) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -24,7 +24,25 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 			$(this).parent().removeClass("parsley-error");
 		});
 
-		// Initiate form error handling
+		window.Parsley.addValidator('datasetName', {
+		  validateString: function(value, requirement) {
+				db.get("getDatasetByName", [value], function() {
+					return false;
+				})
+				// db.each("getDatasetByName", [value], function(row, error) {
+				// 	if (error) {
+				// 	} else {
+				// 		console.log(row);
+				// 	}
+				// });
+		  },
+		  messages: {
+		    en: 'This name is already used for another dataset.',
+		    fr: "Ce nombre n'est pas un multiple de %s."
+		  }
+		});
+
+		// Initiate form error and success handling
 		$('#uploadForm').parsley().on('field:validated', function() {
 			var ok = $('.parsley-error').length === 0;
 			$('.bs-callout-info').toggleClass('hidden', !ok);
@@ -34,9 +52,21 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 			return false; // Don't submit form
 		})
 		.on('form:success', function() {
-			console.log("done");
-			process_wb(JSON.parse(saveData));
-			window.location = 'index.html';
+			var name = $('#uploadForm').find('input[name="name"]').val();
+			var language = $('#uploadForm').find('select[name="language"]').val();
+			var subject = $('#uploadForm').find('select[name="subject"]').val();
+			var currentdate = new Date();
+
+			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, currentdate.getTime()]);
+			db.save();
+			var dataset = false;
+			db.each("getDatasetByName", name, function(row, err) {
+				dataset = row;
+			});
+			console.log(dataset);
+
+			process_data(JSON.parse(saveData), name);
+			//window.location = 'index.html';
 		});
 	});
 
@@ -112,18 +142,17 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		return result;
 	}
 
-	function process_wb(wb) {
-		var output = to_json(wb);
+	function process_data(data,name) {
+		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
 
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
-			db.executeQuery('addDatasetItem' , ['datasets1', question, answer, 'hint']);
-			//db.selectQuery('addDatasetItem' ,['datasets1']);
-			//console.log("Question: " + question + ", answer: " + answer);
+			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
+			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
 		})
-		db.close();
+		db.save();
 	}
 
 	function handleFile(e) {
@@ -141,7 +170,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 				console.log("onload", new Date(), true, true);
 			}
 			var data = e.target.result;
-			xw_xfer(data, process_wb);
+			xw_xfer(data, process_data);
 		};
 		reader.readAsBinaryString(f);
 	}
