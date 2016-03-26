@@ -16,13 +16,13 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 	var queries = {
 		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
-		addSubject :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
+		addSubject :  "INSERT OR IGNORE INTO tblsubjects  (subject_id, subject_name) VALUES (?, ?)",
 		addDataset : "INSERT OR IGNORE INTO tbldatasets  ( dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
-		getDatasets : "SELECT DISTINCT dataset_name FROM tbldatasets ORDER BY dataset_name",
+		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? ORDER BY dataset_name",
 		getDatasetItems : "SELECT * FROM tblitems where item_dataset=?" ,
-		getUserSubjects : "SELECT * FROM tblsubjects where user_id=? ",
+		getUserSubjects : "SELECT * FROM tblsubjects ",
 		getUser : "SELECT * FROM tblsubjects where user_id= ? "
 	};
 
@@ -73,34 +73,15 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 			var query = queries[queryname] ;
 			console.log(query);
 			db.run(query, args);
-
 		},
-		selectDatasetItems :  function (queryname, args) {
-			var query = queries[ queryname] ;
-			db.each(query,args, function(row, err) {
-				console.log(row.item_answer );
-			});
-		},
-		selectUserSubjects :  function (queryname, args) {
-			var query = queries[ queryname] ;
-			db.each(query,args, function(row, err) {
-				console.log(row.subject_name );
-			});
-		},
-		selectUser :  function (queryname, args) {
-			var query = queries[ queryname] ;
-			db.each(query,args, function(row, err) {
-				console.log(row.user_email );
-			});
-		},
-		getQuery: function(queryname){
+		getQuery: function(queryname,args){
 			var queryResult= [ ];
 			var query = queries[ queryname] ;
 			db.each(query,args, function(row, err) {
 				queryResult.push(row);
 			});
 			console.log(queryResult.length);
-			return queryResult.length==0? queryResult: false;
+			return queryResult;
 		}
 
 	}
