@@ -10,9 +10,6 @@
  */
 
 define(['sqlite', 'app/config'], function (sqlite, config) {
-	// Check if SQL.js has been loaded through AMD
-	var sql;
-
 	var queries = {
 		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -22,8 +19,11 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? ORDER BY dataset_name",
 		getDatasetItems : "SELECT * FROM tblitems where item_dataset=?" ,
+		getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getUserSubjects : "SELECT * FROM tblsubjects ",
-		getUser : "SELECT * FROM tblsubjects where user_id= ? "
+		getUser : "SELECT * FROM tblsubjects where user_id= ? ",
+		getSubjects : "SELECT * FROM tblsubjects",
+		getLanguages : "SELECT * FROM tbllanguages"
 	};
 
 	// Check if SQL.js has been loaded through AMD
@@ -80,6 +80,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 			db.each(query,args, function(row, err) {
 				queryResult.push(row);
 			});
+			return queryResult;
 		},
 		selectUserSubjects :  function (queryname, args) {
 			var query = queries[ queryname] ;
@@ -96,13 +97,6 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		each : function(queryname, args, func) {
 			var query = queries[queryname];
 			db.each(query,args, func);
-		},
-		get : function(queryname, args, callback) {
-			var query = queries[queryname];
-			var rows = [];
-			db.each(query,args, function(row,err) {
-				callback();
-			});
 		}
 
 	}

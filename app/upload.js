@@ -26,15 +26,8 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 
 		window.Parsley.addValidator('datasetName', {
 		  validateString: function(value, requirement) {
-				db.get("getDatasetByName", [value], function() {
-					return false;
-				})
-				// db.each("getDatasetByName", [value], function(row, error) {
-				// 	if (error) {
-				// 	} else {
-				// 		console.log(row);
-				// 	}
-				// });
+				var result = db.getQuery("getDatasetByName", [value]);
+				console.log(result);
 		  },
 		  messages: {
 		    en: 'This name is already used for another dataset.',
