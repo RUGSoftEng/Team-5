@@ -19,6 +19,7 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 		var li2 = "\"><a  href=\"#\"  >";
 		var li3 = "<br><span class=\"sidebar_item\" >for English speakers</span></a></li>\n";
 		var rows = db.getQuery('getUserSubjects', []);
+		console.log(rows.length);
 		var sidebar = "";
 
 		for (var i = 0; i < rows.length; i++) {
@@ -55,8 +56,6 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 					});
 		});
 		
-
-
 	});
 
 	function addRandom() {
