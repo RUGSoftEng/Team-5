@@ -36,9 +36,10 @@ define(['jquery', 'app/timer'], function ($, timer) {
     },
     
     clear: function() {
-      $("#show .message").html("");
-      $("#show").removeClass("alert-success alert-danger alert-warning");
-      $("#show .icon .glyphicon").removeClass("glyphicon-ok-sign glyphicon-remove-sign glyphicon-exclamation-sign");
+        $("#show .message").html("");
+        $("#show").removeClass("alert-success alert-danger alert-warning");
+        $("#show .icon .glyphicon").removeClass("glyphicon-ok-sign glyphicon-remove-sign glyphicon-exclamation-sign");
+        $("#hint").hide();
     },
     
     showHint: function(message) {
@@ -47,7 +48,5 @@ define(['jquery', 'app/timer'], function ($, timer) {
       $("#hint").show();
       $("#hint .message").html(message);
     }
-
-    // TODO: add a hideHint function too (?)
   }
 });

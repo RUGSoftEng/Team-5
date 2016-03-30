@@ -14,16 +14,19 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 	var sql;
 
 	var queries = {
-		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
+		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
-		addSubject :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date ) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
+		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
-		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? ORDER BY dataset_name",
-		getDatasetItems : "SELECT * FROM tblitems where item_dataset=?" ,
+		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
+        getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
+		getDatasetItems : "SELECT * FROM tblitems WHERE item_dataset_id=?" ,
 		getUserSubjects : "SELECT * FROM tblsubjects",
-		getUser : "SELECT * FROM tblsubjects where user_id= ? "
+		getUser : "SELECT * FROM tblsubjects where user_id= ? ",
+        getLanguages: "SELECT * FROM tbllanguages",
+        getModules : "SELECT language_id, language_name, subject_id, subject_name FROM (SELECT DISTINCT dataset_language, dataset_subject FROM tbldatasets) JOIN tbllanguages ON (dataset_language = language_id) JOIN tblsubjects ON (dataset_subject = subject_id)"
 	};
 
 	// Check if SQL.js has been loaded through AMD
@@ -80,6 +83,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 			db.each(query,args, function(row, err) {
 				queryResult.push(row);
 			});
+            
 			return queryResult;
 		}
 	}

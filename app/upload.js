@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject, date) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -26,19 +26,12 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 
 		window.Parsley.addValidator('datasetName', {
 		  validateString: function(value, requirement) {
-				db.get("getDatasetByName", [value], function() {
+				db.getQuery("getDatasetByName", [value], function() {
 					return false;
 				})
-				// db.each("getDatasetByName", [value], function(row, error) {
-				// 	if (error) {
-				// 	} else {
-				// 		console.log(row);
-				// 	}
-				// });
 		  },
 		  messages: {
-		    en: 'This name is already used for another dataset.',
-		    fr: "Ce nombre n'est pas un multiple de %s."
+		    en: 'This name is already used for another dataset.'
 		  }
 		});
 
@@ -53,20 +46,18 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		})
 		.on('form:success', function() {
 			var name = $('#uploadForm').find('input[name="name"]').val();
-			var language = $('#uploadForm').find('select[name="language"]').val();
-			var subject = $('#uploadForm').find('select[name="subject"]').val();
-			var currentdate = new Date();
+			var language = $('#uploadForm').find('select[name="language"]').prop("value");
+            var subjectname = $('#uploadForm').find('select[name="language"]').val();
+			var subject = $('#uploadForm').find('select[name="subject"]').prop("value");
+			var currentdate = date.formatDate(new Date());
 
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, currentdate.getTime()]);
-			db.save();
+			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, currentdate, currentdate]);
+            db.save();
 			var dataset = false;
-			db.each("getDatasetByName", name, function(row, err) {
-				dataset = row;
-			});
-			console.log(dataset);
+            var row  = db.getQuery("getDatasetByName",[name]);
+            var datasetId = row[0].dataset_id;
+			process_data(JSON.parse(saveData), datasetId);
 
-			process_data(JSON.parse(saveData), name);
-			//window.location = 'index.html';
 		});
 	});
 
@@ -142,17 +133,16 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		return result;
 	}
 
-	function process_data(data,name) {
+	function process_data(data,datasetId) {
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
-
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
 			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
-			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
+			db.executeQuery('addDatasetItem' , [datasetId, question, answer, hint]);
 		})
-		db.save();
+        db.close();
 	}
 
 	function handleFile(e) {

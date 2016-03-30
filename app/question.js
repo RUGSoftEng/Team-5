@@ -1,7 +1,8 @@
 define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) {
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
-  var items = config.items();
+  var items;
+  var totalLength;
 
   // Calculate the percentage of 'part out of total'
   function percentage(part, total) {
@@ -47,8 +48,8 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + (config.constant("TOTAL_LENGTH") - items.length) + "/" + config.constant("TOTAL_LENGTH") + " words</p>" );
-    var percentageVal = percentage(config.constant("TOTAL_LENGTH") - items.length, config.constant("TOTAL_LENGTH"));
+    $( "#progress-number" ).html( "<p>" + (totalLength - items.length) + "/" + totalLength + " words</p>" );
+    var percentageVal = percentage(totalLength - items.length, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
 
@@ -65,16 +66,22 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
   }
 
   return {
+    initialise: function(datasetItems) {
+        items = datasetItems;
+        totalLength = items.length;
+    },
+      
     show: function() {
-      var question = items[currentItemIndex].question;
+      var question = items[currentItemIndex].item_question;
 
       if (inTutorial) {
-        question += "<br><b>Type the answer:</b> " + items[currentItemIndex].answer;
+        question += "<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer;
       }
 
       showProgress();
       $( "#question" ).html( question );
     },
+    
     checkAnswer: function() {
       /* Check answer checks the provided answer of the user. When the levenshtein
       * difference is equal to zero than the answer is correct. When the difference
@@ -82,7 +89,7 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
       * that it was almost correct.
       */
       var input = document.getElementById("answer").value;
-      var answer = items[currentItemIndex].answer;
+      var answer = items[currentItemIndex].item_answer;
 
       var difference = levenstein(input,answer);
       
@@ -101,6 +108,10 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
       if (items.length == 0) {
         alert("Done!");
       }
+    },
+    
+    hint: function() {
+        return items[currentItemIndex].item_hint;
     }
   }
 });

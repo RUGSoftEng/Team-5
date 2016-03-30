@@ -7,25 +7,30 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, bootstrap, config, db, messages, question, timer) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database'], function ($, bootstrap, config, db, messages, question, timer,db) {
   timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   var waitingForEnter = false;
 
   // Disable autocomplete that provides suggestions when typing words
   $('input').attr('autocomplete', 'off');
-
+//when the page is loaded we get the datasetId from the page url and load the dataset from the databese
   $(document).ready(function() {
+    var url =   window.location.href
+    var datasetId = url.substring(url.indexOf('?')+1);
+    var datasetItems = db.getQuery("getDatasetItems",[datasetId]);
+    db.close();
+    question.initialise(datasetItems);
   	question.show();
   });
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    messages.showHint('This is a very handy hint to answer this question that you see above.');
+    messages.showHint(question.hint());
   });
 
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
-  $(document).bind("keypress", function (e) {
+  $(document).bind("keypress", function (e) {     
   	if (e.keyCode == 13) {
       if (waitingForEnter) {
         nextQuestion();

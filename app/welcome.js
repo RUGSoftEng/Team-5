@@ -15,29 +15,31 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 	});
 
 	function createSidebarElements() {
-		var li1 = "<li class=\"sidebar_li\" id=\"";
-		var li2 = "\"><a  href=\"#\"  >";
-		var li3 = "<br><span class=\"sidebar_item\" >for English speakers</span></a></li>\n";
-		var rows = db.getQuery('getUserSubjects', []);
-		console.log(rows.length);
+		var li1 = "<li class=\"sidebar_li\" subject_id=\"";
+        var li2 = "\" language_id=\"";
+		var li3 = "\"><a  href=\"#\"  >";
+		var li4 = "<br><span class=\"sidebar_item\" >for ";
+        var li5 = " speakers</span></a></li>\n";
+		var rows = db.getQuery('getModules', []);
 		var sidebar = "";
 
 		for (var i = 0; i < rows.length; i++) {
-			sidebar += li1 + rows[i].subject_id + li2 + rows[i].subject_name + li3;
+			sidebar += li1 + rows[i].subject_id + li2 + rows[i].language_id + li3 + rows[i].subject_name + li4 + rows[i].language_name + li5;
 		}
 
 		var container = document.getElementById("sidebar_ul");
 		container.innerHTML = sidebar;
 	}
 
-	function createDatasetsGrid(index) {
+	function createDatasetsGrid(subjectid, languageid) {
 		var grid = "";
-		var rows = db.getQuery('getDatasets', [index]);
+        console.log(4);
+		var rows = db.getQuery('getDatasets', [languageid, subjectid]);
+        console.log(5);
 		var gridItem1 = "<div class=\"col-md-3 col-sm-6\">\n<div class=\"btn mybutton\" id=\"";
 		var gridItem2 = "\" >\n<h3>";
 		var gridItem3 = "</h3>\n <br><h4>Strength:</h4><center>\n<div class=\"progress\" style=\"width:80%\"><div class=\"progress-bar progress-bar-success progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"68\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 68%;\"></div></div></center></div></div>\n";
 		for (var i = 0; i < rows.length; i++) {
-			console.log(rows[i]);
 			grid += gridItem1+ rows[i].dataset_id + gridItem2 + rows[i].dataset_name + gridItem3;
 		}
 		var container = document.getElementById("container");
@@ -45,40 +47,18 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 	}
 
 	$(document).ready(function () {
-		console.log("ready!");
+        console.log(1);
 		createSidebarElements();
+        console.log(2);
+        createDatasetsGrid(1,1);
+        console.log(3);
 		$(".sidebar_li").click(function () {
-			var contentPanelId = $(this).attr("id");
-			createDatasetsGrid(contentPanelId);
-					$(".mybutton").click(function () {
-						var contentPanelId = $(this).attr("id");
-						alert(contentPanelId);
-					});
+			createDatasetsGrid($(this).attr("subject_id"), $(this).attr("language_id"));
+                $(".mybutton").click(function () {
+                    var datasetId = $(this).attr("id");
+                     window.location.href = "learn.html?"+datasetId ;
+                });
 		});
 		
 	});
-
-	function addRandom() {
-		var date = new Date();
-		var a = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
-		console.log(a);
-
-		/*db.executeQuery('addDataset', [1,'Travail',1,1,0,0, a,a]);
-		db.executeQuery('addDataset', [1,'Tourism',1,1,0,0, a, a]);
-		db.executeQuery('addDataset', [1,'Animaux',1,1,0,0, a, a ]);
-		db.executeQuery('addDataset', [1,'Ecole',1,1,0,0, a, a ]);
-		db.executeQuery('addDataset', [1,'Most used',1,1,0,0, a, a ]);
-		db.executeQuery('addSubject',[1,'French']);
-		db.executeQuery('addSubject',[2,'Dutch']);
-		db.executeQuery('addSubject',[3,'Spanish']);
-		db.executeQuery('addSubject',[4,'Italian']);*/
-
-		console.log(rows.length);
-		for (var i = 0; i < rows.length; i++) {
-			console.log(rows[i].dataset_name);
-		}
-		db.close();
-		console.log('success');
-	}
-
 });
