@@ -4,7 +4,10 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select', 'a
     $(".selectpicker").selectpicker();
     window.Parsley.on('field:error', function() {
         if (this.$element.is("select")) {
-            this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
+            this.$element.parent().children('.selectpicker') {
+              selectpicker('setStyle', 'alert-danger')
+              selectpicker('refresh');
+            }
         }
     });
     window.Parsley.on('field:success', function() {
@@ -17,7 +20,10 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select', 'a
         }
     });
     $('select').on('changed.bs.select', function (e) {
-      $(this).selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+      $(this).selectpicker('setStyle', 'alert-success', 'add') {
+        selectpicker('setStyle', 'alert-danger', 'remove')
+        selectpicker('refresh');
+      }  
       $(this).parent().children(".parsley-errors-list").html("");
     });
     $('select').on('rendered.bs.select', function (e) {
