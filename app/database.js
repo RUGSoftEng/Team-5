@@ -19,7 +19,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? ORDER BY dataset_name",
 		getDatasetItems : "SELECT * FROM tblitems where item_dataset=?" ,
-		getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
+		getDatasetByName : "SELECT * FROM tbldatasets WHERE LOWER(dataset_name)=LOWER(?)",
 		getUserSubjects : "SELECT * FROM tblsubjects ",
 		getUser : "SELECT * FROM tblsubjects where user_id= ? ",
 		getSubjects : "SELECT * FROM tblsubjects",
@@ -75,10 +75,17 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 			db.run(query, args);
 		},
 		getQuery: function(queryname,args){
-			var queryResult= [ ];
-			var query = queries[ queryname] ;
+			var queryResult = [];
+			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
 				queryResult.push(row);
+			});
+			return queryResult;
+		},
+		lastInsertRowId: function(table,row_id) {
+			var query = "SELECT "+row_id+" FROM "+table+ " ORDER BY "+row_id+ " DESC LIMIT 1";
+			db.each(query,"", function(row, err) {
+				queryResult = row[row_id];
 			});
 			return queryResult;
 		},
@@ -89,7 +96,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 			});
 		},
 		selectUser :  function (queryname, args) {
-			var query = queries[ queryname] ;
+			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
 				console.log(row.user_email );
 			});

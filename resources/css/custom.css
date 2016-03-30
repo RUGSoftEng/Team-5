@@ -7,7 +7,7 @@
 .clear { clear: both; }
 
 .createdataset{
-	 margin-top: 15px; 	
+	 margin-top: 15px;
 }
 
 nav { }
@@ -36,6 +36,8 @@ nav { }
    /* form input[type="submit"], form button {}
     form label { margin: 15px 0 0; }*/
     form #xlf { border: 2px dashed #bbb; width: 100%; padding: 25px; }
+		form label { margin-top: 15px; }
+		form input[type="submit"] { margin-top: 15px; }
     .bootstrap-select { width: 100% !important; }
     .dropdown-header { color: #555 !important;  }
     .bootstrap-select .dropdown-menu li.disabled:hover { background: #8a94a6; }
@@ -54,7 +56,7 @@ nav { }
       text-align:center;
       font:20pt bold;color:#fff
     }
-	
+
 
   /* RESPONSIVE RESET/CHANGE */
 

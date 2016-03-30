@@ -1,42 +1,33 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/selectLanguage', 'app/selectSubject'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
 
+	// Check in the database if the name of the dataset already exists
+	window.Parsley.addValidator('datasetName', {
+		validateString: function(value, requirement) {
+			var result = db.getQuery("getDatasetByName", [value]);
+			return (result.length==0) ? true : false;
+		},
+		messages: {
+			en: 'This name is already used for another dataset.'
+		}
+	});
+	// Check if the file uploaded file is correct (see xw_xfer)
+	window.Parsley.addValidator('fileXlsx', {
+		validateString: function(_value, maxSize, parsleyInstance) {
+			return correctUpload;
+		},
+		requirementType: 'integer',
+		messages: {
+			en: 'This file is not supported.'
+		}
+	});
+
 	// Script for evaluating the input of the upload form
 	$(function () {
-		$(".selectpicker").selectpicker();
-		window.Parsley.on('field:error', function() {
-				if (this.$element.is("select")) {
-						this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
-				}
-		});
-		window.Parsley.on('field:success', function() {
-				if (this.$element.is("select")) {
-						this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
-				}
-		});
-		$('select').on('changed.bs.select', function (e) {
-			$(this).selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
-			$(this).parent().children(".parsley-errors-list").html("");
-		});
-		$('select').on('rendered.bs.select', function (e) {
-			$(this).parent().removeClass("parsley-error");
-		});
-
-		window.Parsley.addValidator('datasetName', {
-		  validateString: function(value, requirement) {
-				var result = db.getQuery("getDatasetByName", [value]);
-				console.log(result);
-		  },
-		  messages: {
-		    en: 'This name is already used for another dataset.',
-		    fr: "Ce nombre n'est pas un multiple de %s."
-		  }
-		});
-
-		// Initiate form error and success handling
 		$('#uploadForm').parsley().on('field:validated', function() {
+			// Initiate form error and success handling
 			var ok = $('.parsley-error').length === 0;
 			$('.bs-callout-info').toggleClass('hidden', !ok);
 			$('.bs-callout-warning').toggleClass('hidden', ok);
@@ -45,35 +36,38 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 			return false; // Don't submit form
 		})
 		.on('form:success', function() {
+			// Save data into the database
 			var name = $('#uploadForm').find('input[name="name"]').val();
 			var language = $('#uploadForm').find('select[name="language"]').val();
 			var subject = $('#uploadForm').find('select[name="subject"]').val();
 			var currentdate = new Date();
 
 			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, currentdate.getTime()]);
-			db.save();
-			var dataset = false;
-			db.each("getDatasetByName", name, function(row, err) {
-				dataset = row;
-			});
-			console.log(dataset);
+			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 
-			process_data(JSON.parse(saveData), name);
-			//window.location = 'index.html';
+			// Save all items in the dataset
+			process_data(JSON.parse(saveData), id);
+			db.close();
+			window.location = 'index.html';
 		});
 	});
 
-	window.Parsley.addValidator('fileXlsx', {
-		validateString: function(_value, maxSize, parsleyInstance) {
-			return correctUpload;
-		},
-		requirementType: 'integer',
-		messages: {
-			en: 'This file is not supported.',
-			fr: "Ce fichier est plus grand que %s Kb."
-		}
-	});
+	// Function for saving all items in the dataset
+	function process_data(data,name) {
+		var output = to_json(data);
+		var sheetName = Object.keys(output)[0];
 
+		$.each(output[sheetName], function (i, item) {
+			var question = output[sheetName][i].question;
+			var answer = output[sheetName][i].answer;
+			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
+			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
+		});
+	}
+
+	/* Scripts for reading and processing the XLS files.
+	 * See https://github.com/SheetJS/js-xlsx for reference
+	 */
 	var XW = {
 		/* worker message */
 		msg : 'xlsx',
@@ -135,19 +129,6 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		return result;
 	}
 
-	function process_data(data,name) {
-		var output = to_json(data);
-		var sheetName = Object.keys(output)[0];
-
-		$.each(output[sheetName], function (i, item) {
-			var question = output[sheetName][i].question;
-			var answer = output[sheetName][i].answer;
-			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
-			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
-		})
-		db.save();
-	}
-
 	function handleFile(e) {
 		var files = e.target.files;
 		readFile(files, e);
@@ -171,11 +152,5 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 	var xlf = document.getElementById('xlf');
 	if (xlf.addEventListener) {
 		xlf.addEventListener('change', handleFile, false);
-	}
-
-	return {
-		saveToDatabase: function() {
-			console.log(saveData);
-		}
 	}
 });
