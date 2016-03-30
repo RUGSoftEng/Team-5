@@ -24,7 +24,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		getUserSubjects : "SELECT * FROM tblsubjects where user_id=? ",
 		getUser : "SELECT * FROM tblsubjects where user_id= ? "
 	};
-	
+
 	// Check if SQL.js has been loaded through AMD
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
@@ -34,15 +34,15 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 	}
 
 	// Initiate DB and check if there is an existing user DB
-	var read_database;
-	if (database_exists(config.constant("DATABASE_USER"))) {
-		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
+	var readDatabase;
+	if (databaseExists(config.constant("DATABASE_USER"))) {
+		readDatabase = fs.readFileSync(config.constant("DATABASE_USER"));
 	} else {
-		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
+		readDatabase = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
 	}
-	var db = new sql.Database(read_database);
+	var db = new sql.Database(readDatabase);
 
-	function database_exists(path) {
+	function databaseExists(path) {
 		try {
 			fs.accessSync(path, fs.F_OK);
 			return true;
