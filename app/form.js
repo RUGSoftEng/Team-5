@@ -22,7 +22,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'bootstrap-select'], f
 	});
 
 	$(".remove").click(function() {
-		if (numberOfFormItems != 1) {
+		if (numberOfFormItems < 1) {
 	  		$(this).parents("tr").remove();
 	  	  	numberOfFormItems--;
         	console.log($(this).parents("table").children().length);
