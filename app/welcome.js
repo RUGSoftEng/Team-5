@@ -46,6 +46,7 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 	$(document).ready(function () {
 		console.log("ready!");
 		createSidebarElements();
+		createDatasetsGrid(0);
 		$(".sidebar_li").click(function () {
 			var contentPanelId = $(this).attr("id");
 			createDatasetsGrid(contentPanelId);
@@ -54,7 +55,7 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 						alert(contentPanelId);
 					});
 		});
-		
+
 
 
 	});

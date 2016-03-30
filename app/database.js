@@ -17,7 +17,7 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date ) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
-		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? ORDER BY dataset_name",
+		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_subject=? ORDER BY dataset_name",
 		getDatasetItems : "SELECT * FROM tblitems where item_dataset=?" ,
 		getDatasetByName : "SELECT * FROM tbldatasets WHERE LOWER(dataset_name)=LOWER(?)",
 		getUserSubjects : "SELECT * FROM tblsubjects ",

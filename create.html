@@ -17,10 +17,13 @@
 		<div id="content">
       <div class="container">
 				<div class="row">
+          <div class="alert alert-danger bs-callout-warning hidden" role="alert">
+            You have not entered all fields!
+          </div>
           <form id="createForm" data-parsley-validate="">
             <div class="col-md-4">
               <label for="name">Name:</label>
-              <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" />
+              <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
               <label for="language">Language:</label>
               <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
                 <!-- Items are loaded in selectLanguage.js  -->
@@ -45,8 +48,8 @@
                     <th>Remove</th>
                   </tr>
                   <tr id="item-layout">
-                    <td><input type="text" class="form-control" name="question{i}" required="" placeholder="Question" /></td>
-                    <td><input type="text" class="form-control" name="answer{i}" required="" placeholder="Answer" /></td>
+                    <td><input type="text" class="form-control" name="question{i}" {required} data-parsley-errors-messages-disabled placeholder="Question" /></td>
+                    <td><input type="text" class="form-control" name="answer{i}" {required} data-parsley-errors-messages-disabled placeholder="Answer" /></td>
                     <td><input type="text" class="form-control" name="hint{i}" placeholder="Hint" /></td>
                     <td><span class="glyphicon glyphicon-remove remove"></span></td>
                   </tr>
