@@ -9,7 +9,11 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select', 'a
     });
     window.Parsley.on('field:success', function() {
         if (this.$element.is("select")) {
-            this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+            this.$element.parent().children('.selectpicker') {
+              selectpicker('setStyle', 'alert-success', 'add')
+              selectpicker('setStyle', 'alert-danger', 'remove')
+              selectpicker('refresh');
+              }
         }
     });
     $('select').on('changed.bs.select', function (e) {
