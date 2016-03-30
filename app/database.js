@@ -10,7 +10,7 @@
  */
 
 define(['sqlite', 'app/config'], function (sqlite, config) {
-	// Check if SQL.js has been loaded through AMD
+
 	var sql;
 
 	var queries = {
@@ -24,7 +24,8 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		getUserSubjects : "SELECT * FROM tblsubjects where user_id=? ",
 		getUser : "SELECT * FROM tblsubjects where user_id= ? "
 	};
-
+	
+	// Check if SQL.js has been loaded through AMD
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
 		alert("Failed to require sql.js through AMD");

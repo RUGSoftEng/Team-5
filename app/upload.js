@@ -46,8 +46,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		},
 		requirementType: 'integer',
 		messages: {
-			en: 'This file is not supported.',
-			fr: "Ce fichier est plus grand que %s Kb."
+			en: 'This file is not supported.'
 		}
 	});
 
@@ -120,8 +119,6 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
 			db.executeQuery('addDatasetItem' , ['datasets1', question, answer, 'hint']);
-			//db.selectQuery('addDatasetItem' ,['datasets1']);
-			//console.log("Question: " + question + ", answer: " + answer);
 		})
 		db.close();
 	}

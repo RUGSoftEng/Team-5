@@ -27,7 +27,6 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select', 'a
       $('.bs-callout-warning').toggleClass('hidden', ok);
       if (ok) {
         upload.saveToDatabase();
-        // window.location = 'index.html';
       }
     })
     .on('form:submit', function() {
@@ -43,8 +42,7 @@ define(['jquery','app/messages', 'app/config', 'parsley', 'bootstrap-select', 'a
     },
     requirementType: 'integer',
     messages: {
-      en: 'This file is not supported.',
-      fr: "Ce fichier est plus grand que %s Kb."
+      en: 'This file is not supported.'
     }
   });
 
