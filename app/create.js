@@ -6,13 +6,12 @@
  * Description:
  */
 
-define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject'], function (db, $, bootstrap, parsley, language, subject) {
+define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, parsley, language, subject, date) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
 	// Function for removing elements from the form
 	function remove_element(element) {
-		console.log("remove");
 		if (numberOfFormItems > 1) {
 			element.parents("tr").remove();
 			numberOfFormItems--;
@@ -73,7 +72,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 
 			var subject = $('#createForm').find('select[name="subject"]').val();
 			var currentdate = new Date();
 
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, currentdate.getTime()]);
+			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.formatDate(currentdate), date.formatDate(currentdate)]);
 			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			// Save all items in the dataset
 			for (i = 0; i<=formItemId; i++) {
@@ -81,11 +80,11 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 
 				var answer = $("#items input[name='answer"+i+"']").val();
 				var hint = $("#items input[name='hint"+i+"']").val();
 				hint = (hint==="undefined") ? "" : hint;
+
 				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-				console.log(id);
 			}
 			db.close();
-			//window.location = 'index.html';
+			window.location = 'index.html';
 		});
 	});
 });

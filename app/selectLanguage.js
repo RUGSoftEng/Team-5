@@ -3,7 +3,7 @@ define(['app/database', 'jquery', 'parsley', 'bootstrap-select'], function (db, 
   var item = ".selectLanguage"
   db.each("getLanguages", "", function (row,err) {
     $(item).append($("<option></option>")
-      .attr("value",row.language_short)
+      .attr("value",row.language_id)
       .text(row.language_name));
   });
 
