@@ -24,7 +24,8 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    messages.showHint(question.hint());
+    if (question.hint()!=="")
+      messages.showHint(question.hint());
   });
 
   // Read the user input when the Enter key is pressed and evaluate it.

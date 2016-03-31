@@ -20,7 +20,7 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 		var li3 = "\"><a  href=\"#\"  >";
 		var li4 = "<br><span class=\"sidebar_item\" >for ";
     var li5 = " speakers</span></a></li>\n";
-		var rows = db.getQuery('getModules', []);
+		var rows = db.getUnique('getModules', 'subject_name', []);
 		var sidebar = "";
 
 		for (var i = 0; i < rows.length; i++) {
@@ -34,7 +34,6 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 	function createDatasetsGrid(subjectid, languageid) {
 		var grid = "";
 		var rows = db.getQuery('getDatasets', [languageid, subjectid]);
-    console.log(5);
 		var gridItem1 = "<div class=\"col-md-3 col-sm-6\">\n<div class=\"btn mybutton\" id=\"";
 		var gridItem2 = "\" >\n<h3>";
 		var gridItem3 = "</h3>\n <br><h4>Strength:</h4><center>\n<div class=\"progress\" style=\"width:80%\"><div class=\"progress-bar progress-bar-success progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"68\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 68%;\"></div></div></center></div></div>\n";

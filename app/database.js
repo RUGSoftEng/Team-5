@@ -9,7 +9,7 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config'], function (sqlite, config) {
+define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	var queries = {
 		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -79,6 +79,20 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
 				queryResult.push(row);
+			});
+			return queryResult;
+		},
+		getUnique: function(queryname,unique_name, args) {
+			var queryResult = [];
+			var query = queries[queryname] ;
+			db.each(query,args, function(row, err) {
+				unique = 1;
+				for (i = 0; i<queryResult.length;i++) {
+					if (queryResult[i][unique_name]==row[unique_name])
+						unique = 0;
+				}
+				if (unique==1)
+					queryResult.push(row);
 			});
 			return queryResult;
 		},
