@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, XLSX, parsley, selectLanguage, selectSubject, date) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject,date) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
