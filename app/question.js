@@ -1,4 +1,4 @@
-define(['app/config', 'app/messages'], function (config, messages) {
+define(['app/messages', 'app/config'], function (messages,config) {
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
   var items = config.items();

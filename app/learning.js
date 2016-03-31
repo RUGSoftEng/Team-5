@@ -1,5 +1,5 @@
 /* file: learning.js
- * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
+ * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
  * date: 5/3/2016
  * version 1.1
  *
@@ -7,7 +7,7 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, config, db, messages, question, timer) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer'], function ($, bootstrap, config, db, messages, question, timer) {
   timer.startTimer(config.constant("TIME_LIMIT"));
 
   // Disable autocomplete that provides suggestions when typing words

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 		<script type="text/javascript">var fs = require("fs");</script>
-		<script data-main="app/uploadpage" src="lib/require.js"></script>
+		<script data-main="app/formpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
     <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
@@ -57,28 +57,18 @@
 		<div id="content">
       <div class="container">
 				<div class="row">
-          <div class="alert alert-danger bs-callout-warning hidden" role="alert">
-            You have not entered all fields!
-          </div>
-          <form id="uploadForm" data-parsley-validate="">
-            <div class="col-md-6">
-  						<h1>Upload a new dataset</h1>
-  						<p>Drop a XLSX / XLSM / XLSB / ODS / XLS / XML file below:</p>
-  						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
-  					</div>
-  					<div class="col-md-6">
-  						<h1>Enter the dataset information</h1>
-						  <label for="name">Name:</label>
-						  <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" />
-
-						  <label for="language">Language:</label>
+          <form id="newForm" data-parsley-validate="">
+            <div class="col-md-4">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" />
+              <label for="language">Language:</label>
               <select class="selectpicker hello" name="language" required="" data-live-search="true">
                 <option value="en" selected>English</option>
                 <option value="nl">Dutch</option>
               </select>
               <div class="clear"></div>
 
-						  <label for="subject">Subject:</label>
+              <label for="subject">Subject:</label>
               <select class="selectpicker" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
                 <optgroup label="Languages">
                   <option>Dutch</option>
@@ -101,8 +91,37 @@
                   <option>Biology</option>
                 </optgroup>
               </select>
-              <input type="submit" name="upload" class="btn btn-lg btn-success right" value="Save dataset" />
-  						<div class="clear"></div>
+
+              <input type="submit" name="create" class="btn btn-lg btn-success submit" value="Create dataset" />
+              <div class="clear"></div>
+            </div>
+            <div class="col-md-8">
+              <div id="items">
+                <table class="table">
+                  <tr>
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Hint (optional)</th>
+                    <th>Remove</th>
+                  </tr>
+                  <tr id="item-layout">
+                    <td><strong></strong></td>
+                    <td><input type="text" class="form-control" name="question" required="" placeholder="Question" /></td>
+                    <td><input type="text" class="form-control" name="answer" required="" placeholder="Answer" /></td>
+                    <td><input type="text" class="form-control" name="hint" placeholder="Hint" /></td>
+                    <td><span class="glyphicon glyphicon-remove remove"></span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>1</strong></td>
+                    <td><input type="text" class="form-control" name="question1" required="" placeholder="Question" /></td>
+                    <td><input type="text" class="form-control" name="answer1" required="" placeholder="Answer" /></td>
+                    <td><input type="text" class="form-control active" name="hint1" placeholder="Hint" /></td>
+                    <td><span class="glyphicon glyphicon-remove remove"></span></td>
+                  </tr>
+                </table>
+              </div>
+              <button class="btn btn-lg add btn-warning">Add item</button>
             </div>
           </form>
 				</div>

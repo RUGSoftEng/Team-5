@@ -9,7 +9,10 @@
 nav { }
   nav .btn-group { padding: 8px 15px; }
   nav .navbar-header { width: 100%; }
-  nav p.timer { float: left; margin: 0; margin-left: 40%; font-size: 22px; line-height: 50px; }
+  nav .timer { margin: 0; font-size: 22px; display:flex; line-height: 50px;}
+    nav .timer .glyphicon { line-height: 50px;}
+  nav .center-menu { display:flex; justify-content: center; }
+  nav .right-menu { display:flex;position:absolute;right:0px;top:0px; }
 
 #content { margin-top: 100px; }
   #content h1 { margin-bottom: 30px; }
@@ -22,8 +25,19 @@ nav { }
   #hint { display: none; }
     #show .message, #hint .message { float: left; width: 80%; font-size: 18px; }
   .stats { margin: 0 0 50px 0; }
-  .input-group { margin-bottom: 30px; }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
+
+  form { }
+    form input[type="submit"], form button { margin-top: 15px; }
+    form label { margin: 15px 0 0; }
+    form #xlf { border: 2px dashed #bbb; width: 100%; padding: 25px; }
+    .bootstrap-select { width: 100% !important; }
+    .dropdown-header { color: #555 !important;  }
+    .bootstrap-select .dropdown-menu li.disabled:hover { background: #8a94a6; }
+    #item-layout { display: none; }
+    #items { }
+      #items .table td { line-height: 30px; }
+      #items .remove { color: red; font-size:30px; cursor: pointer; }
 
     #drop{
       border:2px dashed #bbb;
