@@ -43,19 +43,19 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 
 	  }
 	});
 
-	// Check in the database if the name of the dataset already exists
-	window.Parsley.addValidator('datasetName', {
-		validateString: function(value, requirement) {
-			var result = db.getQuery("getDatasetByName", [value]);
-			return (result.length==0) ? true : false;
-		},
-		messages: {
-			en: 'This name is already used for another dataset.'
-		}
-	});
-
 	// Script for evaluating the input of the upload form
 	$(function () {
+		// Check in the database if the name of the dataset already exists
+		window.Parsley.addValidator('datasetName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getDatasetByName", [value]);
+				return (result.length==0) ? true : false;
+			},
+			messages: {
+				en: 'This name is already used for another dataset.'
+			}
+		});
+		
 		$('#createForm').parsley().on('field:validated', function() {
 			// Initiate form error and success handling
 			var ok = $('.parsley-error').length === 0;
