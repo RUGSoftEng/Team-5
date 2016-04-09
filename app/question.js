@@ -1,6 +1,6 @@
 define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
   var currentItemIndex = 0;
-  var inTutorial = config.constant("TUTORIAL_MODE");
+  var inTutorial = true;
   var items;
   var totalLength;
 
@@ -12,7 +12,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
-    if (inTutorial && config.constant("TUTORIAL_MODE")) {
+    if (inTutorial) {
       if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
         currentItemIndex = 0;
       } else {
