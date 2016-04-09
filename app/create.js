@@ -38,9 +38,12 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
     return string.replace(/{required}/g, 'required=""');
   }
   
-  // Auxiliary form function
+  // Auxiliary form functions
   function getFormVal(formType, formName) {
     return $('#createForm').find(formType + '[name="' + formName + '"]').val();
+  }
+  function getItemVal(formName, formIndex) {
+    return $("#items input[name='" + formName + formIndex + "']").val();
   }
   
 	// Add the first element
@@ -90,9 +93,9 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			// Save all items in the dataset
 			for (i = 0; i<=formItemId; i++) {
-				var question = $("#items input[name='question"+i+"']").val();
-				var answer = $("#items input[name='answer"+i+"']").val();
-				var hint = $("#items input[name='hint"+i+"']").val();
+				var question = getItemVal("question", i);
+				var answer = getItemVal("answer", i);
+				var hint = getItemVal("hint", i);
 				hint = (hint==="undefined") ? "" : hint;
 
 				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
