@@ -52,6 +52,10 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
     var percentageVal = percentage(totalLength - items.length, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
+  
+  function isWithinMarginOfError(answer, difference) {
+    return difference <= (answer.length * config.constant("MARGIN_OF_ERROR"));
+  }
 
   // Handle how to move to the next question
   // depending on the tutorial status.
@@ -96,7 +100,7 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
       if (difference == 0) {
         messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
         nextQuestion();
-      } else if (difference <= (answer.length * config.constant("MARGIN_OF_ERROR"))) {
+      } else if (isWithinMarginOfError(answer, difference)) {
         messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       } else {
