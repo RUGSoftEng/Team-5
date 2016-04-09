@@ -57,6 +57,16 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	function onError(db, error) {
 		console.log("this error " + error.message);
 	}
+  
+  // Auxiluary uniqueness function
+  function isUnique(unique_name, queryResult, row) {
+    for (i = 0; i<queryResult.length;i++) {
+      if (queryResult[i][unique_name]==row[unique_name]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
 	var database = {
 		save : function () {
@@ -86,12 +96,7 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 			var queryResult = [];
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
-				unique = true;
-				for (i = 0; i<queryResult.length;i++) {
-					if (queryResult[i][unique_name]==row[unique_name])
-						unique = false;
-				}
-				if (unique)
+				if (isUnique(unique_name, queryResult, row))
 					queryResult.push(row);
 			});
 			return queryResult;
