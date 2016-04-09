@@ -86,12 +86,12 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 			var queryResult = [];
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
-				unique = 1;
+				unique = true;
 				for (i = 0; i<queryResult.length;i++) {
 					if (queryResult[i][unique_name]==row[unique_name])
-						unique = 0;
+						unique = false;
 				}
-				if (unique==1)
+				if (unique)
 					queryResult.push(row);
 			});
 			return queryResult;
