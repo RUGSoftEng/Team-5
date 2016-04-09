@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, parsley, language, subject, date) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (config, db, $, bootstrap, parsley, language, subject, date) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -47,7 +47,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 
 	});
 
 	$('#items input[type="text"]:last').on('keydown', function(e) {
-	  if (e.which == 9) { // If a tab is pressed
+	  if (e.keyCode == config.key("TAB")) {
 	      add_element();
 	  }
 	});

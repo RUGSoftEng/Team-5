@@ -15,10 +15,19 @@ define(function (require) {
     DATABASE_USER: "./database/user.sqlite",
     DATABASE_SLIMSTAMPEN: "./database/slimstampen.sqlite"
   };
+  
+  var keys = {
+    TAB: 9,
+    ENTER: 13
+  };
 
   return {
     constant: function(name) {
       return constants[name];
+    },
+    
+    key: function(name) {
+      return keys[name];
     }
   }
 });

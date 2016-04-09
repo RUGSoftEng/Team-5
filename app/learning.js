@@ -31,7 +31,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {
-  	if (e.keyCode == 13) {
+  	if (e.keyCode == config.key("ENTER")) {
       if (waitingForEnter) {
         nextQuestion();
       } else {
