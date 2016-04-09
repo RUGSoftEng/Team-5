@@ -1,4 +1,4 @@
-define(['jquery', 'app/timer'], function ($, timer) {
+define(['jquery', 'app/timer', 'app/string'], function ($, timer, string) {
   /* Function show for displaying normal, danger and warning messages.
   * The message is included as html and a class with the corresponding type is
   * added. Within the switch statement the icon is added.
@@ -10,7 +10,7 @@ define(['jquery', 'app/timer'], function ($, timer) {
     show: function(message, type, countdown) {
       countdown /= THOUSAND;
       if (countdown > 0) {
-        $("#show .message").html(message + "<br> <span class=\"countdownnotice\">Press enter to continue or wait <span class=\"countdown\" data-seconds=\"" + countdown + "\"></span> seconds.</span>");
+        $("#show .message").html(message + "<br> <span class=\"countdownnotice\">Press enter to continue or wait <span class=\"countdown\" data-seconds=\"" + countdown + "\"></span> second" + string.pluralIfAppropriate(countdown) + ".</span>");
         timer.startCountdown(".countdown", countdown);
       } else {
         $("#show .message").html(message);

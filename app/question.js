@@ -1,4 +1,4 @@
-define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) {
+define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
   var currentItemIndex = 0;
   var inTutorial = config.constant("TUTORIAL_MODE");
   var items;
@@ -101,7 +101,7 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
         messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
         nextQuestion();
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning", config.constant("FEEDBACK_DELAY") );
+        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       } else {
         messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );
