@@ -17,18 +17,27 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 
 			numberOfFormItems--;
 		}
 	}
+  
+  // Auxiliary replace functions
+  function giveId(string, formItemId) {
+    return string.replace(/{i}/g, formItemId);
+  }
+  function giveRequired(string) {
+    return string.replace(/{required}/g, 'required=""');
+  }
 
 	// Function for adding elements to the form
 	function add_element() {
 		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-		var add_id = newElement.html().replace(/{i}/g, formItemId).replace(/{required}/g, 'required=""');
-		newElement.html(add_id);
+		newElement.html(giveId(newElement.html(), formItemId));
+    newElement.html(giveRequired(newElement.html()));
 		newElement.on("click", ".remove", function() {
 			remove_element($(this));
 		});
 		numberOfFormItems++;
 		formItemId++;
 	}
+  
 	// Add the first element
 	add_element();
 
