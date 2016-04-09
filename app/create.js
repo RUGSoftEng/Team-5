@@ -18,14 +18,6 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 		}
 	}
   
-  // Auxiliary replace functions
-  function giveId(string, formItemId) {
-    return string.replace(/{i}/g, formItemId);
-  }
-  function giveRequired(string) {
-    return string.replace(/{required}/g, 'required=""');
-  }
-
 	// Function for adding elements to the form
 	function add_element() {
 		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
@@ -37,6 +29,19 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 		numberOfFormItems++;
 		formItemId++;
 	}
+  
+  // Auxiliary replace functions
+  function giveId(string, formItemId) {
+    return string.replace(/{i}/g, formItemId);
+  }
+  function giveRequired(string) {
+    return string.replace(/{required}/g, 'required=""');
+  }
+  
+  // Auxiliary form function
+  function getFormVal(formType, formName) {
+    return $('#createForm').find(formType + '[name="' + formName + '"]').val();
+  }
   
 	// Add the first element
 	add_element();
@@ -76,9 +81,9 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 		})
 		.on('form:success', function() {
 			// Save data into the database
-			var name = $('#createForm').find('input[name="name"]').val();
-			var language = $('#createForm').find('select[name="language"]').val();
-			var subject = $('#createForm').find('select[name="subject"]').val();
+			var name = getFormVal("input", "name");
+			var language = getFormVal("select", "language");
+			var subject = getFormVal("select", "subject");
 			var currentdate = new Date();
 
 			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.formatDate(currentdate), date.formatDate(currentdate)]);
