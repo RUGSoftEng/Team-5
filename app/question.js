@@ -68,6 +68,10 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       inTutorial = checkTutorialStatus();
     }
   }
+  
+  function showTutorialInstruction() {
+    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
+  }
 
   return {
     initialise: function(datasetItems) {
@@ -76,14 +80,12 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
     },
       
     show: function() {
-      var question = items[currentItemIndex].item_question;
-
-      if (inTutorial) {
-        question += "<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer;
-      }
-
       showProgress();
-      $( "#question" ).html( question );
+      $("#question").html(items[currentItemIndex].item_question);
+      
+      if (inTutorial) {
+        showTutorialInstruction();
+      }
     },
     
     checkAnswer: function() {
