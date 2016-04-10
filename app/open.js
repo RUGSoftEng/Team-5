@@ -31,14 +31,14 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
       forms.saveIntoDatabase('#uploadForm');
 			// Save all items in the dataset
       var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-			process_data(JSON.parse(saveData), id);
+			saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
 			db.close();
 			window.location = 'index.html';
 		});
 	});
 
 	// Function for saving all items in the dataset
-	function process_data(data,name) {
+	function saveDatasetItemsIntoDatabase(data,name) {
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
 
@@ -129,7 +129,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 				console.log("onload", new Date(), true, true);
 			}
 			var data = e.target.result;
-			xw_xfer(data, process_data);
+			xw_xfer(data, saveDatasetItemsIntoDatabase);
 		};
 		reader.readAsBinaryString(f);
 	}
