@@ -1,7 +1,8 @@
-define(['app/messages', 'app/config'], function (messages,config) {
+define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
   var currentItemIndex = 0;
-  var inTutorial = config.constant("TUTORIAL_MODE");
-  var items = config.items();
+  var inTutorial = true;
+  var items;
+  var totalLength;
 
   // Calculate the percentage of 'part out of total'
   function percentage(part, total) {
@@ -11,7 +12,7 @@ define(['app/messages', 'app/config'], function (messages,config) {
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
-    if (inTutorial && config.constant("TUTORIAL_MODE")) {
+    if (inTutorial) {
       if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
         currentItemIndex = 0;
       } else {
@@ -47,11 +48,13 @@ define(['app/messages', 'app/config'], function (messages,config) {
   }
 
   function showProgress() {
-    requirejs(['jquery'], function( $ ) {
-      $( "#progress-number" ).html( "<p>" + (config.constant("TOTAL_LENGTH") - items.length) + "/" + config.constant("TOTAL_LENGTH") + " words</p>" );
-      var percentageVal = percentage(config.constant("TOTAL_LENGTH") - items.length, config.constant("TOTAL_LENGTH"));
-      $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
-    });
+    $( "#progress-number" ).html( "<p>" + (totalLength - items.length) + "/" + totalLength + " words</p>" );
+    var percentageVal = percentage(totalLength - items.length, totalLength);
+    $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
+  }
+  
+  function isWithinMarginOfError(answer, difference) {
+    return difference <= (answer.length * config.constant("MARGIN_OF_ERROR"));
   }
 
   // Handle how to move to the next question
@@ -65,20 +68,26 @@ define(['app/messages', 'app/config'], function (messages,config) {
       inTutorial = checkTutorialStatus();
     }
   }
+  
+  function showTutorialInstruction() {
+    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
+  }
 
   return {
-    show: function() {
-      var question = items[currentItemIndex].question;
-
-      if (inTutorial) {
-        question += "<br><b>Type the answer:</b> " + items[currentItemIndex].answer;
-      }
-
-      showProgress();
-      requirejs(['jquery'], function( $ ) {
-        $( "#question" ).html( question );
-      });
+    initialise: function(datasetItems) {
+        items = datasetItems;
+        totalLength = items.length;
     },
+      
+    show: function() {
+      showProgress();
+      $("#question").html(items[currentItemIndex].item_question);
+      
+      if (inTutorial) {
+        showTutorialInstruction();
+      }
+    },
+    
     checkAnswer: function() {
       /* Check answer checks the provided answer of the user. When the levenshtein
       * difference is equal to zero than the answer is correct. When the difference
@@ -86,28 +95,29 @@ define(['app/messages', 'app/config'], function (messages,config) {
       * that it was almost correct.
       */
       var input = document.getElementById("answer").value;
-      var answer = items[currentItemIndex].answer;
+      var answer = items[currentItemIndex].item_answer;
 
       var difference = levenstein(input,answer);
-
+      
       if (difference == 0) {
-        messages.show( "Well done!", "success" );
+        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
         nextQuestion();
-      } else if (difference <= (answer.length * config.constant("MARGIN_OF_ERROR"))) {
-        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning");
+      } else if (isWithinMarginOfError(answer, difference)) {
+        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       } else {
-        messages.show( "Wrong answer! Expected answer: " + answer , "danger");
+        messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       }
-      requirejs(['jquery'], function( $ ) {
-        $( "#answer" ).val( "" );
-      });
       showProgress();
 
       if (items.length == 0) {
         alert("Done!");
       }
+    },
+    
+    hint: function() {
+        return items[currentItemIndex].item_hint;
     }
   }
 });

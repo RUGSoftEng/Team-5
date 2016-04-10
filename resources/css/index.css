@@ -52,20 +52,34 @@
     padding-left: 250px;
 }
 
+#sidebar-wrapper,
+#sidebar-logos {
+  z-index: 1000;
+  left: 250px;
+  width: 0;
+  position: fixed;
+  margin-left: -250px;
+  overflow-x: hidden;
+  background: #000;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
 #sidebar-wrapper {
-     margin-top: -10px;
-    z-index: 1000;
-    position: fixed;
-    left: 250px;
-    width: 0;
-    height: 100%;
-    margin-left: -250px;
-    overflow-y: auto;
-    background: #000;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+  margin-top: -10px;
+  height: calc(100% - 265px);
+  overflow-y: auto;
+}
+
+#sidebar-logos {
+  bottom: 0;
+  height: 215px;
+}
+#sidebar-logos img {
+  border-radius: 5px;
+  margin: 5px 5px 0 5px;
 }
 
 #wrapper.toggled #sidebar-wrapper {
@@ -86,37 +100,37 @@
 /* Sidebar Styles */
 
 .sidebar-nav {
-    position: absolute;
-    top: 0;
-    width: 250px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  position: absolute;
+  top: 0;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .sidebar-nav li {
-    padding: 5px;
-	width:200px;
-	text-align: center;
-	border-bottom: 1px #333333 solid;
+  padding: 5px;
+  width:200px;
+  text-align: center;
+  border-bottom: 1px #333333 solid;
 }
 
 .sidebar-nav li a {
-    display: block;
-    text-decoration: none;
-    color: #999999;
+  display: block;
+  text-decoration: none;
+  color: #999999;
 }
 
 .sidebar_item {
-    font-size: 0.8em;
-	 padding-left: 10px;
+  font-size: 0.8em;
+  padding-left: 10px;
 }
 
 
 .sidebar-nav li a:hover {
-    text-decoration: none;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255,255,255,0.2);
 }
 
 .sidebar-nav li a:active,
@@ -148,7 +162,9 @@
         padding-left: 0;
     }
 
-    #sidebar-wrapper {
+    #sidebar-wrapper,
+    #sidebar-logos
+        {
         width: 200px;
     }
 

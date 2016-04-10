@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>SlimStampen Learning App</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript">var fs = require("fs");</script>
+		<script data-main="app/openpage" src="lib/require.js"></script>
+    <link rel="stylesheet" href="./resources/css/bootstrap.css">
+    <link rel="stylesheet" href="./resources/css/custom.css">
+    <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
+    <!-- Javascript libraries are added before the </body> tag  -->
+  </head>
+	<body>
+    <div include-HTML="resources/html/header.html"><!-- Content of header will be placed here --></div>
+		<div id="content">
+      <div class="container">
+				<div class="row">
+          <div class="alert alert-danger bs-callout-warning hidden" role="alert">
+            You have not entered all fields!
+          </div>
+          <form id="uploadForm" data-parsley-validate="">
+            <div class="col-md-6">
+  						<h1>Upload a new dataset</h1>
+  						<p>Drop a XLSX / XLSM / XLSB / ODS / XLS / XML file below:</p>
+  						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
+  					</div>
+  					<div class="col-md-6">
+  						<h1>Enter the dataset information</h1>
+						  <label for="name">Name:</label>
+						  <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
+
+						  <label for="language">Language:</label>
+              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
+                <!-- Items are loaded in selectLanguage.js  -->
+              </select>
+              <div class="clear"></div>
+
+						  <label for="subject">Subject:</label>
+              <select class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
+                <!-- Items are loaded in selectSubject.js -->
+              </select>
+              <input type="submit" name="upload" class="btn btn-lg btn-success right" value="Save dataset" />
+  						<div class="clear"></div>
+            </div>
+          </form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

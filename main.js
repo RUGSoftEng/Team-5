@@ -12,7 +12,7 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow();
+  mainWindow = new BrowserWindow({minWidth: 800});
   mainWindow.maximize();
 
   // and load the index.html of the app.

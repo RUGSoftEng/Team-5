@@ -9,23 +9,25 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config'], function (sqlite, config) {
-
-	var sql;
-
+define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	var queries = {
-		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
+		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
-		addSubject :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT OR IGNORE INTO tbldatasets  ( dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date ) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
+		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
-		getDatasetItems : "SELECT * FROM tblitems where item_dataset=?" ,
-		getUserSubjects : "SELECT * FROM tblsubjects where user_id=? ",
-		getUser : "SELECT * FROM tblsubjects where user_id= ? "
+		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
+    getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
+		getDatasetItems : "SELECT * FROM tblitems WHERE item_dataset_id=?" ,
+		getUserSubjects : "SELECT * FROM tblsubjects",
+		getUser : "SELECT * FROM tblsubjects where user_id= ? ",
+    getLanguages: "SELECT * FROM tbllanguages",
+		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id"
 	};
 
 	// Check if SQL.js has been loaded through AMD
+	var sql;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
 		alert("Failed to require sql.js through AMD");
@@ -34,15 +36,15 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 	}
 
 	// Initiate DB and check if there is an existing user DB
-	var readDatabase;
-	if (databaseExists(config.constant("DATABASE_USER"))) {
-		readDatabase = fs.readFileSync(config.constant("DATABASE_USER"));
+	var read_database;
+	if (database_exists(config.constant("DATABASE_USER"))) {
+		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
 	} else {
-		readDatabase = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
+		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
 	}
-	var db = new sql.Database(readDatabase);
+	var db = new sql.Database(read_database);
 
-	function databaseExists(path) {
+	function database_exists(path) {
 		try {
 			fs.accessSync(path, fs.F_OK);
 			return true;
@@ -55,6 +57,16 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 	function onError(db, error) {
 		console.log("this error " + error.message);
 	}
+  
+  // Auxiluary uniqueness function
+  function isUnique(unique_name, queryResult, row) {
+    for (i = 0; i<queryResult.length;i++) {
+      if (queryResult[i][unique_name]==row[unique_name]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
 	var database = {
 		save : function () {
@@ -70,27 +82,36 @@ define(['sqlite', 'app/config'], function (sqlite, config) {
 		},
 		executeQuery : function (queryname, args) {
 			var query = queries[queryname] ;
-			db.run(query, args, onError);
+			db.run(query, args);
 		},
-		selectDatasetItems :  function (queryname, args) {
-			var query = queries[ queryname] ;
+		getQuery: function(queryname,args){
+			var queryResult = [];
+			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
-				console.log(row.item_answer );
+				queryResult.push(row);
 			});
+			return queryResult;
 		},
-		selectUserSubjects :  function (queryname, args) {
-			var query = queries[ queryname] ;
+		getUnique: function(queryname,unique_name, args) {
+			var queryResult = [];
+			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
-				console.log(row.subject_name );
+				if (isUnique(unique_name, queryResult, row))
+					queryResult.push(row);
 			});
+			return queryResult;
 		},
-		selectUser :  function (queryname, args) {
-			var query = queries[ queryname] ;
-			db.each(query,args, function(row, err) {
-				console.log(row.user_email );
+		lastInsertRowId: function(table,row_id) {
+			var query = "SELECT "+row_id+" FROM "+table+ " ORDER BY "+row_id+ " DESC LIMIT 1";
+			db.each(query,"", function(row, err) {
+				queryResult = row[row_id];
 			});
+			return queryResult;
+		},
+		each : function(queryname, args, func) {
+			var query = queries[queryname];
+			db.each(query,args, func);
 		}
-
 	}
 	return database;
 });
