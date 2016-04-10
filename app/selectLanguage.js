@@ -12,14 +12,14 @@ define(['app/database', 'jquery', 'parsley', 'bootstrap-select'], function (db, 
 
   // Activate error handling for select boxes
   window.Parsley.on('field:error', function() {
-      if (this.$element.is("select")) {
-          this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
-      }
+    if (this.$element.is("select")) {
+      this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
+    }
   });
   window.Parsley.on('field:success', function() {
-      if (this.$element.is("select")) {
-          this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
-      }
+    if (this.$element.is("select")) {
+      this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+    }
   });
   $('select').on('changed.bs.select', function (e) {
     $(this).selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
