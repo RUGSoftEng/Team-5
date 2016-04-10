@@ -89,7 +89,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 			var subject = getFormVal("select", "subject");
 			var currentdate = new Date();
 
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.formatDate(currentdate), date.formatDate(currentdate)]);
+			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
 			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			// Save all items in the dataset
 			for (i = 0; i<=formItemId; i++) {

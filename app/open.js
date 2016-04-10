@@ -43,7 +43,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 			var subject = $('#uploadForm').find('select[name="subject"]').val();
 			var currentdate = new Date();
 
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.formatDate(currentdate), date.formatDate(currentdate)]);
+			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
 			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			// Save all items in the dataset
 			process_data(JSON.parse(saveData), id);
