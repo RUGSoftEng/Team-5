@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (config, db, $, bootstrap, parsley, language, subject, date) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/forms'], function (config, db, $, bootstrap, parsley, language, subject, forms) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -39,9 +39,6 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
   }
   
   // Auxiliary form functions
-  function getFormVal(formType, formName) {
-    return $('#createForm').find(formType + '[name="' + formName + '"]').val();
-  }
   function getItemVal(formName, formIndex) {
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
@@ -73,25 +70,11 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 
 	// Script for evaluating the input of the upload form
 	$(function () {
-		$('#createForm').parsley().on('field:validated', function() {
-			// Initiate form error and success handling
-			var ok = $('.parsley-error').length === 0;
-			$('.bs-callout-info').toggleClass('hidden', !ok);
-			$('.bs-callout-warning').toggleClass('hidden', ok);
-		})
-		.on('form:submit', function() {
-			return false; // Don't submit form
-		})
+    forms.initializeForm('#createForm')
 		.on('form:success', function() {
-			// Save data into the database
-			var name = getFormVal("input", "name");
-			var language = getFormVal("select", "language");
-			var subject = getFormVal("select", "subject");
-			var currentdate = new Date();
-
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
-			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+			forms.saveIntoDatabase('#createForm');
 			// Save all items in the dataset
+      var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			for (i = 0; i<=formItemId; i++) {
 				var question = getItemVal("question", i);
 				var answer = getItemVal("answer", i);

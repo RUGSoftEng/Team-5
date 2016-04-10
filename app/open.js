@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject,date) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/forms'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject, forms) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -26,26 +26,11 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 
 	// Script for evaluating the input of the upload form
 	$(function () {
-		// Initiate form error and success handling
-		$('#uploadForm').parsley().on('field:validated', function() {
-			// Initiate form error and success handling
-			var ok = $('.parsley-error').length === 0;
-			$('.bs-callout-info').toggleClass('hidden', !ok);
-			$('.bs-callout-warning').toggleClass('hidden', ok);
-		})
-		.on('form:submit', function() {
-			return false; // Don't submit form
-		})
+    forms.initializeForm('#uploadForm')
 		.on('form:success', function() {
-			// Save data into the database
-			var name = $('#uploadForm').find('input[name="name"]').val();
-			var language = $('#uploadForm').find('select[name="language"]').val();
-			var subject = $('#uploadForm').find('select[name="subject"]').val();
-			var currentdate = new Date();
-
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
-			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+      forms.saveIntoDatabase('#uploadForm');
 			// Save all items in the dataset
+      var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			process_data(JSON.parse(saveData), id);
 			db.close();
 			window.location = 'index.html';
