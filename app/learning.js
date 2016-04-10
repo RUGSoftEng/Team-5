@@ -25,10 +25,21 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     question.show();
     waitingForEnter = false;
   }
+  
+  function handleEnter() {
+    if (waitingForEnter) {
+      nextQuestion();
+    } else {
+      $( "#answer" ).prop("disabled", true);
+      question.checkAnswer();
+      waitingForEnter = true;
+      timeout = setTimeout(nextQuestion, config.constant("FEEDBACK_DELAY"));
+    }
+  }
 
   disableAutocomplete();
   
-  //when the page is loaded we get the datasetId from the page url and load the dataset from the databese
+  // When the page is loaded we get the datasetId from the page url and load the dataset from the databese
   $(document).ready(function() {
     var url =   window.location.href
     var datasetId = url.substring(url.indexOf('?')+1);
@@ -47,14 +58,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   // Then show the next question.
   $(document).bind("keypress", function (e) {
   	if (e.keyCode == config.key("ENTER")) {
-      if (waitingForEnter) {
-        nextQuestion();
-      } else {
-        $( "#answer" ).prop("disabled", true);
-        question.checkAnswer();
-        waitingForEnter = true;
-        timeout = setTimeout(nextQuestion, config.constant("FEEDBACK_DELAY"));
-      }
+      handleEnter();
   	}
   });
 });
