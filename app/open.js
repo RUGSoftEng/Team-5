@@ -7,7 +7,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 	window.Parsley.addValidator('datasetName', {
 		validateString: function(value, requirement) {
 			var result = db.getQuery("getDatasetByName", [value]);
-			return (result.length==0) ? true : false;
+			return (result.length==0);
 		},
 		messages: {
 			en: 'This name is already used for another dataset.'
