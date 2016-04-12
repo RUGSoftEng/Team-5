@@ -81,7 +81,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 		return [v, b];
 	}
 
-	function xw_xfer(data, cb) {
+	function xw_xfer(data) {
 		var worker = new Worker(XW.rABS);
 		worker.onmessage = function (e) {
 			switch (e.data.t) {
@@ -129,7 +129,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 				console.log("onload", new Date(), true, true);
 			}
 			var data = e.target.result;
-			xw_xfer(data, process_data);
+			xw_xfer(data);
 		};
 		reader.readAsBinaryString(f);
 	}

@@ -1,6 +1,6 @@
 define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
   var currentItemIndex = 0;
-  var inTutorial = true;
+  var inTutorial = config.constant("TUTORIAL_MODE");
   var items;
   var totalLength;
 
@@ -52,7 +52,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
     var percentageVal = percentage(totalLength - items.length, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
-  
+
   function isWithinMarginOfError(answer, difference) {
     return difference <= (answer.length * config.constant("MARGIN_OF_ERROR"));
   }
@@ -68,7 +68,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       inTutorial = checkTutorialStatus();
     }
   }
-  
+
   function showTutorialInstruction() {
     $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
   }
@@ -78,16 +78,16 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
         items = datasetItems;
         totalLength = items.length;
     },
-      
+
     show: function() {
       showProgress();
       $("#question").html(items[currentItemIndex].item_question);
-      
+
       if (inTutorial) {
         showTutorialInstruction();
       }
     },
-    
+
     checkAnswer: function() {
       /* Check answer checks the provided answer of the user. When the levenshtein
       * difference is equal to zero than the answer is correct. When the difference
@@ -98,7 +98,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       var answer = items[currentItemIndex].item_answer;
 
       var difference = levenstein(input,answer);
-      
+
       if (difference == 0) {
         messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
         nextQuestion();
@@ -115,7 +115,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
         alert("Done!");
       }
     },
-    
+
     hint: function() {
         return items[currentItemIndex].item_hint;
     }
