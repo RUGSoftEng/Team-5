@@ -13,8 +13,8 @@ define(function (require) {
         TUTORIAL_MODE: true,
         TIME_LIMIT: 600,
         FEEDBACK_DELAY: 10000,
-        DATABASE_USER: "./database/user.sqlite",
-        DATABASE_SLIMSTAMPEN: "./database/slimstampen.sqlite"
+        DATABASE_USER: __dirname + "/database/user.sqlite",
+        DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite"
 	};
 
 	return {

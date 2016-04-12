@@ -5,6 +5,8 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+// Module to communicate between main process and renderer process
+const ipc = electron.ipcMain;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -35,6 +37,11 @@ function createWindow () {
 app.on('ready', function() {
   createWindow();
 });
+
+ipc.on('loadURL', function(e, url) {
+  console.log(url);
+  mainWindow.loadURL('file://' + __dirname + '/'+url);
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

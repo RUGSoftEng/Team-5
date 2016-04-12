@@ -47,7 +47,6 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 				window.location.href = "learn.html?"+datasetId ;
 		});
 	}
-
 	$(document).ready(function () {
 		createSidebarElements();
     createDatasetsGrid(1,1);
