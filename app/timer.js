@@ -32,14 +32,18 @@ define(['jquery'], function($) {
     seconds = time%60;
     return timeFormat(minutes)+":"+timeFormat(seconds);
   }
-
+  
+  // Clear the timer by setting it back to 00:00
+  function clearTimer(timerid) {
+    $(timerid+" .current").html("00:00");
+  }
+  
   return {
     // Timer functions that initiates and updates the timer.
     startTimer: function(timerid, max_seconds) {
       timer = setInterval(function() { updateTimer(max_seconds); }, 1000);
-
       $(timerid+" .max").html(timeToString(max_seconds));
-      $(timerid+" .current").html("00:00");
+      clearTimer(timerid);
     },
     
     startCountdown: function(timerid, seconds) {

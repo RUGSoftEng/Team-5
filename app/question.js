@@ -1,6 +1,6 @@
-define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) {
+define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
   var currentItemIndex = 0;
-  var inTutorial = config.constant("TUTORIAL_MODE");
+  var inTutorial = true;
   var items;
   var totalLength;
 
@@ -12,7 +12,7 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
-    if (inTutorial && config.constant("TUTORIAL_MODE")) {
+    if (inTutorial) {
       if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
         currentItemIndex = 0;
       } else {
@@ -52,6 +52,10 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
     var percentageVal = percentage(totalLength - items.length, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
+  
+  function isWithinMarginOfError(answer, difference) {
+    return difference <= (answer.length * config.constant("MARGIN_OF_ERROR"));
+  }
 
   // Handle how to move to the next question
   // depending on the tutorial status.
@@ -64,6 +68,10 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
       inTutorial = checkTutorialStatus();
     }
   }
+  
+  function showTutorialInstruction() {
+    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
+  }
 
   return {
     initialise: function(datasetItems) {
@@ -72,14 +80,12 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
     },
       
     show: function() {
-      var question = items[currentItemIndex].item_question;
-
-      if (inTutorial) {
-        question += "<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer;
-      }
-
       showProgress();
-      $( "#question" ).html( question );
+      $("#question").html(items[currentItemIndex].item_question);
+      
+      if (inTutorial) {
+        showTutorialInstruction();
+      }
     },
     
     checkAnswer: function() {
@@ -96,8 +102,8 @@ define(['jquery', 'app/messages', 'app/config'], function ($, messages, config) 
       if (difference == 0) {
         messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
         nextQuestion();
-      } else if (difference <= (answer.length * config.constant("MARGIN_OF_ERROR"))) {
-        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter(s) difference)", "warning", config.constant("FEEDBACK_DELAY") );
+      } else if (isWithinMarginOfError(answer, difference)) {
+        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY") );
         currentItemIndex = (currentItemIndex + 1) % items.length;
       } else {
         messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );

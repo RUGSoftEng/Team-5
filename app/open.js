@@ -1,58 +1,44 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/date'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject,date) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/forms'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject, forms) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
 
+	// Check in the database if the name of the dataset already exists
+	window.Parsley.addValidator('datasetName', {
+		validateString: function(value, requirement) {
+			var result = db.getQuery("getDatasetByName", [value]);
+			return (result.length==0);
+		},
+		messages: {
+			en: 'This name is already used for another dataset.'
+		}
+	});
+	// Check if the file uploaded file is correct (see xw_xfer)
+	window.Parsley.addValidator('fileXlsx', {
+		validateString: function(_value, maxSize, parsleyInstance) {
+			return correctUpload;
+		},
+		requirementType: 'integer',
+		messages: {
+			en: 'This file is not supported.'
+		}
+	});
+
+	// Script for evaluating the input of the upload form
 	$(function () {
-		// Check in the database if the name of the dataset already exists
-		window.Parsley.addValidator('datasetName', {
-			validateString: function(value, requirement) {
-				var result = db.getQuery("getDatasetByName", [value]);
-				return (result.length==0) ? true : false;
-			},
-			messages: {
-				en: 'This name is already used for another dataset.'
-			}
-		});
-		// Check if the file uploaded file is correct (see xw_xfer)
-		window.Parsley.addValidator('fileXlsx', {
-			validateString: function(_value, maxSize, parsleyInstance) {
-				return correctUpload;
-			},
-			requirementType: 'integer',
-			messages: {
-				en: 'This file is not supported.'
-			}
-		});
-
-		// Initiate form error and success handling
-		$('#uploadForm').parsley().on('field:validated', function() {
-			// Initiate form error and success handling
-			var ok = $('.parsley-error').length === 0;
-			$('.bs-callout-info').toggleClass('hidden', !ok);
-			$('.bs-callout-warning').toggleClass('hidden', ok);
-		})
-		.on('form:submit', function() {
-			return false; // Don't submit form
-		})
+    forms.initializeForm('#uploadForm')
 		.on('form:success', function() {
-			// Save data into the database
-			var name = $('#uploadForm').find('input[name="name"]').val();
-			var language = $('#uploadForm').find('select[name="language"]').val();
-			var subject = $('#uploadForm').find('select[name="subject"]').val();
-			var currentdate = new Date();
-
-			db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.formatDate(currentdate), date.formatDate(currentdate)]);
-			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+      forms.saveIntoDatabase('#uploadForm');
 			// Save all items in the dataset
-			process_data(JSON.parse(saveData), id);
+      var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+			saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
 			db.close();
 			window.location = 'index.html';
 		});
 	});
 
 	// Function for saving all items in the dataset
-	function process_data(data,name) {
+	function saveDatasetItemsIntoDatabase(data,name) {
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
 

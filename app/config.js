@@ -1,7 +1,7 @@
 /* file: config.js
  * authors: H. Bouakaz, S. van Vliet, S. de Jong & E. Werkema
- * date: 19/03/2016
- * version 1.1
+ * date: 09/04/2016
+ * version 1.2
  *
  * Description:
  * Initialization of variables and constants.
@@ -17,9 +17,13 @@ define(function (require) {
         DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite"
 	};
 
-	return {
-		constant: function(name) {
-			return constants[name];
-		}
-	}
+  return {
+    constant: function(name) {
+      return constants[name];
+    },
+    
+    key: function(name) {
+      return keys[name];
+    }
+  }
 });

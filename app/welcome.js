@@ -8,11 +8,10 @@
  */
 
 define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
-
-	$("#menu-toggle").click(function (e) {
-		e.preventDefault();
-		$("#wrapper").toggleClass("toggled");
-	});
+  $("#menu-toggle").click(function (e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+  });
 
 	function createSidebarElements() {
 		var li1 = "<li class=\"sidebar_li\" subject_id=\"";
@@ -47,6 +46,7 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
 				window.location.href = "learn.html?"+datasetId ;
 		});
 	}
+
 	$(document).ready(function () {
 		createSidebarElements();
     createDatasetsGrid(1,1);
