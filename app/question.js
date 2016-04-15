@@ -121,11 +121,11 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
 
       if (difference == 0) {
         handleScoreIncrease();
-        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
+        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY") );
+        messages.show( "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
-        messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );
+        messages.show( "Wrong answer! Expected answer: <b>" + answer + "</b>", "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
       answerWasCorrect = (difference == 0);
     },
