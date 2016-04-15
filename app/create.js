@@ -26,7 +26,20 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 			function(callback) {
 				// First create the element
 				newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-				callback(null, "one");
+				async.during(
+					function (callback2) {
+						return callback2(null, newElement===undefined);
+					},
+					function (callback2) {
+						console.log("retry");
+						setTimeout(function () {
+		          callback(null, count);
+		        }, 100);
+					},
+					function (err) {
+						callback(null, "one");
+					}
+				);
 			}, function(callback) {
 				// After the element is created perform these operations:
 				newElement.html(giveId(newElement.html(), formItemId));
