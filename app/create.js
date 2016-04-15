@@ -26,8 +26,20 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 		newElement.on("click", ".remove", function() {
 			remove_element($(this));
 		});
+		removeKeybinds();
+		newElement.find("input:last").on('keydown', function(e) {
+		  if (e.keyCode == config.key("TAB")) {
+		      add_element();
+		  }
+		});
 		numberOfFormItems++;
 		formItemId++;
+	}
+
+	function removeKeybinds() {
+		$("#items table input").each(function() {
+			$(this).unbind("keydown");
+		})
 	}
 
   // Auxiliary replace functions
@@ -49,12 +61,6 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 	$(".add").click(function(add) {
 		add_element();
 		return false;
-	});
-
-	$('#items input[type="text"]:last').on('keydown', function(e) {
-	  if (e.keyCode == config.key("TAB")) {
-	      add_element();
-	  }
 	});
 
 	// Check in the database if the name of the dataset already exists
@@ -90,6 +96,5 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");
 		select.initiate("subjects", ".selectSubject");
-		select.initiateParsley();
 	});
 });

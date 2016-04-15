@@ -39,7 +39,6 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");
 		select.initiate("subjects", ".selectSubject");
-		select.initiateParsley();
 	});
 
 	// Function for saving all items in the dataset

@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'parsley', 'bootstrap-select'], function (db, $, parsley, select) {
+define(['app/database', 'jquery', 'parsley', 'bootstrap-select'], function (db, $, parsley, bootstrapSelect) {
   return {
     initiate: function(name, item) {
       switch (name) {
@@ -26,26 +26,24 @@ define(['app/database', 'jquery', 'parsley', 'bootstrap-select'], function (db, 
       // Initiate bootstrap select box
       $(".selectpicker"+item).selectpicker();
     },
-    initiateParsley: function() {
+    parsleyErrors: function() {
       // Activate error handling for select boxes
-      $(document).ready(function() {
-        window.Parsley.on('field:error', function() {
-          if (this.$element.is("select")) {
-            this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
-          }
-        });
-        window.Parsley.on('field:success', function() {
-          if (this.$element.is("select")) {
-            this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
-          }
-        });
-        $('select').on('changed.bs.select', function (e) {
-          $(this).selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
-          $(this).parent().children(".parsley-errors-list").html("");
-        });
-        $('select').on('rendered.bs.select', function (e) {
-          $(this).parent().removeClass("parsley-error");
-        });
+      window.Parsley.on('field:error', function() {
+        if (this.$element.is("select")) {
+          this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-danger').selectpicker('refresh');
+        }
+      });
+      window.Parsley.on('field:success', function() {
+        if (this.$element.is("select")) {
+          this.$element.parent().children('.selectpicker').selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+        }
+      });
+      $('select').on('changed.bs.select', function (e) {
+        $(this).selectpicker('setStyle', 'alert-success', 'add').selectpicker('setStyle', 'alert-danger', 'remove').selectpicker('refresh');
+        $(this).parent().children(".parsley-errors-list").html("");
+      });
+      $('select').on('rendered.bs.select', function (e) {
+        $(this).parent().removeClass("parsley-error");
       });
     }
   }
