@@ -12,10 +12,22 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
       var parsley;
       async.series([
         function(callback) {
-          parsley = $(formName).parsley();
-          callback(null, "one");
+          async.during(
+            function (callback2) {
+              return callback2(null, $(formName).length==0);
+            },
+            function (callback2) {
+              alert("try again");
+              window.location = window.location.href;
+            },
+            function (err) {
+              parsley = $(formName).parsley();
+              callback(null, "Initiate parsley");
+            }
+          );
         }, function(callback) {
-          parsley.on('field:validated', function() {
+          console.log(parsley);
+          window.Parsley.on('field:validated', function() {
             // Initiate form error and success handling
             var ok = $('.parsley-error').length === 0;
             $('.bs-callout-info').toggleClass('hidden', !ok);
@@ -28,9 +40,11 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
           }).on('form:submit', function() {
             return false;
           }).on('form:success', onSuccess);
-          callback(null, "two");
+          callback(null, "Add methods to form");
         }
-      ]);
+      ], function(err,results) {
+        console.log(results);
+      });
     }, saveDataset: function(formName) {
       var name = getFormVal(formName, "input", "name");
       var language = getFormVal(formName, "select", "language");
