@@ -19,6 +19,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
+    question.nextQuestion();
     $( "#answer" ).prop("disabled", false);
     $( "#answer" ).val( "" );
     $( "#answer" ).focus();

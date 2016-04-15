@@ -1,8 +1,13 @@
 define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
-  var currentItemIndex = 0;
-  var inTutorial = config.constant("TUTORIAL_MODE");
   var items;
+  var currentItemIndex = 0;
   var totalLength;
+  
+  var itemsAnsweredCorrectly = 0;
+  var answerWasCorrect;
+  
+  var tutorialLength;
+  var inTutorial = config.constant("TUTORIAL_MODE");
 
   // Calculate the percentage of 'part out of total'
   function percentage(part, total) {
@@ -13,7 +18,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
     if (inTutorial) {
-      if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
+      if (currentItemIndex == tutorialLength) {
         currentItemIndex = 0;
       } else {
         return true;
@@ -48,8 +53,8 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + (totalLength - items.length) + "/" + totalLength + " words</p>" );
-    var percentageVal = percentage(totalLength - items.length, totalLength);
+    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
+    var percentageVal = percentage(itemsAnsweredCorrectly, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
 
@@ -60,23 +65,38 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   // Handle how to move to the next question
   // depending on the tutorial status.
   function nextQuestion() {
-    if (!inTutorial) {
-      items.splice(currentItemIndex,1);
-      currentItemIndex %= items.length;
-    } else {
+    if (inTutorial) {
       currentItemIndex++;
       inTutorial = checkTutorialStatus();
+    } else if (answerWasCorrect) {
+      items.splice(currentItemIndex, 1);
+      currentItemIndex %= items.length;
+    } else {
+      currentItemIndex = (currentItemIndex + 1) % items.length;
     }
   }
 
   function showTutorialInstruction() {
     $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
   }
+  
+  function handleScoreIncrease() {
+    if (!inTutorial) {
+      itemsAnsweredCorrectly++;
+    }
+    showProgress();
+    
+    if (itemsAnsweredCorrectly == totalLength) {
+      alert("Done!");
+      window.location = 'index.html';
+    }
+  }
 
   return {
     initialise: function(datasetItems) {
         items = datasetItems;
         totalLength = items.length;
+        tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
     },
 
     show: function() {
@@ -100,20 +120,18 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       var difference = levenstein(input,answer);
 
       if (difference == 0) {
+        handleScoreIncrease();
         messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
-        nextQuestion();
       } else if (isWithinMarginOfError(answer, difference)) {
         messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY") );
-        currentItemIndex = (currentItemIndex + 1) % items.length;
       } else {
         messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );
-        currentItemIndex = (currentItemIndex + 1) % items.length;
       }
-      showProgress();
-
-      if (items.length == 0) {
-        alert("Done!");
-      }
+      answerWasCorrect = (difference == 0);
+    },
+    
+    nextQuestion: function() {
+      nextQuestion();
     },
 
     hint: function() {
