@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'parsley', 'bootstrap-select'], function (db, $, parsley, bootstrapSelect) {
+define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley, bootstrapSelect) {
   return {
     initiate: function(name, item) {
       switch (name) {
