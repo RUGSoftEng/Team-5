@@ -57,7 +57,7 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	function onError(db, error) {
 		console.log("this error " + error.message);
 	}
-  
+
   // Auxiluary uniqueness function
   function isUnique(unique_name, queryResult, row) {
     for (i = 0; i<queryResult.length;i++) {

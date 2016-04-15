@@ -36,15 +36,11 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   createWindow();
-
-  mainWindow.webContents.on('did-finish-load', function() {
-    mainWindow.webContents.executeJavaScript("");
-  })
 });
 
 ipc.on('loadURL', function(e, url) {
-  console.log(url);
-  mainWindow.loadURL('file://' + __dirname + '/'+url);
+  //console.log(url);
+  //mainWindow.loadURL('file://' + __dirname + '/'+url);
 })
 
 // Quit when all windows are closed.

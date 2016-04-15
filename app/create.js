@@ -79,7 +79,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		});
 
 		// Script when the form is successfull
-		forms.initializeForm('#createForm').on('form:success', function() {
+		forms.initializeForm('#createForm', function() {
 			// Save dataset
 			forms.saveDataset("#createForm");
 			// Save all items in the dataset
@@ -93,7 +93,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
 			}
 			db.close();
-			window.location.href = 'index.html';
+			window.location = "index.html";
 		});
 
 		// Initiate select boxes

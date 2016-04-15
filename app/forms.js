@@ -8,7 +8,7 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
   var parsleyInitiated = false;
 
   return {
-    initializeForm: function(formName) {
+    initializeForm: function(formName, onSuccess) {
       var parsley;
       async.series([
         function(callback) {
@@ -25,14 +25,12 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
               select.parsleyErrors();
               parsleyInitiated = true;
             }
-          });
-
+          }).on('form:submit', function() {
+            return false;
+          }).on('form:success', onSuccess);
           callback(null, "two");
         }
-      ], function(err, results) {
-        //console.log(results);
-      });
-      return parsley;
+      ]);
     }, saveDataset: function(formName) {
       var name = getFormVal(formName, "input", "name");
       var language = getFormVal(formName, "select", "language");

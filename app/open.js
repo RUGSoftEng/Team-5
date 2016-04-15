@@ -25,14 +25,13 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	});
 
 	// Script for evaluating the input of the upload form
-  forms.initializeForm('#uploadForm').on('form:success', function() {
-    forms.saveDataset('#uploadForm');
+  forms.initializeForm('#uploadForm', function() {
+		forms.saveDataset('#uploadForm');
 		// Save all items in the dataset
     var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 		saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
 		db.close();
-		alert("bye");
-		window.location = __dirname + '/index.html';
+		window.location = 'index.html';
 	});
 
 	// Initiate select boxes
