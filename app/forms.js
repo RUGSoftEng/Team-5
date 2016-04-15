@@ -1,10 +1,11 @@
 // General functions for forms
 
-define(['jquery', 'app/database', 'app/date'], function ($, db, date) {
+define(['jquery', 'app/database', 'app/date', 'app/select'], function ($, db, date, select) {
   function getFormVal(parentName, formType, formName) {
     return $(parentName).find(formType + '[name="' + formName + '"]').val();
   }
-  
+  parsleyInitiated = false;
+
   return {
     initializeForm: function(formName) {
       return $(formName).parsley().on('field:validated', function() {
@@ -12,12 +13,14 @@ define(['jquery', 'app/database', 'app/date'], function ($, db, date) {
         var ok = $('.parsley-error').length === 0;
         $('.bs-callout-info').toggleClass('hidden', !ok);
         $('.bs-callout-warning').toggleClass('hidden', ok);
-      })
-      .on('form:submit', function() {
-        return false; // Don't submit form
-      })
+
+        if (!parsleyInitiated) {
+          select.parsleyErrors();
+          parsleyInitiated = true;
+        }
+      });
     },
-    
+
     saveIntoDatabase: function(formName) {
 			var name = getFormVal(formName, "input", "name");
 			var language = getFormVal(formName, "select", "language");
