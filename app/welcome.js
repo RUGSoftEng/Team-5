@@ -8,17 +8,24 @@
  */
 
 define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
-  $("#menu-toggle").click(function (e) {
-    e.preventDefault();
-    $("#wrapper").toggleClass("toggled");
-  });
+
+	var sudo = require('sudo-prompt');
+	var options = {
+		name: 'Ronomon',
+		icns: '/path/to/icns/file', // (optional)
+		};
+	sudo.exec('echo hello', options, function(error, stdout, stderr) {});
+	$("#menu-toggle").click(function (e) {
+		e.preventDefault();
+	$("#wrapper").toggleClass("toggled");
+	});
 
 	function createSidebarElements() {
 		var li1 = "<li class=\"sidebar_li\" subject_id=\"";
-    var li2 = "\" language_id=\"";
+    	var li2 = "\" language_id=\"";
 		var li3 = "\"><a  href=\"#\"  >";
 		var li4 = "<br><span class=\"sidebar_item\" >for ";
-    var li5 = " speakers</span></a></li>\n";
+    	var li5 = " speakers</span></a></li>\n";
 		var rows = db.getUnique('getModules', 'subject_name', []);
 		var sidebar = "";
 
@@ -52,6 +59,10 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
     createDatasetsGrid(1,1);
 		$(".sidebar_li").click(function () {
 			createDatasetsGrid($(this).attr("subject_id"), $(this).attr("language_id"));
+			$(this).parents('.sidebar-nav').find('.active').removeClass('active').end().end();
+	        $(this).addClass('active');
+	        console.log("hello");
+	        $(activeTab).show();
 		});
 	});
 });
