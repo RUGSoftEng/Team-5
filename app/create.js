@@ -26,6 +26,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 				newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
 				callback(null, "one");
 			}, function(callback) {
+				console.log(newElement);
 				newElement.html(giveId(newElement.html(), formItemId));
 				newElement.html(giveRequired(newElement.html()));
 				newElement.on("click", ".remove", function() {
@@ -71,10 +72,35 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		});
 
 		// Script for evaluating the input of the upload form
-		forms.initializeForm('#createForm');
+		forms.initializeForm('#createForm').on('form:success', function() {
+			forms.saveIntoDatabase("createForm");
+			// Save all items in the dataset
+			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+			for (i = 0; i<=formItemId; i++) {
+				var question = getItemVal("question", i);
+				var answer = getItemVal("answer", i);
+				var hint = getItemVal("hint", i);
+				hint = (hint==="undefined") ? "" : hint;
+
+				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+			}
+			db.close();
+			window.location = 'index.html';
+		});
 
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");
 		select.initiate("subjects", ".selectSubject");
+
+		// Check in the database if the name of the dataset already exists
+		window.Parsley.addValidator('datasetName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getDatasetByName", [value]);
+				return result.length == 0;
+			},
+			messages: {
+				en: 'This name is already used for another dataset.'
+			}
+		});
 	});
 });
