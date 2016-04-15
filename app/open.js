@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-select', 'app/selectLanguage', 'app/selectSubject', 'app/forms'], function (db, $, bootstrap, XLSX, parsley, select, selectLanguage, selectSubject, forms) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms'], function (db, $, bootstrap, XLSX, parsley, select, forms) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -35,6 +35,11 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'bootstrap-sel
 			db.close();
 			window.location = 'index.html';
 		});
+
+		// Initiate select boxes
+		select.initiate("languages", ".selectLanguage");
+		select.initiate("subjects", ".selectSubject");
+		select.initiateParsley();
 	});
 
 	// Function for saving all items in the dataset

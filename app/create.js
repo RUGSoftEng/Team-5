@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/selectLanguage', 'app/selectSubject', 'app/forms'], function (config, db, $, bootstrap, parsley, language, subject, forms) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/forms'], function (config, db, $, bootstrap, parsley, select, forms) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -17,7 +17,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 			numberOfFormItems--;
 		}
 	}
-  
+
 	// Function for adding elements to the form
 	function add_element() {
 		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
@@ -29,7 +29,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 		numberOfFormItems++;
 		formItemId++;
 	}
-  
+
   // Auxiliary replace functions
   function giveId(string, formItemId) {
     return string.replace(/{i}/g, formItemId);
@@ -37,12 +37,12 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
   function giveRequired(string) {
     return string.replace(/{required}/g, 'required=""');
   }
-  
+
   // Auxiliary form functions
   function getItemVal(formName, formIndex) {
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
-  
+
 	// Add the first element
 	add_element();
 
@@ -86,5 +86,10 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'parsley', 'app/sel
 			db.close();
 			window.location = 'index.html';
 		});
+
+		// Initiate select boxes
+		select.initiate("languages", ".selectLanguage");
+		select.initiate("subjects", ".selectSubject");
+		select.initiateParsley();
 	});
 });
