@@ -25,21 +25,19 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	});
 
 	// Script for evaluating the input of the upload form
-	$(function () {
-    forms.initializeForm('#uploadForm')
-		.on('form:success', function() {
-      forms.saveIntoDatabase('#uploadForm');
-			// Save all items in the dataset
-      var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-			saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
-			db.close();
-			window.location = 'index.html';
-		});
-
-		// Initiate select boxes
-		select.initiate("languages", ".selectLanguage");
-		select.initiate("subjects", ".selectSubject");
+  forms.initializeForm('#uploadForm').on('form:success', function() {
+    forms.saveDataset('#uploadForm');
+		// Save all items in the dataset
+    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+		saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+		db.close();
+		alert("bye");
+		window.location = __dirname + '/index.html';
 	});
+
+	// Initiate select boxes
+	select.initiate("languages", ".selectLanguage");
+	select.initiate("subjects", ".selectSubject");
 
 	// Function for saving all items in the dataset
 	function saveDatasetItemsIntoDatabase(data,name) {

@@ -5,11 +5,6 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
     return $(parentName).find(formType + '[name="' + formName + '"]').val();
   }
 
-  // Auxiliary form functions
-  function getItemVal(formName, formIndex) {
-    return $("#items input[name='" + formName + formIndex + "']").val();
-  }
-
   var parsleyInitiated = false;
 
   return {
@@ -38,7 +33,7 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
         //console.log(results);
       });
       return parsley;
-    }, saveIntoDatabase: function(formName) {
+    }, saveDataset: function(formName) {
       var name = getFormVal(formName, "input", "name");
       var language = getFormVal(formName, "select", "language");
       var subject = getFormVal(formName, "select", "subject");

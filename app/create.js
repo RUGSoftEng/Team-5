@@ -20,28 +20,30 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	// Function for adding elements to the form
 	function add_element() {
+		// Perform the following operations in sequence:
 		var newElement;
 		async.series([
 			function(callback) {
+				// First create the element
 				newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
 				callback(null, "one");
 			}, function(callback) {
-				console.log(newElement);
+				// After the element is created perform these operations:
 				newElement.html(giveId(newElement.html(), formItemId));
 				newElement.html(giveRequired(newElement.html()));
 				newElement.on("click", ".remove", function() {
 					remove_element($(this));
 				});
+				// When the TAB is pressed, add a new line
 				removeKeybinds();
 				newElement.find("input:last").on('keydown', function(e) {
 					if (e.keyCode == config.key("TAB")) {
 							add_element();
 					}
 				});
-
 				numberOfFormItems++;
 				formItemId++;
-				callback(null, "one");
+				callback(null, "two");
 			}
 		], function(err, results) {
 			//console.log(results);
@@ -62,6 +64,11 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
     return string.replace(/{required}/g, 'required=""');
   }
 
+	// Auxiliary form functions
+  function getItemVal(formName, formIndex) {
+    return $("#items input[name='" + formName + formIndex + "']").val();
+  }
+
 	$(document).ready(function() {
 		// Add the first element
 		add_element();
@@ -71,9 +78,10 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 			return false;
 		});
 
-		// Script for evaluating the input of the upload form
+		// Script when the form is successfull
 		forms.initializeForm('#createForm').on('form:success', function() {
-			forms.saveIntoDatabase("createForm");
+			// Save dataset
+			forms.saveDataset("#createForm");
 			// Save all items in the dataset
 			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
 			for (i = 0; i<=formItemId; i++) {
@@ -85,7 +93,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
 			}
 			db.close();
-			window.location = 'index.html';
+			window.location.href = 'index.html';
 		});
 
 		// Initiate select boxes
