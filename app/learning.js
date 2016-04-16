@@ -8,6 +8,8 @@
  */
 
 define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database'], function ($, bootstrap, config, db, messages, question, timer,db) {
+  const THOUSAND = 1000;
+  
   timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   var waitingForEnter = false;
   
@@ -19,6 +21,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
+    question.nextQuestion();
     $( "#answer" ).prop("disabled", false);
     $( "#answer" ).val( "" );
     $( "#answer" ).focus();
@@ -33,7 +36,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
       $( "#answer" ).prop("disabled", true);
       question.checkAnswer();
       waitingForEnter = true;
-      timeout = setTimeout(nextQuestion, config.constant("FEEDBACK_DELAY"));
+      timeout = setTimeout(nextQuestion, $(".countdown").data("seconds") * THOUSAND);
     }
   }
 
