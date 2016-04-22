@@ -10,13 +10,10 @@ define(['jquery'], function($) {
     on: function(callback) {
       loadingPage = setTimeout(function() {
         // Remove load Page
-        $("#loadFrame").remove();
         console.log("After ready");
         callback();
-      }, 1);
-    },
-    clear: function() {
-      clearTimeout(loadingPage);
+        $("#loadFrame").fadeOut(300);
+      }, 0);
     }
-  } 
-})
+  }
+});

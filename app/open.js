@@ -38,26 +38,21 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");
 		select.initiate("subjects", ".selectSubject");
+
+		// Function for saving all items in the dataset
+		function saveDatasetItemsIntoDatabase(data,name) {
+			var output = to_json(data);
+			var sheetName = Object.keys(output)[0];
+
+			$.each(output[sheetName], function (i, item) {
+				var question = output[sheetName][i].question;
+				var answer = output[sheetName][i].answer;
+				var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
+				db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
+			});
+		}
 	});
 
-	// Function for saving all items in the dataset
-	function saveDatasetItemsIntoDatabase(data,name) {
-		var output = to_json(data);
-		var sheetName = Object.keys(output)[0];
-
-		$.each(output[sheetName], function (i, item) {
-			var question = output[sheetName][i].question;
-			var answer = output[sheetName][i].answer;
-			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
-			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
-		});
-
-		// Initiate upload box
-		var xlf = document.getElementById('xlf');
-		if (xlf.addEventListener) {
-			xlf.addEventListener('change', handleFile, false);
-		}
-	}
 
 	/* Scripts for reading and processing the XLS files.
 	 * See https://github.com/SheetJS/js-xlsx for reference
@@ -141,5 +136,10 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			xw_xfer(data);
 		};
 		reader.readAsBinaryString(f);
+	}
+	// Initiate upload box
+	var xlf = document.getElementById('xlf');
+	if (xlf.addEventListener) {
+		xlf.addEventListener('change', handleFile, false);
 	}
 });

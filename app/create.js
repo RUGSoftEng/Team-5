@@ -69,7 +69,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
 
-	$(document).ready(function() {
+	ready.on(function() { 
 		// Add the first element
 		add_element();
 		// Bind the click method for adding elements
