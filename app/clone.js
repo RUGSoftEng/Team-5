@@ -8,13 +8,15 @@
 
 define(['jquery'], function ($) {
   // Replace all occurences of replaceFrom[i] to replaceTo[i]
-  $.fn.replaceStrings = function(replaceFrom, replaceTo) {
-    var content = this[0].outerHTML // Use the outer HTML
+  $.fn.replaceClone = function(replaceFrom, replaceTo) {
+    var content = this.html();
     for (i = 0; i<replaceFrom.length;i++) {
       var regular_expression = new RegExp("{"+replaceFrom[i]+"}", "g");
       content = content.replace(regular_expression, replaceTo[i]);
     }
-    this[0].outerHTML = content;
+    this.html(content);
+    //this[0].outerHTML = content;
+    return this;
   };
 
   // Clone layout function and return it

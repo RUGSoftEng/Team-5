@@ -20,10 +20,9 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	// Function for adding elements to the form
 	function add_element() {
-		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-		// After the element is created perform these operations:
-		newElement.html(giveId(newElement.html(), formItemId));
-		newElement.html(giveRequired(newElement.html()));
+		var newElement = $('#items table').cloneLayout();
+		newElement.replaceClone(["i", "required"], [formItemId, "required"]);
+		// Remove when clicked on close
 		newElement.on("click", ".remove", function() {
 			remove_element($(this));
 		});

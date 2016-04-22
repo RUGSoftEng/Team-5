@@ -17,7 +17,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 		var rows = db.getUnique('getModules', 'subject_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
-      newElement.replaceStrings(["subject_id", "language_id", "subject_name", "language_name"],
+      newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 		}
 	}
@@ -29,7 +29,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 		var rows = db.getQuery('getDatasets', [languageid, subjectid]);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#container').cloneLayout();
-      newElement.replaceStrings(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
+      newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
 		}
     // Go to learn page on click
     $(".mybutton").click(function() {
@@ -45,9 +45,11 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 		createSidebarElements();
     createDatasetsGrid(1,1);
 		$(".sidebar_li").click(function () {
-			createDatasetsGrid($(this).attr("subject_id"), $(this).attr("language_id"));
-			$(this).parents('.sidebar-nav').find('.active').removeClass('active').end().end();
-	        $(this).addClass('active');
+      var subject = $(this).children("a").attr("subject_id");
+      var language = $(this).children("a").attr("language_id");
+			createDatasetsGrid(subject, language);
+			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
+	    $(this).addClass('active');
 		});
 	});
 });
