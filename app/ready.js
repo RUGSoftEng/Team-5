@@ -1,5 +1,5 @@
 define(['jquery'], function($) {
-  // Initiate page and show loading
+/*  // Initiate page and show loading
   function initiateLoadPage() {
     $("body").append("<div id='loadFrame'></div>");
   }
@@ -13,10 +13,10 @@ define(['jquery'], function($) {
         $("#loadFrame").remove();
         console.log("After ready");
         callback();
-      }, 1000);
+      }, 1);
     },
     clear: function() {
       clearTimeout(loadingPage);
     }
-  }
+  } */
 })
