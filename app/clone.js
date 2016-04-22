@@ -15,7 +15,6 @@ define(['jquery'], function ($) {
       content = content.replace(regular_expression, replaceTo[i]);
     }
     this.html(content);
-    //this[0].outerHTML = content;
     return this;
   };
 

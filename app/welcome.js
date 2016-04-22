@@ -25,17 +25,17 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 	function createDatasetsGrid(subjectid, languageid) {
     // Clear dataset grid
     $("#container .dataset_item").not("#layout").remove();
-    // And load new items
+    // And load all new datasets
 		var rows = db.getQuery('getDatasets', [languageid, subjectid]);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#container').cloneLayout();
       newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
+      // Goto learn page on click
+      newElement.on("click", ".mybutton", function() {
+        var id = $(this).data("id");
+        window.location = "learn.html?"+id;
+      })
 		}
-    // Go to learn page on click
-    $(".mybutton").click(function() {
-      var id = $(this).attr("id");
-      window.location.href = "learn.html?"+id;
-    })
 	}
 
 	$(document).ready(function () {
@@ -44,9 +44,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 
 		createSidebarElements();
     createDatasetsGrid(1,1);
-		$(".sidebar_li").click(function () {
-      var subject = $(this).children("a").attr("subject_id");
-      var language = $(this).children("a").attr("language_id");
+		$(".sidebar_li a").click(function () {
+      var subject = $(this).data("subject-id");
+      var language = $(this).data("language-id");
 			createDatasetsGrid(subject, language);
 			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
 	    $(this).addClass('active');
