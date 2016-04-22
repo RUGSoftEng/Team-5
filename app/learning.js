@@ -7,16 +7,14 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database'], function ($, bootstrap, config, db, messages, question, timer,db) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, bootstrap, config, db, messages, question, timer,db,ready) {
   const THOUSAND = 1000;
-  
-  timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   var waitingForEnter = false;
-  
+
   function disableAutocomplete() {
     $('input').attr('autocomplete', 'off');
   }
-  
+
   function nextQuestion() {
     clearTimeout(timeout);
     timer.clearCountdown();
@@ -28,7 +26,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     question.show();
     waitingForEnter = false;
   }
-  
+
   function handleEnter() {
     if (waitingForEnter) {
       nextQuestion();
@@ -41,14 +39,16 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   }
 
   disableAutocomplete();
-  
+
   // When the page is loaded we get the datasetId from the page url and load the dataset from the databese
-  $(document).ready(function() {
-    var url =   window.location.href
+  ready.on(function() {
+    var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
     var datasetItems = db.getQuery("getDatasetItems",[datasetId]);
     question.initialise(datasetItems);
   	question.show();
+
+    timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
 
   // Temporary hint button

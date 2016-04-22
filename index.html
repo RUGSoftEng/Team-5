@@ -61,10 +61,15 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav" id="sidebar_ul">
+              <!-- Clone layout -->
+              <li id="layout" class="sidebar_li" subject_id="{subject_id}" language_id="{language_id}">
+                <a href="#">{subject_name}<br /><span class="sidebar_item">for {language_name} speakers</span></a>
+              </li>
+
             </ul>
         </div>
         <div id="sidebar-logos">
-            <img src="testlogo.png" />
+            <img src="resources/images/university_groningen.png" />
             <br>
             <img src="testlogo.png" />
         </div>
@@ -73,9 +78,22 @@
    <div id="content" class="main">
       <div class="container"  >
         <div class="datasets">
-          <div class="row"  id="container">
+          <div class="row" id="container">
+            <!-- Clone layout -->
+            <div class="dataset_item col-md-3 col-md-6" id="layout">
+              <div class="btn mybutton" id="{dataset_id}">
+                <h3>{dataset_name}</h3>
+                <br>
+                <h4>Strength:</h4>
+                <center>
+                  <div class="progress" style="width: 80%;">
+                    <div class="progress-bar progress-bar-success progress-bar-stiped" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </center>
+              </div>
+            </div>
 
-		 </div>
+		      </div>
         </div>
       </div>
     </div>

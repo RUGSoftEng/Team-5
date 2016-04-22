@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready'], function (config, db, $, bootstrap, select, forms, ready) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone'], function (config, db, $, bootstrap, select, forms, ready, clone) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -20,9 +20,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	// Function for adding elements to the form
 	function add_element() {
-		// Perform the following operations in sequence:
 		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-
 		// After the element is created perform these operations:
 		newElement.html(giveId(newElement.html(), formItemId));
 		newElement.html(giveRequired(newElement.html()));
@@ -83,7 +81,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
 			}
 			db.close();
-			window.location = "index.html";
+			window.location = "index.html?create_dataset";
 		});
 
 		// Initiate select boxes
