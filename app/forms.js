@@ -1,6 +1,6 @@
 // General functions for forms
 
-define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'], function ($, db, date, select, async, parsley) {
+define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley'], function ($, db, date, select, parsley) {
   function getFormVal(parentName, formType, formName) {
     return $(parentName).find(formType + '[name="' + formName + '"]').val();
   }
@@ -9,30 +9,20 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
 
   return {
     initializeForm: function(formName, onSuccess) {
-      var parsley;
-      async.series([
-        function(callback) {
-            parsley = $(formName).parsley();
-            callback(null, "Initiate parsley");
-        }, function(callback) {
-          window.Parsley.on('field:validated', function() {
-            // Initiate form error and success handling
-            var ok = $('.parsley-error').length === 0;
-            $('.bs-callout-info').toggleClass('hidden', !ok);
-            $('.bs-callout-warning').toggleClass('hidden', ok);
+      var parsley = $(formName).parsley();
+      window.Parsley.on('field:validated', function() {
+        // Initiate form error and success handling
+        var ok = $('.parsley-error').length === 0;
+        $('.bs-callout-info').toggleClass('hidden', !ok);
+        $('.bs-callout-warning').toggleClass('hidden', ok);
 
-            if (!parsleyInitiated) {
-              select.parsleyErrors();
-              parsleyInitiated = true;
-            }
-          }).on('form:submit', function() {
-            return false;
-          }).on('form:success', onSuccess);
-          callback(null, "Add methods to form");
+        if (!parsleyInitiated) {
+          select.parsleyErrors();
+          parsleyInitiated = true;
         }
-      ], function(err,results) {
-        console.log(results);
-      });
+      }).on('form:submit', function() {
+        return false;
+      }).on('form:success', onSuccess);
     }, saveDataset: function(formName) {
       var name = getFormVal(formName, "input", "name");
       var language = getFormVal(formName, "select", "language");

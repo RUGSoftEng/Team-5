@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'async', 'app/ready'], function (config, db, $, bootstrap, select, forms, async, ready) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready'], function (config, db, $, bootstrap, select, forms, ready) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -21,33 +21,23 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 	// Function for adding elements to the form
 	function add_element() {
 		// Perform the following operations in sequence:
-		var newElement;
-		async.series([
-			function(callback) {
-				// First create the element
-				newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-				callback(null, "one");
-			}, function(callback) {
-				// After the element is created perform these operations:
-				newElement.html(giveId(newElement.html(), formItemId));
-				newElement.html(giveRequired(newElement.html()));
-				newElement.on("click", ".remove", function() {
-					remove_element($(this));
-				});
-				// When the TAB is pressed, add a new line
-				removeKeybinds();
-				newElement.find("input:last").on('keydown', function(e) {
-					if (e.keyCode == config.key("TAB")) {
-							add_element();
-					}
-				});
-				numberOfFormItems++;
-				formItemId++;
-				callback(null, "two");
-			}
-		], function(err, results) {
-			//console.log(results);
+		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
+
+		// After the element is created perform these operations:
+		newElement.html(giveId(newElement.html(), formItemId));
+		newElement.html(giveRequired(newElement.html()));
+		newElement.on("click", ".remove", function() {
+			remove_element($(this));
 		});
+		// When the TAB is pressed, add a new line
+		removeKeybinds();
+		newElement.find("input:last").on('keydown', function(e) {
+			if (e.keyCode == config.key("TAB")) {
+					add_element();
+			}
+		});
+		numberOfFormItems++;
+		formItemId++;
 	}
 
 	function removeKeybinds() {
@@ -69,7 +59,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
 
-	ready.on(function() { 
+	ready.on(function() {
 		// Add the first element
 		add_element();
 		// Bind the click method for adding elements

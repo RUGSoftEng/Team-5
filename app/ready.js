@@ -1,10 +1,5 @@
 define(['jquery'], function($) {
   // Initiate page and show loading
-  function initiateLoadPage() {
-    $("body").append("<div id='loadFrame'></div>");
-  }
-  initiateLoadPage();
-
   var loadingPage;
   return {
     on: function(callback) {
