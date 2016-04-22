@@ -52,6 +52,9 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
     createDatasetsGrid(1,1);
 		$(".sidebar_li").click(function () {
 			createDatasetsGrid($(this).attr("subject_id"), $(this).attr("language_id"));
+			$(this).parents('.sidebar-nav').find('.active').removeClass('active').end().end();
+	        $(this).addClass('active');
+
 		});
 	});
 });
