@@ -16,8 +16,9 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		});
 	}
 	// Function for showing the user the system is loading
-	function showLoading() {
-		$("#loadFrame").fadeIn(500);
+	function showLoading(onSuccess) {
+		$("#loadFrame").children("h1").html("Uploading dataset...")
+		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
 	ready.on(function() {
@@ -42,14 +43,24 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			}
 		});
 
+		// Get value of form input
+		function getFormVal(parentName, formType, formName) {
+	    return $(parentName).find(formType + '[name="' + formName + '"]').val();
+	  }
+
 		// Script for evaluating the input of the upload form
 	  forms.initializeForm('#uploadForm', function() {
-			forms.saveDataset('#uploadForm');
-			// Save all items of the dataset
-	    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-			saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
-			db.close();
-			window.location = 'index.html?open_dataset'
+			showLoading(function () {
+				var form = '#uploadForm';
+				forms.saveDataset(form);
+				// Save all items of the dataset
+		    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+				db.close();
+				var language = getFormVal(form, "select", "language");
+	      var subject = getFormVal(form, "select", "subject");
+				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+			});
 		});
 
 		// Initiate select boxes

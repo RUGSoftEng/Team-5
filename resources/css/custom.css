@@ -31,6 +31,7 @@ nav { }
     #hint { display: none; }
     #show .countdownnotice { font-style: italic; font-size: 15px }
     #show .message, #hint .message { float: left; width: 80%; font-size: 18px; }
+	#messages { display: none; }
   .stats { margin: 0 0 50px 0; }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
 

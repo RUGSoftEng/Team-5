@@ -38,15 +38,50 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 		}
 	}
 
+  // Function for displaying messages on main screen
+  function showMessage(message) {
+    var element = $("#messages");
+    switch(message) {
+      case "create_dataset":
+        message = "You have succesfully created a new dataset."
+        break;
+      case "open_dataset":
+        message = "You have succesfully uploaded a new dataset."
+        break;
+      default:
+        message = "This message is unknown.";
+    }
+    element.append("<p>"+message+"</p>").show();
+  }
+
+  function hideMessage() {
+    var element = $("#messages");
+    element.hide();
+  }
+
+  // Function for obtaining the GET data from the url
+  function $_GET(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp(q+'=([^&]*)','i');
+    return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
+  }
+
 	$(document).ready(function () {
-    var url = window.location.href;
-    var get = url.substring(url.indexOf('?')+1);
+    var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
+    var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
+    console.log(currentSubject);
+
+    // Show message if there is any
+    if ($_GET('message')) {
+      showMessage($_GET('message'));
+    }
 
 		createSidebarElements();
-    createDatasetsGrid(1,1);
+    createDatasetsGrid(currentSubject,currentLanguage);
 		$(".sidebar_li a").click(function () {
       var subject = $(this).data("subject-id");
       var language = $(this).data("language-id");
+      hideMessage();
 			createDatasetsGrid(subject, language);
 			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
 	    $(this).addClass('active');

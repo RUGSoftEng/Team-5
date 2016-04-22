@@ -43,18 +43,19 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		})
 	}
 
-  // Auxiliary replace functions
-  function giveId(string, formItemId) {
-    return string.replace(/{i}/g, formItemId);
-  }
-  function giveRequired(string) {
-    return string.replace(/{required}/g, 'required=""');
-  }
-
 	// Auxiliary form functions
   function getItemVal(formName, formIndex) {
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
+	function getFormVal(parentName, formType, formName) {
+    return $(parentName).find(formType + '[name="' + formName + '"]').val();
+  }
+
+	// Function for showing the user the system is loading
+	function showLoading(onSuccess) {
+		$("#loadFrame").children("h1").html("Creating dataset...")
+		$("#loadFrame").fadeIn(300, onSuccess);
+	}
 
 	ready.on(function() {
 		// Add the first element
@@ -67,20 +68,25 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 		// Script when the form is successfull
 		forms.initializeForm('#createForm', function() {
-			// Save dataset
-			forms.saveDataset("#createForm");
-			// Save all items in the dataset
-			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-			for (i = 0; i<=formItemId; i++) {
-				var question = getItemVal("question", i);
-				var answer = getItemVal("answer", i);
-				var hint = getItemVal("hint", i);
-				hint = (hint==="undefined") ? "" : hint;
+			showLoading(function() {
+				// Save dataset
+				var form = "#createForm";
+				forms.saveDataset(form);
+				// Save all items in the dataset
+				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+				for (i = 0; i<=formItemId; i++) {
+					var question = getItemVal("question", i);
+					var answer = getItemVal("answer", i);
+					var hint = getItemVal("hint", i);
+					hint = (hint==="undefined") ? "" : hint;
 
-				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-			}
-			db.close();
-			window.location = "index.html?create_dataset";
+					db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+				}
+				db.close();
+				var language = getFormVal(form, "select", "language");
+	      var subject = getFormVal(form, "select", "subject");
+				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+			});
 		});
 
 		// Initiate select boxes
