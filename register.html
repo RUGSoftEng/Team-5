@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript">var fs = require("fs");</script>
-    <!--script data-main="app/loginpage" src="lib/require.js"></script-->
+    <!--script data-main="app/registerpage" src="lib/require.js"></script-->
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
   </head>
@@ -14,7 +14,7 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header" >
 				<ul class="nav navbar-nav " id="nav-left">
-					<li class="navbar-brand">SlimStampen</li>
+					<li><a class="navbar-brand" href="#" onclick="location.href='login.html';" >SlimStampen</a></li>
 				</ul>
 
 				<div class="btn-group right-menu" role="group">
@@ -40,20 +40,51 @@
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
 								<p class="h1">
-									Welcome to the SlimStampen application.<br>
-									Please sign in below.
+									Account registration
 								</p>
 							</div>
 							<div class="panel-body text-info">
-								<form>
+								<form role="form">
 									<div class="form-group">
-										<label for="username">Username</label>
-										<input type="text" class="form-control" id="username" placeholder="Username">
+										<div class="row">
+											<div class="col-sm-6">
+												<label for="username">Username</label>
+												<input type="text" class="form-control" id="username" placeholder="Username">
+											</div>
+											<div class="col-sm-6">
+												<label for="password">Your email address</label>
+												<input type="email" class="form-control" id="email" placeholder="Email address">
+											</div>
+										</div>
 										
-										<label for="password">Password</label>
-										<input type="password" class="form-control" id="password" placeholder="Password">
+										<div class="row">
+											<div class="col-sm-6">
+												<label for="password">Password</label>
+												<input type="password" class="form-control" id="password" placeholder="Password">
+											</div>
+											<div class="col-sm-6">
+												<label for="password">Confirm password</label>
+												<input type="password" class="form-control" id="passwordconfirm" placeholder="Confirm password">
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-sm-6">
+												<label for="gender">Gender</label>
+												<select class="form-control" id="gender">
+													<option selected disabled>Select your gender</option>
+													<option value="male">Male</option>
+													<option value="female">Female</option>
+												</select>
+											</div>
+											<div class="col-sm-6">
+												<label for="dateofbirth">Date of birth</label>
+												<input type="date" class="form-control" id="dateofbirth">
+											</div>
+										</div>
 									</div>
-									<button type="submit" class="btn btn-info btn-block" formaction="index.html">Sign in</button>
+									<button type="submit" class="btn btn-info btn-block" formaction="index.html">Confirm and register account</button>
+									<button class="btn btn-secondary btn-block" formaction="login.html">Cancel and return to log in screen</button>
 								</form>
 							</div>
 							<div class="panel-footer">
@@ -61,11 +92,7 @@
 									<div class="col-sm-4 text-center">
 										<img src="testlogo.png" />
 									</div>
-									<div class="col-sm-4 text-center text-info">
-										Need help?<br>
-										<a href="#">I forgot my password.</a><br>
-										<a href="register.html">I want to register a new account.</a>
-									</div>
+									<div class="col-sm-4 text-center"></div>
 									<div class="col-sm-4 text-center">
 										<img src="testlogo.png" />
 									</div>
