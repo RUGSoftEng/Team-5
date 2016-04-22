@@ -1,42 +1,44 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms'], function (db, $, bootstrap, XLSX, parsley, select, forms) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
 
-	// Check in the database if the name of the dataset already exists
-	window.Parsley.addValidator('datasetName', {
-		validateString: function(value, requirement) {
-			var result = db.getQuery("getDatasetByName", [value]);
-			return (result.length==0);
-		},
-		messages: {
-			en: 'This name is already used for another dataset.'
-		}
-	});
-	// Check if the file uploaded file is correct (see xw_xfer)
-	window.Parsley.addValidator('fileXlsx', {
-		validateString: function(_value, maxSize, parsleyInstance) {
-			return correctUpload;
-		},
-		requirementType: 'integer',
-		messages: {
-			en: 'This file is not supported.'
-		}
-	});
+	ready.on(function() {
+		// Check in the database if the name of the dataset already exists
+		window.Parsley.addValidator('datasetName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getDatasetByName", [value]);
+				return (result.length==0);
+			},
+			messages: {
+				en: 'This name is already used for another dataset.'
+			}
+		});
+		// Check if the file uploaded file is correct (see xw_xfer)
+		window.Parsley.addValidator('fileXlsx', {
+			validateString: function(_value, maxSize, parsleyInstance) {
+				return correctUpload;
+			},
+			requirementType: 'integer',
+			messages: {
+				en: 'This file is not supported.'
+			}
+		});
 
-	// Script for evaluating the input of the upload form
-  forms.initializeForm('#uploadForm', function() {
-		forms.saveDataset('#uploadForm');
-		// Save all items in the dataset
-    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-		saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
-		db.close();
-		window.location = 'index.html';
-	});
+		// Script for evaluating the input of the upload form
+	  forms.initializeForm('#uploadForm', function() {
+			forms.saveDataset('#uploadForm');
+			// Save all items in the dataset
+	    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+			saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+			db.close();
+			window.location = 'index.html';
+		});
 
-	// Initiate select boxes
-	select.initiate("languages", ".selectLanguage");
-	select.initiate("subjects", ".selectSubject");
+		// Initiate select boxes
+		select.initiate("languages", ".selectLanguage");
+		select.initiate("subjects", ".selectSubject");
+	});
 
 	// Function for saving all items in the dataset
 	function saveDatasetItemsIntoDatabase(data,name) {
@@ -49,6 +51,12 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
 			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
 		});
+
+		// Initiate upload box
+		var xlf = document.getElementById('xlf');
+		if (xlf.addEventListener) {
+			xlf.addEventListener('change', handleFile, false);
+		}
 	}
 
 	/* Scripts for reading and processing the XLS files.
@@ -133,10 +141,5 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			xw_xfer(data);
 		};
 		reader.readAsBinaryString(f);
-	}
-
-	var xlf = document.getElementById('xlf');
-	if (xlf.addEventListener) {
-		xlf.addEventListener('change', handleFile, false);
 	}
 });

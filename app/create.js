@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'async'], function (config, db, $, bootstrap, select, forms, async) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'async', 'app/ready'], function (config, db, $, bootstrap, select, forms, async, ready) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -26,20 +26,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 			function(callback) {
 				// First create the element
 				newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-				async.during(
-					function (callback2) {
-						return callback2(null, newElement===undefined);
-					},
-					function (callback2) {
-						console.log("retry");
-						setTimeout(function () {
-		          callback(null, count);
-		        }, 100);
-					},
-					function (err) {
-						callback(null, "one");
-					}
-				);
+				callback(null, "one");
 			}, function(callback) {
 				// After the element is created perform these operations:
 				newElement.html(giveId(newElement.html(), formItemId));
@@ -82,7 +69,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
 
-	$(document).ready(function() {
+	ready.on(function() {
 		// Add the first element
 		add_element();
 		// Bind the click method for adding elements

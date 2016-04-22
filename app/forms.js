@@ -12,21 +12,9 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'async', 'parsley'],
       var parsley;
       async.series([
         function(callback) {
-          async.during(
-            function (callback2) {
-              return callback2(null, $(formName).length==0);
-            },
-            function (callback2) {
-              alert("try again");
-              window.location = window.location.href;
-            },
-            function (err) {
-              parsley = $(formName).parsley();
-              callback(null, "Initiate parsley");
-            }
-          );
+            parsley = $(formName).parsley();
+            callback(null, "Initiate parsley");
         }, function(callback) {
-          console.log(parsley);
           window.Parsley.on('field:validated', function() {
             // Initiate form error and success handling
             var ok = $('.parsley-error').length === 0;
