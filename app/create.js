@@ -27,7 +27,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 			remove_element($(this));
 		});
 		// When the TAB is pressed, add a new line
-		removeKeybinds();
+		removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
 			if (e.keyCode == config.key("TAB")) {
 					add_element();
@@ -37,9 +37,9 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		formItemId++;
 	}
 
-	function removeKeybinds() {
+	function removeKeybinds(keybind) {
 		$("#items table input").each(function() {
-			$(this).unbind("keydown");
+			$(this).unbind(keybind);
 		})
 	}
 

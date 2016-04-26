@@ -1,10 +1,10 @@
 /* file: welcome.js
  * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 17/3/2016
- * version 1.1
+ * date: 23/4/2016
+ * version 1.2
  *
  * Description:
- * Main script for initiating the welcome  page.
+ * Main script for initiating the welcome page.
  */
 
 define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
@@ -69,7 +69,6 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
 	$(document).ready(function () {
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
-    console.log(currentSubject);
 
     // Show message if there is any
     if ($_GET('message')) {

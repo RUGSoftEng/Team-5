@@ -38,14 +38,28 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     }
   }
 
+  function formatFactList(items) {
+    var newList = [];
+    items.forEach(function(item) {
+      newItem = {
+        id: item.item_id,
+        text: item.item_question,
+        answer: item.item_answer,
+        hint: item.item_hint
+      };
+      newList.push(newItem);
+    });
+    return newList;
+  }
+
   disableAutocomplete();
 
   // When the page is loaded we get the datasetId from the page url and load the dataset from the databese
   ready.on(function() {
     var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
-    var datasetItems = db.getQuery("getDatasetItems",[datasetId]);
-    question.initialise(datasetItems);
+    var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+    question.initialize(factList);
   	question.show();
 
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
