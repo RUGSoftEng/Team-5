@@ -8,6 +8,7 @@
  */
 
 define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
+
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
