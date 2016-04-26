@@ -8,7 +8,7 @@ define(['jquery'], function($) {
         console.log("After ready");
         callback();
         $("#loadFrame").fadeOut(300);
-      }, 0);
+      }, 1);
     }
   }
 });

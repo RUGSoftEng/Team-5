@@ -7,7 +7,12 @@
  * Main script for initiating the welcome page.
  */
 
+<<<<<<< HEAD
+define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
+
+=======
 define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
+>>>>>>> loadform
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");

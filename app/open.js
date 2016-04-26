@@ -1,7 +1,25 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
+
+	// Function for saving all items in the dataset
+	function saveDatasetItemsIntoDatabase(data,name) {
+		var output = to_json(data);
+		var sheetName = Object.keys(output)[0];
+
+		$.each(output[sheetName], function (i, item) {
+			var question = output[sheetName][i].question;
+			var answer = output[sheetName][i].answer;
+			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
+			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
+		});
+	}
+	// Function for showing the user the system is loading
+	function showLoading(onSuccess) {
+		$("#loadFrame").children("h1").html("Uploading dataset...")
+		$("#loadFrame").fadeIn(300, onSuccess);
+	}
 
 	ready.on(function() {
 		// Check in the database if the name of the dataset already exists
@@ -25,32 +43,51 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			}
 		});
 
+		// Get value of form input
+		function getFormVal(parentName, formType, formName) {
+	    return $(parentName).find(formType + '[name="' + formName + '"]').val();
+	  }
+
 		// Script for evaluating the input of the upload form
 	  forms.initializeForm('#uploadForm', function() {
-			forms.saveDataset('#uploadForm');
-			// Save all items in the dataset
-	    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-			saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
-			db.close();
-			window.location = 'index.html';
+			showLoading(function () {
+				var form = '#uploadForm';
+				forms.saveDataset(form);
+				// Save all items of the dataset
+		    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+				db.close();
+				var language = getFormVal(form, "select", "language");
+	      var subject = getFormVal(form, "select", "subject");
+				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+			});
 		});
 
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");
 		select.initiate("subjects", ".selectSubject");
 
-		// Function for saving all items in the dataset
-		function saveDatasetItemsIntoDatabase(data,name) {
-			var output = to_json(data);
-			var sheetName = Object.keys(output)[0];
+		// Highlight upload area when dragging files
+		$(document).on("dragenter", function() {
+			$("#xlf").addClass("dragging");
+		}).on("drop", function() {
+			$("#xlf").removeClass("dragging");
+		});
 
-			$.each(output[sheetName], function (i, item) {
-				var question = output[sheetName][i].question;
-				var answer = output[sheetName][i].answer;
-				var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
-				db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
-			});
-		}
+		// Prevent Electron from opening files when dragging
+		document.addEventListener('dragover',function(event) {
+			if (event.target.id!="xlf") {
+				event.preventDefault();
+		    return false;
+			}
+	  },false);
+
+	  document.addEventListener('drop',function(event){
+			if (event.target.id!="xlf") {
+				event.preventDefault();
+				return false;
+			}
+	  },false);
 	});
 
 
