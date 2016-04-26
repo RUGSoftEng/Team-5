@@ -8,7 +8,6 @@
  */
 
 define([], function () {
-	console.log("hallo");
 	var options = {		
 	  name: 'SlimStampen',
 //	  icns: '/path/to/icns/file', // (optional, only for MacOS), 
@@ -29,7 +28,5 @@ define([], function () {
 	    }
 	  }
 	};
-	electronsudo.exec("chmod 0777 database/user.sqlite", options, function(error) {	
-		console.log(error);
-	});
+	electronsudo.exec("chmod 0777 database/user.sqlite", options, function(error) {});
 });
