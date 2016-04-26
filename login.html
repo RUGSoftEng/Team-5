@@ -5,10 +5,12 @@
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript">var sha256 = require("sha256");</script>
     <script type="text/javascript">var fs = require("fs");</script>
-    <!--script data-main="app/loginpage" src="lib/require.js"></script-->
+    <script data-main="app/loginpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
+    <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
   </head>
   <body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -45,15 +47,16 @@
 								</p>
 							</div>
 							<div class="panel-body text-info">
-								<form>
+                              <form data-parsley-validate="">
 									<div class="form-group">
 										<label for="username">Username</label>
-										<input type="text" class="form-control" id="username" placeholder="Username">
-										
-										<label for="password">Password</label>
-										<input type="password" class="form-control" id="password" placeholder="Password">
+                                      <input type="text" class="form-control" id="username" placeholder="Username" data-parsley-user-name="1">
 									</div>
-									<button type="submit" class="btn btn-info btn-block" formaction="index.html">Sign in</button>
+									<div class="form-group">
+										<label for="password">Password</label>
+                                      <input type="password" class="form-control" id="password" placeholder="Password" data-parsley-password-name="1">
+									</div>
+                                  <button type="submit" class="btn btn-info btn-block">Sign in</button>
 								</form>
 							</div>
 							<div class="panel-footer">

@@ -12,6 +12,8 @@ define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
+  
+  
 
 	function createSidebarElements() {
 		var li1 = "<li class=\"sidebar_li\" subject_id=\"";

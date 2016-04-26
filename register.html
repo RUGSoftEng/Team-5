@@ -5,10 +5,12 @@
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript">var sha256 = require("sha256");</script>
     <script type="text/javascript">var fs = require("fs");</script>
-    <!--script data-main="app/registerpage" src="lib/require.js"></script-->
+    <script data-main="app/registerpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
+    <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
   </head>
   <body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -44,16 +46,17 @@
 								</p>
 							</div>
 							<div class="panel-body text-info">
-								<form role="form">
+                              <form role="form" data-parsley-validate="">
+                                  <fieldset>
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6">
 												<label for="username">Username</label>
-												<input type="text" class="form-control" id="username" placeholder="Username">
+                                              <input type="text" class="form-control" id="username" placeholder="Username" data-parsley-user-name="1">
 											</div>
 											<div class="col-sm-6">
 												<label for="password">Your email address</label>
-												<input type="email" class="form-control" id="email" placeholder="Email address">
+                                              <input type="email" class="form-control" id="email" placeholder="Email address" data-parsley-email-name="1">
 											</div>
 										</div>
 										
@@ -64,7 +67,7 @@
 											</div>
 											<div class="col-sm-6">
 												<label for="password">Confirm password</label>
-												<input type="password" class="form-control" id="passwordconfirm" placeholder="Confirm password">
+												<input type="password" class="form-control" id="confirm_password" placeholder="Confirm password">
 											</div>
 										</div>
 										
@@ -83,9 +86,10 @@
 											</div>
 										</div>
 									</div>
-									<button type="submit" class="btn btn-info btn-block" formaction="index.html">Confirm and register account</button>
-									<button class="btn btn-secondary btn-block" formaction="login.html">Cancel and return to log in screen</button>
-								</form>
+									<button type="submit" class="btn btn-info btn-block">Confirm and register account</button>
+                                    </form>
+                                  <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='login.html'">Cancel and return to log in screen</button>
+								
 							</div>
 							<div class="panel-footer">
 								<div class="row">
