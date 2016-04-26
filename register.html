@@ -52,29 +52,29 @@
 										<div class="row">
 											<div class="col-sm-6">
 												<label for="username">Username</label>
-                                              <input type="text" class="form-control" id="username" placeholder="Username" data-parsley-user-name="1">
+                                              <input type="text" class="form-control" id="username" placeholder="Username" data-parsley-user-name="1" data-parsley-required = "true">
 											</div>
 											<div class="col-sm-6">
-												<label for="password">Your email address</label>
-                                              <input type="email" class="form-control" id="email" placeholder="Email address" data-parsley-email-name="1">
+												<label for="email">Your email address</label>
+                                              <input type="email" class="form-control" id="email" placeholder="Email address" data-parsley-email-name="1" data-parsley-required = "true">
 											</div>
 										</div>
 										
 										<div class="row">
 											<div class="col-sm-6">
 												<label for="password">Password</label>
-												<input type="password" class="form-control" id="password" placeholder="Password">
+                                              <input type="password" class="form-control" id="password" placeholder="Password" required="">
 											</div>
 											<div class="col-sm-6">
 												<label for="password">Confirm password</label>
-												<input type="password" class="form-control" id="confirm_password" placeholder="Confirm password">
+                                              <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
 											</div>
 										</div>
 										
 										<div class="row">
 											<div class="col-sm-6">
 												<label for="gender">Gender</label>
-												<select class="form-control" id="gender">
+                                              <select class="form-control" id="gender" data-parsley-required = "true">
 													<option selected disabled>Select your gender</option>
 													<option value="male">Male</option>
 													<option value="female">Female</option>
@@ -82,7 +82,7 @@
 											</div>
 											<div class="col-sm-6">
 												<label for="dateofbirth">Date of birth</label>
-												<input type="date" class="form-control" id="dateofbirth">
+                                              <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
 											</div>
 										</div>
 									</div>
