@@ -8,9 +8,10 @@
  */
 
 define([], function () {
+  // Ask for permission to write to the database on Linux and Mac OSX
 	var options = {		
 	  name: 'SlimStampen',
-//	  icns: '/path/to/icns/file', // (optional, only for MacOS), 
+	//icns: '/path/to/icns/file', // (optional, only for MacOS), 
 	  process: {
 	    options: {
 	      // Can use custom environment variables for your privileged subprocess 
@@ -28,5 +29,5 @@ define([], function () {
 	    }
 	  }
 	};
-	electronsudo.exec("chmod 0777 database/user.sqlite", options, function(error) {});
+	electronsudo.exec("chmod 755 database/", options, function(error) {});
 });
