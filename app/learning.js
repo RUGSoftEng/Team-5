@@ -14,6 +14,10 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   function disableAutocomplete() {
     $('input').attr('autocomplete', 'off');
   }
+	
+	function inputIsEmpty() {
+		return $.trim($("#answer").val()).length == 0;
+	}
 
   function nextQuestion() {
     clearTimeout(timeout);
@@ -30,7 +34,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   function handleEnter() {
     if (waitingForEnter) {
       nextQuestion();
-    } else {
+    } else if (!inputIsEmpty()) {
       $( "#answer" ).prop("disabled", true);
       question.checkAnswer();
       waitingForEnter = true;
@@ -54,7 +58,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
 
   disableAutocomplete();
 
-  // When the page is loaded we get the datasetId from the page url and load the dataset from the databese
+  // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);

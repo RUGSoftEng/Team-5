@@ -10,13 +10,13 @@ define(function (require) {
 	var constants = {
 		NUMBER_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
-		TUTORIAL_MODE: false,
+		TUTORIAL_MODE: true,
 		TIME_LIMIT: 600,
 		FEEDBACK_DELAY_CORRECT: 0.5,
 		FEEDBACK_DELAY_INCORRECT: 10,
 		DATABASE_USER: __dirname + "/database/user.sqlite",
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
-		ALGORITHM: "slimstampen" // flashcard; slimstampen;
+		ALGORITHM: "flashcard" // flashcard; slimstampen;
 	};
 
 	var keys = {
