@@ -6,11 +6,12 @@ define(['jquery'], function($) {
     $(".timer .current").html(timeToString(currentTime));
     if (currentTime>=max_seconds) {
       clearInterval(timer);
-      alert("You have run out of time!");
+      alert("You are done with this session!");
       $('.timer').css("color", "red");
+      window.location = 'index.html';
     }
   }
-  
+
   function updateCountdown(timerid) {
     currentTime = $(timerid).data("seconds");
     currentTime--;
@@ -32,12 +33,12 @@ define(['jquery'], function($) {
     seconds = time%60;
     return timeFormat(minutes)+":"+timeFormat(seconds);
   }
-  
+
   // Clear the timer by setting it back to 00:00
   function clearTimer(timerid) {
     $(timerid+" .current").html("00:00");
   }
-  
+
   return {
     // Timer functions that initiates and updates the timer.
     startTimer: function(timerid, max_seconds) {
@@ -45,13 +46,13 @@ define(['jquery'], function($) {
       $(timerid+" .max").html(timeToString(max_seconds));
       clearTimer(timerid);
     },
-    
+
     startCountdown: function(timerid, seconds) {
       countdown = setInterval(function() { updateCountdown(timerid); }, 1000);
-      
+
       $(timerid).html(seconds);
     },
-    
+
     clearCountdown: function() {
       clearInterval(countdown);
     }

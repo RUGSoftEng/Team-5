@@ -1,17 +1,27 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
+define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, messages, config, string, slimstampen) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
-  
+
   var itemsAnsweredCorrectly = 0;
   var answerWasCorrect;
-  
+
   var tutorialLength;
   var inTutorial = config.constant("TUTORIAL_MODE");
+
+  var startTime = new Date();
+  var firstKeyPress = 0;
+  var responseList = [];
 
   // Calculate the percentage of 'part out of total'
   function percentage(part, total) {
    return Math.round(part / total * 100);
+  }
+
+  // Calculate the time difference in milliseconds
+  function measureTime(start) {
+    var end = new Date();
+    return end.getTime() - start.getTime();
   }
 
   // Check whether the user is in tutorial mode.
@@ -63,45 +73,74 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   }
 
   // Handle how to move to the next question
-  // depending on the tutorial status.
+  // depending on the tutorial status and algorithm.
   function nextQuestion() {
-    if (inTutorial) {
-      currentItemIndex++;
-      inTutorial = checkTutorialStatus();
-    } else if (answerWasCorrect) {
-      items.splice(currentItemIndex, 1);
-      currentItemIndex %= items.length;
-    } else {
-      currentItemIndex = (currentItemIndex + 1) % items.length;
+
+    switch(config.constant("ALGORITHM")) {
+      case "flashcard":
+        // Use flaschcard method to determine next question
+        if (inTutorial) {
+          currentItemIndex++;
+          inTutorial = checkTutorialStatus();
+        } else if (answerWasCorrect) {
+          items.splice(currentItemIndex, 1);
+          currentItemIndex %= items.length;
+        } else {
+          currentItemIndex = (currentItemIndex + 1) % items.length;
+        }
+        break;
+      case "slimstampen":
+        // Update the response list in order to determine next question
+        newResponse = {
+          factId: items[currentItemIndex].id,
+          timeCreated: timeCreated,
+          number: 0,
+          data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
+        };
+        responseList.push(newResponse);
+        // Use slimstampen method to determine next question
+        var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
+        currentItemIndex = items.indexOf(newQuestion);
+        break;
     }
+    timeCreated = measureTime(startTime);
+    firstKeyPress = 0;
   }
 
   function showTutorialInstruction() {
-    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
+    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].answer);
   }
-  
+
   function handleScoreIncrease() {
     if (!inTutorial) {
       itemsAnsweredCorrectly++;
     }
     showProgress();
-    
-    if (itemsAnsweredCorrectly == totalLength) {
+
+    if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
       alert("Done!");
       window.location = 'index.html';
     }
   }
 
   return {
-    initialise: function(datasetItems) {
-        items = datasetItems;
+    initialize: function(factList) {
+        items = factList;
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
+        timeCreated = measureTime(startTime);
+
+        window.onkeyup = function(e) {
+          // Measure first key press if a letter or number was pressed
+          if (!firstKeyPress && e.keyCode >= 65 && e.keyCode <= 90) {
+            firstKeyPress = measureTime(startTime);
+          }
+        };
     },
 
     show: function() {
       showProgress();
-      $("#question").html(items[currentItemIndex].item_question);
+      $("#question").html(items[currentItemIndex].text);
 
       if (inTutorial) {
         showTutorialInstruction();
@@ -115,8 +154,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       * that it was almost correct.
       */
       var input = document.getElementById("answer").value;
-      var answer = items[currentItemIndex].item_answer;
-
+      var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
 
       if (difference == 0) {
@@ -129,13 +167,13 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       }
       answerWasCorrect = (difference == 0);
     },
-    
+
     nextQuestion: function() {
       nextQuestion();
     },
 
     hint: function() {
-        return items[currentItemIndex].item_hint;
+        return items[currentItemIndex].hint;
     }
   }
 });

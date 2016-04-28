@@ -1,4 +1,5 @@
-//Load common code that includes config, then load the app logic for this page.
+//Load common code that includes config, then load the script needed for login page.
+
 requirejs(['./common'], function (common) {
-  requirejs(['./app/login']);
+	requirejs(['./app/login']);
 });

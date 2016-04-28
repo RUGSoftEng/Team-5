@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready'], function (config, db, $, bootstrap, select, forms, ready) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone'], function (config, db, $, bootstrap, select, forms, ready, clone) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -20,17 +20,14 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	// Function for adding elements to the form
 	function add_element() {
-		// Perform the following operations in sequence:
-		var newElement = $('#item-layout').clone(true).appendTo("#items table").removeAttr("id");
-
-		// After the element is created perform these operations:
-		newElement.html(giveId(newElement.html(), formItemId));
-		newElement.html(giveRequired(newElement.html()));
+		var newElement = $('#items table').cloneLayout();
+		newElement.replaceClone(["i", "required"], [formItemId, "required"]);
+		// Remove when clicked on close
 		newElement.on("click", ".remove", function() {
 			remove_element($(this));
 		});
 		// When the TAB is pressed, add a new line
-		removeKeybinds();
+		removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
 			if (e.keyCode == config.key("TAB")) {
 					add_element();
@@ -40,24 +37,25 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		formItemId++;
 	}
 
-	function removeKeybinds() {
+	function removeKeybinds(keybind) {
 		$("#items table input").each(function() {
-			$(this).unbind("keydown");
+			$(this).unbind(keybind);
 		})
 	}
-
-  // Auxiliary replace functions
-  function giveId(string, formItemId) {
-    return string.replace(/{i}/g, formItemId);
-  }
-  function giveRequired(string) {
-    return string.replace(/{required}/g, 'required=""');
-  }
 
 	// Auxiliary form functions
   function getItemVal(formName, formIndex) {
     return $("#items input[name='" + formName + formIndex + "']").val();
   }
+	function getFormVal(parentName, formType, formName) {
+    return $(parentName).find(formType + '[name="' + formName + '"]').val();
+  }
+
+	// Function for showing the user the system is loading
+	function showLoading(onSuccess) {
+		$("#loadFrame").children("h1").html("Creating dataset...")
+		$("#loadFrame").fadeIn(300, onSuccess);
+	}
 
 	ready.on(function() {
 		// Add the first element
@@ -70,20 +68,25 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 		// Script when the form is successfull
 		forms.initializeForm('#createForm', function() {
-			// Save dataset
-			forms.saveDataset("#createForm");
-			// Save all items in the dataset
-			var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-			for (i = 0; i<=formItemId; i++) {
-				var question = getItemVal("question", i);
-				var answer = getItemVal("answer", i);
-				var hint = getItemVal("hint", i);
-				hint = (hint==="undefined") ? "" : hint;
+			showLoading(function() {
+				// Save dataset
+				var form = "#createForm";
+				forms.saveDataset(form);
+				// Save all items in the dataset
+				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+				for (i = 0; i<=formItemId; i++) {
+					var question = getItemVal("question", i);
+					var answer = getItemVal("answer", i);
+					var hint = getItemVal("hint", i);
+					hint = (hint==="undefined") ? "" : hint;
 
-				db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-			}
-			db.close();
-			window.location = "index.html";
+					db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+				}
+				db.close();
+				var language = getFormVal(form, "select", "language");
+	      var subject = getFormVal(form, "select", "subject");
+				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+			});
 		});
 
 		// Initiate select boxes

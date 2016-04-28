@@ -26,9 +26,12 @@
     "async": "^2.0.0-rc.3",
     "bootstrap": "^3.3.6",
     "bootstrap-select": "^1.10.0",
+    "electron-sudo": "^3.0.4",
     "jquery": "^2.2.2",
     "parsleyjs": "^2.3.7",
+    "sha256": "file:node_modules\\sha256",
     "sqlite": "0.0.4",
+    "underscore": "^1.8.3",
     "xlsx": "^0.8.0"
   }
 }

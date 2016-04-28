@@ -18,7 +18,7 @@ nav { }
   nav .center-menu { display:flex; justify-content: center; }
   nav .right-menu { display:flex;position:absolute;right:0px;top:0px; }
 
-#loadFrame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: 0.8; }
+#loadFrame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: 0.9; z-index:1000; }
 	#loadFrame h1 { text-align: center; margin-top: 25%; }
 #content { margin-top: 100px; }
   #content h1 { margin-bottom: 30px; }
@@ -31,6 +31,7 @@ nav { }
     #hint { display: none; }
     #show .countdownnotice { font-style: italic; font-size: 15px }
     #show .message, #hint .message { float: left; width: 80%; font-size: 18px; }
+	#messages { display: none; }
   .stats { margin: 0 0 50px 0; }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
 
@@ -40,10 +41,11 @@ nav { }
     form #xlf { border: 2px dashed #bbb; width: 100%; padding: 25px; }
 		form label { margin-top: 15px; }
 		form input[type="submit"] { margin-top: 15px; }
+		form input[type="file"].dragging { background-color: #5f6ceb; }
     .bootstrap-select { width: 100% !important; }
     .dropdown-header { color: #555 !important;  }
     .bootstrap-select .dropdown-menu li.disabled:hover { background: #8a94a6; }
-    #item-layout { display: none; }
+    #item-layout, #layout { display: none; }
     #items { }
       #items .table td { line-height: 30px; }
       #items .remove { color: red; font-size:30px; cursor: pointer; }
