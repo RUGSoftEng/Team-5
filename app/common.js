@@ -24,7 +24,7 @@ requirejs.config({
         underscore : "underscore/underscore-min",
         utils : "../lib/slimstampen/utils",
         slimstampenModel : "../lib/slimstampen/model",
-	"electron-sudo": "../lib/electronsudo.min"
+	       "electron-sudo": "../lib/electronsudo.min"
     }
 
 });

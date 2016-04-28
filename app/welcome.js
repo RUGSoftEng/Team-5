@@ -12,6 +12,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
+  
+  
 
 	function createSidebarElements() {
 		var rows = db.getUnique('getModules', 'subject_name', []);
