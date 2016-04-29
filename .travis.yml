@@ -14,5 +14,5 @@ node_js:
   - "iojs"
 notifications:
   email: false
-before_script: ./node_modules/jshint/bin/jshint ./tests/*.js && ./node_modules/jshint/bin/jshint ./app/*.js
-script: ./node_modules/.bin/intern-client config=tests/internCloud && ./node_modules/.bin/intern-runner config=tests/internCloud
+before_script: ./lib/jshint ./tests/*.js && ./lib/jshint ./app/*.js
+script: ./lib/intern/intern-client config=tests/internCloud && ./lib/intern/intern-runner config=tests/internCloud
