@@ -1,4 +1,4 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, messages, config, string, slimstampen) {
+define(['jquery', 'i18n!nls', 'printf', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, lang, printf, messages, config, string, slimstampen) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -159,11 +159,11 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
 
       if (difference == 0) {
         handleScoreIncrease();
-        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY_CORRECT") );
+        messages.show( lang.answer_correct, "success", config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( sprintf(lang.answer_almost, answer, difference), "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
-        messages.show( "Wrong answer! Expected answer: <b>" + answer + "</b>", "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( sprintf(lang.answer_wrong, answer), "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
       answerWasCorrect = (difference == 0);
     },

@@ -24,7 +24,16 @@ requirejs.config({
         underscore : "underscore/underscore-min",
         utils : "../lib/slimstampen/utils",
         slimstampenModel : "../lib/slimstampen/model",
-	       "electron-sudo": "../lib/electronsudo.min"
+	      "electron-sudo": "../lib/electronsudo.min",
+				i18n: "../lib/i18n",
+				nls: "../nls/lang",
+				printf: "sprintf-js/dist/sprintf.min"
+    },
+		config: {
+        //Set the config for the i18n
+        //module ID
+        i18n: {
+            locale: 'nl'
+        }
     }
-
 });
