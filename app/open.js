@@ -11,13 +11,13 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
-			var hint = (output[sheetName][i].hint == null) ? "" : output[sheetName][i].hint;
+			var hint = (output[sheetName][i].hint === null) ? "" : output[sheetName][i].hint;
 			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
 		});
 	}
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html("Uploading dataset...")
+		$("#loadFrame").children("h1").html("Uploading dataset...");
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
@@ -26,7 +26,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		window.Parsley.addValidator('datasetName', {
 			validateString: function(value, requirement) {
 				var result = db.getQuery("getDatasetByName", [value]);
-				return (result.length==0);
+				return (result.length===0);
 			},
 			messages: {
 				en: 'This name is already used for another dataset.'

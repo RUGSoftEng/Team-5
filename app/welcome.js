@@ -12,8 +12,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
-  
-  
+
+
 
 	function createSidebarElements() {
 		var rows = db.getUnique('getModules', 'subject_name', []);
@@ -36,7 +36,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
       newElement.on("click", ".mybutton", function() {
         var id = $(this).data("id");
         window.location = "learn.html?"+id;
-      })
+      });
 		}
 	}
 
@@ -45,10 +45,10 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     var element = $("#messages");
     switch(message) {
       case "create_dataset":
-        message = "You have succesfully created a new dataset."
+        message = "You have succesfully created a new dataset.";
         break;
       case "open_dataset":
-        message = "You have succesfully uploaded a new dataset."
+        message = "You have succesfully uploaded a new dataset.";
         break;
       default:
         message = "This message is unknown.";

@@ -40,7 +40,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 	function removeKeybinds(keybind) {
 		$("#items table input").each(function() {
 			$(this).unbind(keybind);
-		})
+		});
 	}
 
 	// Auxiliary form functions
@@ -53,7 +53,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html("Creating dataset...")
+		$("#loadFrame").children("h1").html("Creating dataset...");
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
@@ -97,7 +97,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		window.Parsley.addValidator('datasetName', {
 			validateString: function(value, requirement) {
 				var result = db.getQuery("getDatasetByName", [value]);
-				return result.length == 0;
+				return result.length === 0;
 			},
 			messages: {
 				en: 'This name is already used for another dataset.'

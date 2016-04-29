@@ -25,13 +25,13 @@ define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config,
 			on : function (ps) {
 				ps.stdout.on('data', function (data) {});
 				setTimeout(function () {
-					ps.kill()
+					ps.kill();
 				}
 					.bind(ps), 50000);
 			}
 		}
 	};
-	
+
 	electronsudo.exec("chmod 755 database/", options, function (error) {});
 	$("form").submit(function (e) {
 		e.preventDefault();

@@ -116,6 +116,6 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 			var query = queries[queryname];
 			db.each(query,args, func);
 		}
-	}
+	};
 	return database;
 });

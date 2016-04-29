@@ -31,5 +31,5 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley'], function
 
       db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
     }
-  }
+  };
 });

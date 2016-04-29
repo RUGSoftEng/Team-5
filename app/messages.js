@@ -33,19 +33,19 @@ define(['jquery', 'app/timer', 'app/string'], function ($, timer, string) {
           break;
       }
     },
-    
+
     clear: function() {
         $("#show .message").html("");
         $("#show").removeClass("alert-success alert-danger alert-warning");
         $("#show .icon .glyphicon").removeClass("glyphicon-ok-sign glyphicon-remove-sign glyphicon-exclamation-sign");
         $("#hint").hide();
     },
-    
+
     showHint: function(message) {
       // Functions showHint, showProgress and showQuestion are used to update the hint,
       // the progress bar and the question box respectively.
       $("#hint").show();
       $("#hint .message").html(message);
     }
-  }
+  };
 });

@@ -34,5 +34,5 @@ define(function (require) {
 		key: function(name) {
 			return keys[name];
 		}
-	}
+	};
 });

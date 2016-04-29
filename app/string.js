@@ -10,5 +10,5 @@ define([], function () {
         return "s";
       }
     }
-  }
+  };
 });

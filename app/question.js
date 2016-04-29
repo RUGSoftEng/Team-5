@@ -156,7 +156,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
 
-      if (difference == 0) {
+      if (difference === 0) {
         handleScoreIncrease();
         messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
@@ -164,7 +164,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
       } else {
         messages.show( "Wrong answer! Expected answer: <b>" + answer + "</b>", "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
-      answerWasCorrect = (difference == 0);
+      answerWasCorrect = (difference === 0);
     },
 
     nextQuestion: function() {
@@ -174,5 +174,5 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
     hint: function() {
         return items[currentItemIndex].hint;
     }
-  }
+  };
 });

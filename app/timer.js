@@ -17,7 +17,7 @@ define(['jquery'], function($) {
     currentTime--;
     $(timerid).data("seconds", currentTime);
     $(timerid).html(currentTime);
-    if (currentTime == 0) {
+    if (currentTime === 0) {
       clearInterval(countdown);
     }
   }
@@ -56,5 +56,5 @@ define(['jquery'], function($) {
     clearCountdown: function() {
       clearInterval(countdown);
     }
-  }
+  };
 });
