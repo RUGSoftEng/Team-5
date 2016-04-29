@@ -21,7 +21,9 @@ define(function (require) {
 
 	var keys = {
 		TAB: 9,
-		ENTER: 13
+		ENTER: 13,
+		"0": 48,
+		"z": 90
 	};
 
 	return {

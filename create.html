@@ -59,24 +59,8 @@
             You have not entered all fields!
           </div>
           <form id="createForm" data-parsley-validate="">
-            <div class="col-md-4">
-              <label for="name">Name:</label>
-              <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
-              <label for="language">Language:</label>
-              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
-                <!-- Items are loaded in selectLanguage.js  -->
-              </select>
-              <div class="clear"></div>
-
-              <label for="subject">Subject:</label>
-              <select class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
-                <!-- Items are loaded in selectSubject.js  -->
-              </select>
-
-              <input type="submit" name="create" class="btn btn-lg btn-success submit createdataset" value="Create dataset" />
-              <div class="clear"></div>
-            </div>
             <div class="col-md-8">
+              <h1>Create new dataset</h1>
               <div id="items">
                 <table class="table">
                   <tr>
@@ -94,6 +78,24 @@
                 </table>
               </div>
               <button class="btn btn-lg add btn-warning">Add item</button>
+            </div>
+            <div class="col-md-4">
+              <h1>Dataset information</h1>
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
+              <label for="language">Language:</label>
+              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
+                <!-- Items are loaded in selectLanguage.js  -->
+              </select>
+              <div class="clear"></div>
+
+              <label for="subject">Subject:</label>
+              <select class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
+                <!-- Items are loaded in selectSubject.js  -->
+              </select>
+
+              <input type="submit" name="create" class="btn btn-lg btn-success submit createdataset" value="Create dataset" />
+              <div class="clear"></div>
             </div>
           </form>
 				</div>

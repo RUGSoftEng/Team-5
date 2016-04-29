@@ -75,7 +75,6 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
   // Handle how to move to the next question
   // depending on the tutorial status and algorithm.
   function nextQuestion() {
-
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
         // Use flaschcard method to determine next question
@@ -132,7 +131,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed
-          if (!firstKeyPress && e.keyCode >= 65 && e.keyCode <= 90) {
+          if (!firstKeyPress && e.keyCode >= config.constant("0") && e.keyCode <= config.constant("z")) {
             firstKeyPress = measureTime(startTime);
           }
         };

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script type="text/javascript">var electronsudo = require("electron-sudo");</script>
-<script type="text/javascript">var sha256 = require("sha256");</script>    
+<script type="text/javascript">var sha256 = require("sha256");</script>
     <script type="text/javascript">var fs = require("fs");</script>
     <script data-main="app/loginpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
@@ -17,7 +17,7 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header" >
 				<ul class="nav navbar-nav " id="nav-left">
-					<li class="navbar-brand">SlimStampen</li>
+					<li class="navbar-brand" onclick="clickme();">SlimStampen</li>
 				</ul>
 
 				<div class="btn-group right-menu" role="group">
@@ -52,7 +52,7 @@
 									<div class="form-group">
 										<label for="username">Username</label>
 										<input type="text" class="form-control" id="username" placeholder="Username">
-										
+
 										<label for="password">Password</label>
 										<input type="password" class="form-control" id="password" placeholder="Password">
 									</div>
