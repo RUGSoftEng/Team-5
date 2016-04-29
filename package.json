@@ -4,7 +4,10 @@
   "description": "An application for learning all kinds of subjects",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "pretest": "chromedriver --port=4444 --url-base=wd/hub 1> /dev/null & ./node_modules/jshint/bin/jshint ./tests/*.js && ./node_modules/jshint/bin/jshint ./app/*.js",
+    "test": "./node_modules/.bin/intern-runner config=tests/internLocal",
+    "posttest": "echo 'Hallo!' && pkill chromedriver"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,7 @@
     "bootstrap": "^3.3.6",
     "bootstrap-select": "^1.10.0",
     "electron-sudo": "^3.0.4",
+    "intern": "^3.1.1",
     "jquery": "^2.2.2",
     "parsleyjs": "^2.3.7",
     "sha256": "^0.2.0",
