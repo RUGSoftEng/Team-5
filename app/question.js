@@ -1,4 +1,4 @@
-define(['jquery', 'i18n!nls', 'printf', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, lang, printf, messages, config, string, slimstampen) {
+define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, lang, messages, config, string, slimstampen) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -63,7 +63,7 @@ define(['jquery', 'i18n!nls', 'printf', 'app/messages', 'app/config', 'app/strin
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
+    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " " + lang("general_words") + "</p>" );
     var percentageVal = percentage(itemsAnsweredCorrectly, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
@@ -108,7 +108,7 @@ define(['jquery', 'i18n!nls', 'printf', 'app/messages', 'app/config', 'app/strin
   }
 
   function showTutorialInstruction() {
-    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].answer);
+    $("#question").append("<br>" + lang("tutorial_typeanswer", items[currentItemIndex].answer));
   }
 
   function handleScoreIncrease() {
@@ -118,7 +118,7 @@ define(['jquery', 'i18n!nls', 'printf', 'app/messages', 'app/config', 'app/strin
     showProgress();
 
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
-      alert("Done!");
+      alert(lang("learning_done"));
       window.location = 'index.html';
     }
   }
@@ -159,11 +159,11 @@ define(['jquery', 'i18n!nls', 'printf', 'app/messages', 'app/config', 'app/strin
 
       if (difference == 0) {
         handleScoreIncrease();
-        messages.show( lang.answer_correct, "success", config.constant("FEEDBACK_DELAY_CORRECT") );
+        messages.show( lang("answer_correct"), "success", config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( sprintf(lang.answer_almost, answer, difference), "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( lang("answer_almost", answer, difference), "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
-        messages.show( sprintf(lang.answer_wrong, answer), "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( lang("answer_wrong", answer), "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
       answerWasCorrect = (difference == 0);
     },
