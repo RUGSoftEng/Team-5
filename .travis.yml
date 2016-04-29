@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - "5"
+  - "5.1"
+  - "4"
+  - "4.2"
+  - "4.1"
+  - "4.0"
+  - "0.12"
+  - "0.11"
+  - "0.10"
+  - "0.8"
+  - "0.6"
+  - "iojs"
+notifications:
+  email: false
+before_script: ./node_modules/jshint/bin/jshint ./tests/*.js && ./node_modules/jshint/bin/jshint ./app/*.js
+script: ./node_modules/.bin/intern-client config=tests/internCloud && ./node_modules/.bin/intern-runner config=tests/internCloud
