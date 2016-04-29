@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script type="text/javascript">var electronsudo = require("electron-sudo");</script>
-<script type="text/javascript">var sha256 = require("sha256");</script>    
+<script type="text/javascript">var sha256 = require("sha256");</script>
     <script type="text/javascript">var fs = require("fs");</script>
     <script data-main="app/loginpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
@@ -48,11 +48,11 @@
 								</p>
 							</div>
 							<div class="panel-body text-info">
-								<form>
+								<form role="form" data-parsley-validate="">
 									<div class="form-group">
-										<label for="username">Username</label>
-										<input type="text" class="form-control" id="username" placeholder="Username">
-										
+										<label for="username">Username or email</label>
+										<input type="text" class="form-control" id="username" placeholder="Username or email" data-parsley-user-name="1" >
+
 										<label for="password">Password</label>
 										<input type="password" class="form-control" id="password" placeholder="Password">
 									</div>
