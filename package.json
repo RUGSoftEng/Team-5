@@ -32,6 +32,7 @@
     "electron-sudo": "^3.0.4",
     "intern": "^3.1.1",
     "jquery": "^2.2.2",
+    "jshint": "^2.9.2",
     "parsleyjs": "^2.3.7",
     "sha256": "^0.2.0",
     "sqlite": "0.0.4",
