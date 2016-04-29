@@ -17,7 +17,7 @@
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header" >
 				<ul class="nav navbar-nav " id="nav-left">
-					<li class="navbar-brand" onclick="clickme();">SlimStampen</li>
+					<li class="navbar-brand">SlimStampen</li>
 				</ul>
 
 				<div class="btn-group right-menu" role="group">
@@ -48,10 +48,10 @@
 								</p>
 							</div>
 							<div class="panel-body text-info">
-								<form>
+								<form role="form" data-parsley-validate="">
 									<div class="form-group">
-										<label for="username">Username</label>
-										<input type="text" class="form-control" id="username" placeholder="Username">
+										<label for="username">Username or email</label>
+										<input type="text" class="form-control" id="username" placeholder="Username or email" data-parsley-user-name="1" >
 
 										<label for="password">Password</label>
 										<input type="password" class="form-control" id="password" placeholder="Password">

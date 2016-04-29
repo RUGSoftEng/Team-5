@@ -48,7 +48,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config,
 		var result = db.getQuery(query, [user]);
 
 		if (sha256(password) == result[0].user_password) {
-			//document.cookie ='username='+result[0].user_name+';userId='+result[0].user_id+' path=/';
+			document.cookie ='username='+result[0].user_name+';userId='+result[0].user_id+' path=/';
 			window.location = "index.html";
 
 		} else {
@@ -59,6 +59,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config,
 
 	window.Parsley.addValidator('userName', {
 		validateString : function (value) {
+			console.log('parsley running');
 			var query = value.indexOf("@") != -1 ? "getUserIdbyEmail" : "getUserIdbyUsername";
 			var result = db.getQuery(query, [value]);
 			return (result.length == 1);
