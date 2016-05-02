@@ -32,7 +32,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config,
 		}
 	};
 	
-	electronsudo.exec("chmod 755 database/", options, function (error) {});
+	electronsudo.exec("chmod 600 database/", options, function (error) {});
 	$("form").submit(function (e) {
 		e.preventDefault();
 		var user = $("#username").val();
