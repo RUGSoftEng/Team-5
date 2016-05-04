@@ -23,7 +23,7 @@ define(['app/database', 'jquery', 'bootstrap', 'app/lang', 'app/string', 'xlsx',
 	
 	// Write localisable text to the page
 	string.fillinTextClasses();
-	$("#datasetname").prop("placeholder", lang("placeholder_name"));
+	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 	$("#datasetsubject").prop("title", lang("placeholder_subject"));
 	$("#buttonsave").prop("value", lang("open_buttonsave"));
 

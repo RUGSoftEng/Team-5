@@ -59,12 +59,12 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	
 	// Write localisable text to the page
 	string.fillinTextClasses();
-	$("#datasetname").prop("placeholder", lang("placeholder_name"));
+	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 	$("#datasetsubject").prop("title", lang("placeholder_subject"));
 	$("#buttoncreate").prop("value", lang("create_buttoncreate"));
-	$("#inputquestion").prop("placeholder", lang("create_question"));
-	$("#inputanswer").prop("placeholder", lang("create_answer"));
-	$("#inputhint").prop("placeholder", lang("create_hint"));
+	$("#inputquestion").prop("placeholder", lang("label_question"));
+	$("#inputanswer").prop("placeholder", lang("label_answer"));
+	$("#inputhint").prop("placeholder", lang("label_hint"));
 	
 	ready.on(function() {
 		// Add the first element
