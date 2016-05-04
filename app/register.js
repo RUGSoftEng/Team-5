@@ -18,6 +18,8 @@ define(['jquery', 'app/config','app/database', 'parsley' ], function ($, config,
     dateofbirth = date[2]+"-"+date[1]+"-"+date[0];
     db.executeQuery("addUser",[email,username,gen,dateofbirth,sha256(password)] );
     db.close();
+    alert('You signed up successfully,\n now we will redericet you to login screen')
+    window.location="login.js"
 
   }
 

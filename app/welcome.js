@@ -6,14 +6,15 @@
  * Description:
  * Main script for initiating the welcome page.
  */
+define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/cookie'], function ($, db, bootstrap, clone,cookie) {
+  //check if the user is logged in
+  var user = cookie.getUser();
+  console.log(user);
 
-define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
-
-
 
 	function createSidebarElements() {
 		var rows = db.getUnique('getModules', 'subject_name', []);
