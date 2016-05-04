@@ -18,8 +18,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		}
 	}
 
-	// Function for adding elements to the form
-	function add_element() {
+	function add_element_to_form() {
 		var newElement = $('#items table').cloneLayout();
 		newElement.replaceClone(["i", "required"], [formItemId, "required"]);
 		// Remove when clicked on close
@@ -30,7 +29,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
 			if (e.keyCode == config.key("TAB")) {
-					add_element();
+					add_element_to_form();
 			}
 		});
 		numberOfFormItems++;
@@ -59,10 +58,10 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	ready.on(function() {
 		// Add the first element
-		add_element();
+		add_element_to_form();
 		// Bind the click method for adding elements
 		$(".add").click(function() {
-			add_element();
+			add_element_to_form();
 			return false;
 		});
 
