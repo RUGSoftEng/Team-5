@@ -16,7 +16,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
   
 
 	function createSidebarElements() {
-		var rows = db.getUnique('getModules', 'subject_name', []);
+		var rows = db.getUnique2('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],

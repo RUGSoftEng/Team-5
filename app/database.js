@@ -70,6 +70,16 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
     }
     return true;
   }
+	
+	// Auxiluary uniqueness function
+  function isUnique2(unique_name1, unique_name2, queryResult, row) {
+    for (i = 0; i<queryResult.length;i++) {
+      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
+        return false;
+      }
+    }
+    return true;
+  }
 
 	var database = {
 		save : function () {
@@ -101,6 +111,15 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
 				if (isUnique(unique_name, queryResult, row))
+					queryResult.push(row);
+			});
+			return queryResult;
+		},
+		getUnique2: function(queryname, unique_name1, unique_name2, args) {
+			var queryResult = [];
+			var query = queries[queryname] ;
+			db.each(query,args, function(row, err) {
+				if (isUnique2(unique_name1, unique_name2, queryResult, row))
 					queryResult.push(row);
 			});
 			return queryResult;
