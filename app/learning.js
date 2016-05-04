@@ -63,8 +63,8 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
     var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
-    question.initialize(factList);
-  	question.show();
+    questions.initialize(factList);
+  	questions.show();
 
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
