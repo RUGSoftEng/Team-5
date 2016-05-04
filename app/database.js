@@ -9,7 +9,7 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
+define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
 	var queries = {
 		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -33,7 +33,7 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	var sql;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
-		alert("Failed to require sql.js through AMD");
+		alert(lang("error_requirefail", "sql.js"));
 	} else {
 		sql = sqlite;
 	}

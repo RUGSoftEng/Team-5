@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'app/lang'], function($, lang) {
   function updateTimer(max_seconds) {
     currentTime = $(".timer .current").data("seconds");
     currentTime++;
@@ -6,7 +6,7 @@ define(['jquery'], function($) {
     $(".timer .current").html(timeToString(currentTime));
     if (currentTime>=max_seconds) {
       clearInterval(timer);
-      alert("You are done with this session!");
+      alert(lang("learning_timeup"));
       $('.timer').css("color", "red");
       window.location = 'index.html';
     }

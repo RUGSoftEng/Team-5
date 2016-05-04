@@ -28,12 +28,5 @@ requirejs.config({
 				i18n: "../lib/i18n",
 				nls: "../nls/lang",
 				printf: "sprintf-js/dist/sprintf.min"
-    },
-		config: {
-        //Set the config for the i18n
-        //module ID
-        i18n: {
-            locale: 'nl'
-        }
     }
 });

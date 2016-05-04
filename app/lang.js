@@ -7,15 +7,32 @@
 //     lang("message_score", "John", 32)
 // Results in the string:
 //     "John scored 32 points."
+//
+// To translate a string in HTML, replace it by:
+//     <span class="text_string_name"></span>
+// Then, in the JS file for that page, run:
+//     string.fillinTextClasses();
+
+requirejs(["app/config"], function (config) {
+	var language = config.constant("LANGUAGE");
+	
+	requirejs.config({
+		config: {
+			i18n: {
+				locale: language
+			}
+		}
+	});
+});
 
 define(['jquery', 'i18n!nls', 'printf'], function ($, i18n, printf) {
   return function() {
 		var string = arguments[0];
-		var array = [];
+		var varargs = [];
 		for (i = 1; i < arguments.length; i++) {
-			array[i-1] = arguments[i];
+			varargs[i-1] = arguments[i];
 		}
 		
-		return vsprintf(i18n[string], array);
+		return vsprintf(i18n[string], varargs);
 	}
 });

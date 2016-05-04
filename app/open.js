@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async) {
+define(['app/database', 'jquery', 'bootstrap', 'app/lang', 'app/string', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async'], function (db, $, bootstrap, lang, string, XLSX, parsley, select, forms, ready, async) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -17,9 +17,15 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	}
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html("Uploading dataset...")
+		$("#loadFrame").children("h1").html(lang("open_busysaving"))
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
+	
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#datasetname").prop("placeholder", lang("placeholder_name"));
+	$("#datasetsubject").prop("title", lang("placeholder_subject"));
+	$("#buttonsave").prop("value", lang("open_buttonsave"));
 
 	ready.on(function() {
 		// Check in the database if the name of the dataset already exists
@@ -29,7 +35,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				return (result.length==0);
 			},
 			messages: {
-				en: 'This name is already used for another dataset.'
+				en: lang("error_datasetnamenotunique")
 			}
 		});
 		// Check if the file uploaded file is correct (see xw_xfer)
@@ -39,7 +45,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			},
 			requirementType: 'integer',
 			messages: {
-				en: 'This file is not supported.'
+				en: lang("error_unsupportedfiletype")
 			}
 		});
 

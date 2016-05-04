@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone'], function (config, db, $, bootstrap, select, forms, ready, clone) {
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -53,10 +53,19 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html("Creating dataset...")
+		$("#loadFrame").children("h1").html(lang("create_busycreating"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-
+	
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#datasetname").prop("placeholder", lang("placeholder_name"));
+	$("#datasetsubject").prop("title", lang("placeholder_subject"));
+	$("#buttoncreate").prop("value", lang("create_buttoncreate"));
+	$("#inputquestion").prop("placeholder", lang("create_question"));
+	$("#inputanswer").prop("placeholder", lang("create_answer"));
+	$("#inputhint").prop("placeholder", lang("create_hint"));
+	
 	ready.on(function() {
 		// Add the first element
 		add_element();
@@ -100,7 +109,7 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 				return result.length == 0;
 			},
 			messages: {
-				en: 'This name is already used for another dataset.'
+				en: lang("error_datasetnamenotunique")
 			}
 		});
 	});

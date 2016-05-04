@@ -7,7 +7,7 @@
  * Main script for initiating the welcome page.
  */
 
-define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string'], function ($, db, bootstrap, clone, lang, string) {
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
@@ -45,13 +45,13 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     var element = $("#messages");
     switch(message) {
       case "create_dataset":
-        message = "You have succesfully created a new dataset."
+        message = lang("success_createdataset");
         break;
       case "open_dataset":
-        message = "You have succesfully uploaded a new dataset."
+        message = lang("success_opendataset");
         break;
       default:
-        message = "This message is unknown.";
+        message = lang("message_default");
     }
     element.append("<p>"+message+"</p>").show();
   }
@@ -67,6 +67,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     var re = new RegExp(q+'=([^&]*)','i');
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
+	
+	// Write localisable text to the page
+	string.fillinTextClasses();
 
 	$(document).ready(function () {
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;

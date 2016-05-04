@@ -7,7 +7,7 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'app/lang', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, lang, bootstrap, config, db, messages, question, timer, db, ready) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, lang, string, bootstrap, config, db, messages, question, timer, db, ready) {
   const THOUSAND = 1000;
   var waitingForEnter = false;
 
@@ -57,13 +57,8 @@ define(['jquery', 'app/lang', 'bootstrap', 'app/config', 'app/database', 'app/me
   }
 	
 	// Write localisable text to the page
-	$(".text_general_progress").html(lang("general_progress"));
-	$(".text_general_words").html(lang("general_words"));
-	$(".text_general_correct").html(lang("general_correct"));
-	$(".text_learning_pause").html(lang("learning_pause"));
-	$(".text_learning_stop").html(lang("learning_stop"));
-	$(".text_general_help").html(lang("general_help"));
-	$("#answer").prop("placeholder", lang("learning_typehere"));
+	string.fillinTextClasses();
+	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
 	
   disableAutocomplete();
 

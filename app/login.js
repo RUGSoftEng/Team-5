@@ -4,9 +4,9 @@
  * version 1.0
  *
  * Description:
- * Main script for initiating the welcome  page.
+ * Main script for initiating the login page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config, db, parsley) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string'], function ($, config, db, parsley, lang, string) {
 
 	// Ask for permission to write to the database on Linux and Mac OSX
 	var options = {
@@ -51,7 +51,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config,
 			window.location = "index.html";
 
 		} else {
-			alert('wrong password');
+			alert(lang("error_passwordincorrect"));
 		}
 
 	}
@@ -63,8 +63,13 @@ define(['jquery', 'app/config', 'app/database', 'parsley'], function ($, config,
 			return (result.length == 1);
 		},
 		messages : {
-			en : 'This username/email does not exist.'
+			en : lang("error_usernameincorrect")
 		}
 	});
+	
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#username").prop("placeholder", lang("label_username"));
+	$("#password").prop("placeholder", lang("label_password"));
 
 });
