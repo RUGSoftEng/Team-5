@@ -65,7 +65,9 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
   function showProgress() {
     $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
     var percentageVal = percentage(itemsAnsweredCorrectly, totalLength);
-    $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
+    $( "#progress-bar" ).html(percentageVal + "%")
+      .attr("aria-valuenow", percentageVal)
+      .css("width", percentageVal+"%");
   }
 
   function isWithinMarginOfError(answer, difference) {
@@ -122,6 +124,26 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
     }
   }
 
+  function constructMessage(type,answer,difference){
+  var message;
+    switch(type){
+      case 'success':
+          message =  "Well done!";
+          break;
+      case 'warning':
+          message =  "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)";
+          break;
+      case 'danger':
+          message =  "Wrong answer! Expected answer: <b>" + answer + "</b>";
+          break;
+      default:
+          message = '';
+    }
+    return message;
+  }
+
+
+
   return {
     initialize: function(factList) {
         items = factList;
@@ -155,16 +177,15 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
       var input = document.getElementById("answer").value;
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
-
-      if (difference == 0) {
-        handleScoreIncrease();
-        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY_CORRECT") );
-      } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
-      } else {
-        messages.show( "Wrong answer! Expected answer: <b>" + answer + "</b>", "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
-      }
       answerWasCorrect = (difference == 0);
+      if (answerWasCorrect) {
+        handleScoreIncrease();
+        messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
+      } else if (isWithinMarginOfError(answer, difference)) {
+        messages.show( constructMessage('warning',answer, difference), 'warning', config.constant("FEEDBACK_DELAY_INCORRECT") );
+      } else {
+        messages.show( constructMessage('danger',answer,difference), 'danger', config.constant("FEEDBACK_DELAY_INCORRECT") );
+      }
     },
 
     nextQuestion: function() {
