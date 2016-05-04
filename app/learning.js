@@ -7,14 +7,14 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, bootstrap, config, db, messages, question, timer,db,ready) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, bootstrap, config, db, messages, questions, timer,db,ready) {
   const THOUSAND = 1000;
   var waitingForEnter = false;
 
   function disableAutocomplete() {
     $('input').attr('autocomplete', 'off');
   }
-	
+
 	function inputIsEmpty() {
 		return $.trim($("#answer").val()).length == 0;
 	}
@@ -23,11 +23,11 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
-    question.nextQuestion();
+    questions.nextQuestion();
     $( "#answer" ).prop("disabled", false);
     $( "#answer" ).val( "" );
     $( "#answer" ).focus();
-    question.show();
+    questions.show();
     waitingForEnter = false;
   }
 
@@ -36,7 +36,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
       nextQuestion();
     } else if (!inputIsEmpty()) {
       $( "#answer" ).prop("disabled", true);
-      question.checkAnswer();
+      questions.checkAnswer();
       waitingForEnter = true;
       timeout = setTimeout(nextQuestion, $(".countdown").data("seconds") * THOUSAND);
     }
@@ -71,8 +71,8 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    if (question.hint()!=="")
-      messages.showHint(question.hint());
+    if (questions.hint()!=="")
+      messages.showHint(questions.hint());
   });
 
   // Read the user input when the Enter key is pressed and evaluate it.
