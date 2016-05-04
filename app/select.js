@@ -28,7 +28,8 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
         case 'subjects':
           loadSubjects();
           break;
-
+        default:
+          console.log('failed to load'+name);
       }
       // Initiate bootstrap select box
       $(".selectpicker"+item).selectpicker();
