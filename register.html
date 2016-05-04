@@ -46,7 +46,7 @@
 								</p>
 							</div>
 							<div class="panel-body text-info">
-                <form role="form" data-parsley-validate="">
+                <form role="form" id="registerForm" data-parsley-validate="">
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6">
@@ -59,6 +59,17 @@
 											</div>
 										</div>
 
+                    <div class="row">
+											<div class="col-sm-6">
+												<label for="username">First name</label>
+                        <input type="text" class="form-control" id="firstname" placeholder="First name" data-parsley-required="false">
+											</div>
+											<div class="col-sm-6">
+												<label for="email">Last name</label>
+                        <input type="text" class="form-control" id="lastname" placeholder="Last name" data-parsley-required="false">
+											</div>
+										</div>
+
 										<div class="row">
 											<div class="col-sm-6">
 												<label for="password">Password</label>
@@ -66,7 +77,7 @@
 											</div>
 											<div class="col-sm-6">
 												<label for="password">Confirm password</label>
-                        <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
+                        <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Passwords are not the same">
 											</div>
 										</div>
 

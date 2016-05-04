@@ -1,10 +1,10 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
 
 	// Function for saving all items in the dataset
-	function saveDatasetItemsIntoDatabase(data,name) {
+	function saveDatasetItemsIntoDatabase(data,id) {
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
 
@@ -12,7 +12,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
 			var hint = (output[sheetName][i].hint === null) ? "" : output[sheetName][i].hint;
-			db.executeQuery('addDatasetItem' , [name, question, answer, hint]);
+			db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
 		});
 	}
 	// Function for showing the user the system is loading

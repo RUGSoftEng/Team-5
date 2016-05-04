@@ -14,7 +14,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   function disableAutocomplete() {
     $('input').attr('autocomplete', 'off');
   }
-	
+
 	function inputIsEmpty() {
 		return $.trim($("#answer").val()).length == 0;
 	}
@@ -62,6 +62,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   ready.on(function() {
     var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
+    console.log(datasetId);
     var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
     question.initialize(factList);
   	question.show();

@@ -48,13 +48,16 @@
 								</p>
 							</div>
 							<div class="panel-body text-info">
-								<form role="form" data-parsley-validate="">
+								<form role="form" id="loginForm" data-parsley-validate="">
+                  <div id="messages" class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  </div>
 									<div class="form-group">
 										<label for="username">Username or email</label>
-										<input type="text" class="form-control" id="username" placeholder="Username or email" data-parsley-user-name="1" >
+										<input type="text" class="form-control" id="username" name="username" placeholder="Username or email" data-parsley-user-name="1" required>
 
 										<label for="password">Password</label>
-										<input type="password" class="form-control" id="password" placeholder="Password">
+										<input type="password" class="form-control" id="password" name="password" placeholder="Password"  data-parsley-password required>
 									</div>
 									<button type="submit" class="btn btn-info btn-block" formaction="index.html">Sign in</button>
 								</form>

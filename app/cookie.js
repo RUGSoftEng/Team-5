@@ -15,14 +15,18 @@ define(['app/database'], function (db) {
     document.cookie = 'expires=Thu, 18 Dec 2013 12:00:00 UTC';
   },
   getUser: function (){
-    console.log(document.cookie);
     var user = {id:cookie.get('user_id'),name:cookie.get('user_name'), password: cookie.get('user_password') };
     var result = db.getQuery("getUserbyUsername", [user.name]);
     if (result.length==0 || user.password != result[0].user_password) {
         window.location= 'login.html';
-    }else{
+    } else {
       return user;
     }
+  },
+  checkUser: function() {
+    var user = {id:cookie.get('user_id'),name:cookie.get('user_name'), password: cookie.get('user_password') };
+    var result = db.getQuery("getUserbyUsername", [user.name]);
+    return result.length!==0;
   },
   get:function(cname) {
      var name = cname + "=";

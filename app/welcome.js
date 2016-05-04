@@ -8,13 +8,21 @@
  */
 define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/cookie'], function ($, db, bootstrap, clone,cookie) {
   //check if the user is logged in
-  var user = cookie.getUser();
-  console.log(user);
+  if (cookie.checkUser()) {
+    var user = cookie.getUser();
+  } else {
+    logout("logout_unknown_cookie");
+  }
 
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
+
+  function logout(message) {
+    delete window.cookie;
+    window.location = 'login.html?message='+message;
+  }
 
 	function createSidebarElements() {
 		var rows = db.getUnique('getModules', 'subject_name', []);
@@ -51,6 +59,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/cookie'], functi
       case "open_dataset":
         message = "You have succesfully uploaded a new dataset.";
         break;
+      case "login":
+        message = "You have succesfully logged in.";
+        break;
       default:
         message = "This message is unknown.";
     }
@@ -77,6 +88,11 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/cookie'], functi
     if ($_GET('message')) {
       showMessage($_GET('message'));
     }
+
+    // Logout button
+    $("#logout").click(function() {
+      logout("logout");
+    })
 
 		createSidebarElements();
     createDatasetsGrid(currentSubject,currentLanguage);
