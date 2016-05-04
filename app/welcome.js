@@ -6,11 +6,9 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/cookie'], function ($, db, bootstrap, clone,cookie) {
+define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/user'], function ($, db, bootstrap, clone,user) {
   //check if the user is logged in
-  if (cookie.checkUser()) {
-    var user = cookie.getUser();
-  } else {
+  if (!user.check()) {
     logout("logout_unknown_cookie");
   }
 
@@ -93,6 +91,14 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/cookie'], functi
     $("#logout").click(function() {
       logout("logout");
     })
+
+    // Replace user data in view from database
+    $("span[data-replace]").each(function() {
+      var user_info = $(this).data("replace");
+      var text = user.get(user_info);
+      $(this).html(text);
+    })
+    $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 		createSidebarElements();
     createDatasetsGrid(currentSubject,currentLanguage);

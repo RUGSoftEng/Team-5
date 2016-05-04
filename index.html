@@ -37,7 +37,7 @@
 
         <div class="btn-group right-menu" role="group">
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalProfile">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Hedderik
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span data-replace="user_firstname"></span> <span data-replace="user_lastname"></span>
           </button>
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalSettings">
             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -107,7 +107,13 @@
             <h4 class="modal-title">Profile</h4>
           </div>
           <div class="modal-body">
-            <p>Name: Hedderik van Rijn</p>
+            <ul>
+              <li>Username: <span data-replace="user_name"></span></li>
+              <li>First name: <span data-replace="user_firstname"></span></li>
+              <li>Last name: <span data-replace="user_lastname"></span></li>
+              <li>Email: <span data-replace="user_email"></span></li>
+              <li>Birthdate: <span data-replace="user_bday"></span></li>
+            </ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

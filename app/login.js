@@ -6,9 +6,8 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/cookie'], function ($, config, db, parsley, forms,cookie) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user'], function ($, config, db, parsley, forms,user) {
 
-	console.log(window.cookie);
 	// Ask for permission to write to the database on Linux and Mac OSX
 	if (navigator.appVersion.indexOf("Mac")!=-1){
 		var options = {
@@ -56,7 +55,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/cook
 				message = "Something went wrong, so you have been logged out. Contact the administrator if this errors keeps occuring.";
 				break;
 			case "register":
-				message = "You have succesfully registered a new account.";
+				message = "You have succesfully registered a new account. You can login here below.";
 				break;
       default:
         message = "This message is unknown.";
@@ -84,7 +83,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/cook
 
 	function handleLogin() {
 		var result = getUser();
-		cookie.set(result);
+		user.setCookie(result);
 		window.location = "index.html?message=login";
 	}
 

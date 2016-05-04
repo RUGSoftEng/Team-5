@@ -7,28 +7,27 @@
  */
 require('electron-cookies');
 define(['app/database'], function (db) {
-  var cookie={
-  set: function(result){
+  var user={
+  setCookie: function(result){
     document.cookie ='user_name='+result[0].user_name;
     document.cookie = 'user_id='+result[0].user_id;
     document.cookie = 'user_password='+result[0].user_password;
     document.cookie = 'expires=Thu, 18 Dec 2013 12:00:00 UTC';
   },
-  getUser: function (){
-    var user = {id:cookie.get('user_id'),name:cookie.get('user_name'), password: cookie.get('user_password') };
-    var result = db.getQuery("getUserbyUsername", [user.name]);
-    if (result.length==0 || user.password != result[0].user_password) {
-        window.location= 'login.html';
+  get: function (item){
+    var result = db.getQuery("getUserbyUsername", [user.getCookie('user_name')]);
+    if (typeof item === 'undefined') {
+      return result;
     } else {
-      return user;
+      return (result.length!==0) ? result[0][item] : result;
     }
   },
-  checkUser: function() {
-    var user = {id:cookie.get('user_id'),name:cookie.get('user_name'), password: cookie.get('user_password') };
-    var result = db.getQuery("getUserbyUsername", [user.name]);
-    return result.length!==0;
+  check: function() {
+    var user_name = user.getCookie("user_name");
+    var result = db.getQuery("getUserbyUsername", [user_name]);
+    return (result.length!==0 && user.getCookie('user_password') === result[0].user_password);
   },
-  get:function(cname) {
+  getCookie:function(cname) {
      var name = cname + "=";
      var cookies = document.cookie.split(';');
      for(var i = 0; i < cookies.length; i++) {
@@ -43,5 +42,5 @@ define(['app/database'], function (db) {
      return "";
    }
  }
- return cookie;
+ return user;
 });
