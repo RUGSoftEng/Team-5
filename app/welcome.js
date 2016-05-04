@@ -7,7 +7,7 @@
  * Main script for initiating the welcome page.
  */
 
-define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'electron-cookies'], function ($, db, bootstrap, clone, cookies) {
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");

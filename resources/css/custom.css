@@ -61,6 +61,8 @@ nav { }
       font:20pt bold;color:#fff
     }
 
+		.modal-content { background: #4b5261; }
+
 
   /* RESPONSIVE RESET/CHANGE */
 

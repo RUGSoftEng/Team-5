@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone'], function (config, db, $, bootstrap, select, forms, ready, clone) {
+define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies'], function (config, db, $, bootstrap, select, forms, ready, clone, cookies) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
