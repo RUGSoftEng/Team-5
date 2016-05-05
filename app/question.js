@@ -1,4 +1,4 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, messages, config, string, slimstampen) {
+define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen', 'app/math'], function ($, messages, config, string, slimstampen,math) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -12,11 +12,6 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
   var startTime = new Date();
   var firstKeyPress = 0;
   var responseList = [];
-
-  // Calculate the percentage of 'part out of total'
-  function percentage(part, total) {
-   return Math.round(part / total * 100);
-  }
 
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
@@ -58,7 +53,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
 
   function showProgress() {
     $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
-    var percentageVal = percentage(itemsAnsweredCorrectly, totalLength);
+    var percentageVal = math.percentage(itemsAnsweredCorrectly, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%")
       .attr("aria-valuenow", percentageVal)
       .css("width", percentageVal+"%");

@@ -1,3 +1,4 @@
+//this Module is responsible for all time related functions.
 define([], function () {
   // TimeFormat makes sure that time below 10 is always displayed with an extra preceding 0.
   function format(time) {
