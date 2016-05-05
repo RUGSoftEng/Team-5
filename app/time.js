@@ -10,6 +10,14 @@ define([], function () {
     minutesToSeconds: function(time){
       return time*60;
     },
+    start: function(){
+      return "00:00"
+    },
+    // Calculate the time difference in milliseconds
+    measure: function(start) {
+      var end = new Date();
+      return end.getTime() - start.getTime();
+    },
     // Create a string representation of time (mm:ss) for easy display
     toString: function(time) {
         minutes = Math.floor(time/60);

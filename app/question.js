@@ -18,12 +18,6 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
    return Math.round(part / total * 100);
   }
 
-  // Calculate the time difference in milliseconds
-  function measureTime(start) {
-    var end = new Date();
-    return end.getTime() - start.getTime();
-  }
-
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
@@ -104,7 +98,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
         currentItemIndex = items.indexOf(newQuestion);
         break;
     }
-    timeCreated = measureTime(startTime);
+    timeCreated = time.measure(startTime);
     firstKeyPress = 0;
   }
 
@@ -149,12 +143,12 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
         items = factList;
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
-        timeCreated = measureTime(startTime);
+        timeCreated = time.measure(startTime);
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed
           if (!firstKeyPress && e.keyCode >= config.constant("0") && e.keyCode <= config.constant("z")) {
-            firstKeyPress = measureTime(startTime);
+            firstKeyPress = time.measure(startTime);
           }
         };
     },
