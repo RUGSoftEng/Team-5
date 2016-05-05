@@ -28,12 +28,16 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		// When the TAB is pressed, add a new line
 		removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
-			if (e.keyCode == config.key("TAB")) {
+			if (isTab(e.keyCode)) {
 					add_element_to_form();
 			}
 		});
 		numberOfFormItems++;
 		formItemId++;
+	}
+
+	function isTab(keyCode){
+		return keyCode == config.key("TAB");
 	}
 
 	function removeKeybinds(keybind) {

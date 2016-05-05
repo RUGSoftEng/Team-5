@@ -1,6 +1,6 @@
 define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley, bootstrapSelect) {
     // Load languages from database
-  function loadLanguages(){
+  function loadLanguages(item){
     db.each("getLanguages", "", function (row,err) {
       $(item).append($("<option></option>")
         .attr("value",row.language_id)
@@ -8,7 +8,7 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
     });
   }
     // Load subjects from database
-  function loadSubjects(){
+  function loadSubjects(item){
     var rows = db.getQuery('getUserSubjects',[]);
     // Add an option for each subject to the dropdown
     for (var i = 0 ; i < rows.length; i++) {
@@ -23,10 +23,10 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
     initiate: function(name, item) {
       switch (name) {
         case 'languages':
-          loadLanguages();
+          loadLanguages(item);
           break;
         case 'subjects':
-          loadSubjects();
+          loadSubjects(item);
           break;
         default:
           console.log('failed to load'+name);
