@@ -139,6 +139,10 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
     currentItemIndex = items.indexOf(newQuestion);
   }
 
+  function  isAlphanumeric(key){
+    return key >= config.constant("0") && key <= config.constant("z");
+  }
+
   return {
     initialize: function(factList) {
         items = factList;
@@ -148,7 +152,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed
-          if (!firstKeyPress && e.keyCode >= config.constant("0") && e.keyCode <= config.constant("z")) {
+          if (!firstKeyPress && isAlphanumeric(e.keyCode)) {
             firstKeyPress = time.measure(startTime);
           }
         };
