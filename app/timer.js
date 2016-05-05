@@ -25,7 +25,7 @@ define(['jquery','app/time'], function($,time) {
 
   // Clear the timer by setting it back to 00:00
   function clearTimer(timerid) {
-    $(timerid+" .current").html("00:00");
+    $(timerid+" .current").html(time.start());
   }
 
   return {
