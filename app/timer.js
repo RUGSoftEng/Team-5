@@ -1,4 +1,5 @@
 define(['jquery','app/time'], function($,time) {
+  UPDATE_INTERVAL = 1000;
   function updateTimer(max_seconds) {
     currentTime = $(".timer .current").data("seconds");
     currentTime++;
@@ -30,14 +31,13 @@ define(['jquery','app/time'], function($,time) {
   return {
     // Timer functions that initiates and updates the timer.
     startTimer: function(timerid, max_seconds) {
-      timer = setInterval(function() { updateTimer(max_seconds); }, 1000);
+      timer = setInterval(function() { updateTimer(max_seconds); }, time.secondsToMilliseconds(1));
       $(timerid+" .max").html(time.toString(max_seconds));
       clearTimer(timerid);
     },
 
     startCountdown: function(timerid, seconds) {
-      countdown = setInterval(function() { updateCountdown(timerid); }, 1000);
-
+      countdown = setInterval(function() { updateCountdown(timerid); }, time.secondsToMilliseconds(1));
       $(timerid).html(seconds);
     },
 
