@@ -59,6 +59,7 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	// Function for Handeling query Error
 	function onError(db, error) {
 		console.log("this error " + error.message);
+		alert('Something went wrong while excuting your request\n please try again! ')
 	}
 
   // Auxiluary uniqueness function
