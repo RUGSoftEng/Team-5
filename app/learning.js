@@ -7,8 +7,7 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, bootstrap, config, db, messages, questions, timer,db,ready) {
-  const THOUSAND = 1000;
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready','app/time'], function ($, bootstrap, config, db, messages, questions, timer,db,ready,time) {
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -38,7 +37,8 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
       $( "#answer" ).prop("disabled", true);
       questions.checkAnswer();
       waitingForEnter = true;
-      timeout = setTimeout(nextQuestion, $(".countdown").data("seconds") * THOUSAND);
+      console.log( $(".countdown").data("seconds"));
+      timeout = setTimeout(nextQuestion,time.secondsToMilliseconds( $(".countdown").data("seconds") ) );
     }
   }
 

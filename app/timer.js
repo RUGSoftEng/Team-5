@@ -1,9 +1,9 @@
-define(['jquery'], function($) {
+define(['jquery','app/time'], function($,time) {
   function updateTimer(max_seconds) {
     currentTime = $(".timer .current").data("seconds");
     currentTime++;
     $(".timer .current").data("seconds", currentTime);
-    $(".timer .current").html(timeToString(currentTime));
+    $(".timer .current").html(time.toString(currentTime));
     if (currentTime>=max_seconds) {
       clearInterval(timer);
       alert("You are done with this session!");
@@ -22,18 +22,6 @@ define(['jquery'], function($) {
     }
   }
 
-  // TimeFormat makes sure that time below 10 is always displayed with an extra preceding 0.
-  function timeFormat(time) {
-    return time < 10 ? "0"+time : time;
-  }
-
-  // Create a string representation of time (mm:ss) for easy display
-  function timeToString(time) {
-    minutes = Math.floor(time/60);
-    seconds = time%60;
-    return timeFormat(minutes)+":"+timeFormat(seconds);
-  }
-
   // Clear the timer by setting it back to 00:00
   function clearTimer(timerid) {
     $(timerid+" .current").html("00:00");
@@ -43,7 +31,7 @@ define(['jquery'], function($) {
     // Timer functions that initiates and updates the timer.
     startTimer: function(timerid, max_seconds) {
       timer = setInterval(function() { updateTimer(max_seconds); }, 1000);
-      $(timerid+" .max").html(timeToString(max_seconds));
+      $(timerid+" .max").html(time.toString(max_seconds));
       clearTimer(timerid);
     },
 
