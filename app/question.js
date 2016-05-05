@@ -68,29 +68,10 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
   function nextQuestion() {
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
-        // Use flaschcard method to determine next question
-        if (inTutorial) {
-          currentItemIndex++;
-          inTutorial = checkTutorialStatus();
-        } else if (answerWasCorrect) {
-          items.splice(currentItemIndex, 1);
-          currentItemIndex %= items.length;
-        } else {
-          currentItemIndex = (currentItemIndex + 1) % items.length;
-        }
+        nextQuestionFlashcard();
         break;
       case "slimstampen":
-        // Update the response list in order to determine next question
-        newResponse = {
-          factId: items[currentItemIndex].id,
-          timeCreated: timeCreated,
-          number: 0,
-          data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
-        };
-        responseList.push(newResponse);
-        // Use slimstampen method to determine next question
-        var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
-        currentItemIndex = items.indexOf(newQuestion);
+        nextQuestionSlimStampen();
         break;
     }
     timeCreated = time.measure(startTime);
@@ -131,7 +112,32 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
     return message;
   }
 
+  // Use flaschcard method to determine next question
+  function nextQuestionFlashcard(){
+    if (inTutorial) {
+      currentItemIndex++;
+      inTutorial = checkTutorialStatus();
+    } else if (answerWasCorrect) {
+      items.splice(currentItemIndex, 1);
+      currentItemIndex %= items.length;
+    } else {
+      currentItemIndex = (currentItemIndex + 1) % items.length;
+    }
+  }
 
+  // Update the response list in order to determine next question
+  function nextQuestionSlimStampen(){
+    newResponse = {
+      factId: items[currentItemIndex].id,
+      timeCreated: timeCreated,
+      number: 0,
+      data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
+    };
+    responseList.push(newResponse);
+    // Use slimstampen method to determine next question
+    var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
+    currentItemIndex = items.indexOf(newQuestion);
+  }
 
   return {
     initialize: function(factList) {
