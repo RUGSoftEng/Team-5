@@ -32,7 +32,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 				}
 			}
 		};
-		electronsudo.exec("chmod 600 database/", options, function (error) {});
+		electronsudo.exec("chmod 700 database/", options, function (error) {});
 	}
 
 	// Function for displaying messages on main screen
