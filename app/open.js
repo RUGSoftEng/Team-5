@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async, lang, string) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async, lang, string, user) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -17,7 +17,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	}
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html(lang("open_busysaving"))
+		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 	
@@ -26,6 +26,14 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 	$("#datasetsubject").prop("title", lang("placeholder_subject"));
 	$("#buttonsave").prop("value", lang("open_buttonsave"));
+	
+	// Replace user data in view from database
+	$("span[data-replace]").each(function() {
+		var user_info = $(this).data("replace");
+		var text = user.get(user_info);
+		$(this).html(text);
+	});
+	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 	ready.on(function() {
 		// Check in the database if the name of the dataset already exists

@@ -20,5 +20,5 @@ define(['jquery', 'app/lang'], function ($, lang) {
 				$(this).html(string);
 			});
 		}
-  }
+  };
 });

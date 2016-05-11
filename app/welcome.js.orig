@@ -66,9 +66,11 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
       case "login":
         message = lang("success_login");
         break;
- case "login_automatic":
+<<<<<<< HEAD
+      case "login_automatic":
         message = "Welcome back "+user.get("user_firstname")+"! You have been logged in automatically.";
         break;
+=======
 			case "logout":
 				message = lang("success_logout");
 				break;
@@ -78,6 +80,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 			case "register":
 				message = lang("success_register");
 				break;
+>>>>>>> 1f0d63ce9d33f02ec81fdfbe3adc2514240c1735
       default:
         message = lang("message_default");
     }

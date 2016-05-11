@@ -34,5 +34,5 @@ define(['jquery', 'i18n!nls', 'printf'], function ($, i18n, printf) {
 		}
 		
 		return vsprintf(i18n[string], varargs);
-	}
+	};
 });

@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies) {
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -65,6 +65,14 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	$("#inputquestion").prop("placeholder", lang("label_question"));
 	$("#inputanswer").prop("placeholder", lang("label_answer"));
 	$("#inputhint").prop("placeholder", lang("label_hint"));
+	
+	// Replace user data in view from database
+	$("span[data-replace]").each(function() {
+		var user_info = $(this).data("replace");
+		var text = user.get(user_info);
+		$(this).html(text);
+	});
+	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 	ready.on(function() {
 		// Add the first element

@@ -31,7 +31,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 				}
 			}
 		};
-		electronsudo.exec("chmod 600 database/", options, function (error) {});
+		electronsudo.exec("chmod 700 database/", options, function (error) {});
 	}
 
 	// Function for displaying messages on main screen
@@ -39,25 +39,25 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
     var element = $("#messages");
     switch(message) {
       case "create_dataset":
-        message = "You have succesfully created a new dataset.";
+        message = lang("success_createdataset");
         break;
       case "open_dataset":
-        message = "You have succesfully uploaded a new dataset.";
+        message = lang("success_opendataset");
         break;
       case "login":
-        message = "You have succesfully logged in.";
+        message = lang("success_login");
         break;
 			case "logout":
-				message = "You have been logged out.";
+				message = lang("success_logout");
 				break;
 			case "logout_unknown_cookie":
-				message = "Something went wrong, so you have been logged out. Contact the administrator if this errors keeps occuring.";
+				message = lang("error_logout");
 				break;
 			case "register":
-				message = "You have succesfully registered a new account. You can login here below.";
+				message = lang("success_register");
 				break;
       default:
-        message = "This message is unknown.";
+        message = lang("message_default");
     }
     element.append("<p>"+message+"</p>").show();
   }
@@ -77,7 +77,8 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	function getUser() {
 		var user = $("#username").val().toLowerCase();
 		var query = user.indexOf("@") != -1 ? "getUserbyEmail" : "getUserbyUsername";
-		return result = db.getQuery(query, [user]);
+		result = db.getQuery(query, [user]);
+		return result;
 	}
 
 	function handleLogin() {
