@@ -23,14 +23,15 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     window.location = 'login.html?message='+message;
   }
 
-	function createSidebarElements() {
+	function createSidebarElements(currentSubject, currentLanguage) {
 		var rows = db.getUnique2('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
-      if (i==0)
-        newElement.addClass("active");
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
+			if (rows[i].subject_id == currentSubject && rows[i].language_id == currentLanguage) {
+				newElement.find('a').addClass("active");
+			}
 		}
 	}
 
@@ -126,7 +127,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     });
     $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
-		createSidebarElements();
+		createSidebarElements(currentSubject, currentLanguage);
     createDatasetsGrid(currentSubject,currentLanguage);
 		$(".sidebar_li a").click(function () {
       var subject = $(this).data("subject-id");
