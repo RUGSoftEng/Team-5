@@ -39,6 +39,7 @@ define(['jquery','app/time', 'app/lang'], function($,time, lang) {
   function clearTimer(timerid) {
     $(timerid+" .current").html(time.start());
   }
+  console.log(time.secondsToMilliseconds(1));
 
   return {
     // Timer functions that initiates and updates the timer.
