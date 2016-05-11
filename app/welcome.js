@@ -27,6 +27,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 		var rows = db.getUnique2('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
+      if (i==0)
+        newElement.addClass("active");
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 		}
