@@ -19,7 +19,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
   });
 
   function logout(message) {
-    delete window.cookie;
+    user.removeCookie();
     window.location = 'login.html?message='+message;
   }
 
@@ -31,8 +31,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 		}
 	}
-  
-  function navigateToLearn(newElement) {   
+
+  function navigateToLearn(newElement) {
     newElement.on("click", ".mybutton", function() {
     var id = $(this).data("id");
     window.location = "learn.html?"+id;

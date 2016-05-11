@@ -1,27 +1,35 @@
 define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley, bootstrapSelect) {
+    // Load languages from database
+  function loadLanguages(item){
+    db.each("getLanguages", "", function (row,err) {
+      $(item).append($("<option></option>")
+        .attr("value",row.language_id)
+        .text(row.language_name));
+    });
+  }
+    // Load subjects from database
+  function loadSubjects(item){
+    var rows = db.getQuery('getUserSubjects',[]);
+    // Add an option for each subject to the dropdown
+    for (var i = 0 ; i < rows.length; i++) {
+      var row = rows[i];
+      $(item).append($("<option></option>")
+        .attr("value",row.subject_id)
+        .text(row.subject_name));
+    }
+  }
+
   return {
     initiate: function(name, item) {
       switch (name) {
         case 'languages':
-          // Load languages from database
-          db.each("getLanguages", "", function (row,err) {
-            $(item).append($("<option></option>")
-              .attr("value",row.language_id)
-              .text(row.language_name));
-          });
+          loadLanguages(item);
           break;
         case 'subjects':
-          // Load subjects from database
-          var rows = db.getQuery('getUserSubjects',[]);
-          // Add an option for each subject to the dropdown
-          for (var i = 0 ; i < rows.length; i++) {
-            var row = rows[i];
-            $(item).append($("<option></option>")
-              .attr("value",row.subject_id)
-              .text(row.subject_name));
-          }
+          loadSubjects(item);
           break;
-
+        default:
+          console.log('failed to load'+name);
       }
       // Initiate bootstrap select box
       $(".selectpicker"+item).selectpicker();

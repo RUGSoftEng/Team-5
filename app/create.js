@@ -18,8 +18,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		}
 	}
 
-	// Function for adding elements to the form
-	function add_element() {
+	function add_element_to_form() {
 		var newElement = $('#items table').cloneLayout();
 		newElement.replaceClone(["i", "required"], [formItemId, "required"]);
 		// Remove when clicked on close
@@ -29,12 +28,16 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		// When the TAB is pressed, add a new line
 		removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
-			if (e.keyCode == config.key("TAB")) {
-					add_element();
+			if (isTab(e.keyCode)) {
+					add_element_to_form();
 			}
 		});
 		numberOfFormItems++;
 		formItemId++;
+	}
+
+	function isTab(keyCode){
+		return keyCode == config.key("TAB");
 	}
 
 	function removeKeybinds(keybind) {
@@ -76,10 +79,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 
 	ready.on(function() {
 		// Add the first element
-		add_element();
+		add_element_to_form();
 		// Bind the click method for adding elements
 		$(".add").click(function() {
-			add_element();
+			add_element_to_form();
 			return false;
 		});
 

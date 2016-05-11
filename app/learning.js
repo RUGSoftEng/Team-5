@@ -8,7 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user'], function ($, lang, string, bootstrap, config, db, messages, question, timer, ready, user) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
 
   const THOUSAND = 1000;
   var waitingForEnter = false;
@@ -25,11 +25,11 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
-    question.nextQuestion();
+    questions.nextQuestion();
     $( "#answer" ).prop("disabled", false);
     $( "#answer" ).val( "" );
     $( "#answer" ).focus();
-    question.show();
+    questions.show();
     waitingForEnter = false;
   }
 
@@ -38,9 +38,9 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
       nextQuestion();
     } else if (!inputIsEmpty()) {
       $( "#answer" ).prop("disabled", true);
-      question.checkAnswer();
+      questions.checkAnswer();
       waitingForEnter = true;
-      timeout = setTimeout(nextQuestion, $(".countdown").data("seconds") * THOUSAND);
+      timeout = setTimeout(nextQuestion,time.secondsToMilliseconds( $(".countdown").data("seconds") ) );
     }
   }
 
@@ -57,13 +57,13 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     });
     return newList;
   }
-	
+
 	// Write localisable text to the page
 	string.fillinTextClasses();
 	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
-	
+
   disableAutocomplete();
-	
+
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
 		var user_info = $(this).data("replace");
@@ -76,18 +76,17 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   ready.on(function() {
     var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
-    console.log(datasetId);
     var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
-    question.initialize(factList);
-  	question.show();
+    questions.initialize(factList);
+  	questions.show();
 
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    if (question.hint()!=="")
-      messages.showHint(question.hint());
+    if (questions.hint()!=="")
+      messages.showHint(questions.hint());
   });
 
   // Read the user input when the Enter key is pressed and evaluate it.

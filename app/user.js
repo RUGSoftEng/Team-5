@@ -13,6 +13,11 @@ define(['app/database'], function (db) {
     document.cookie = 'user_id='+result[0].user_id;
     document.cookie = 'user_password='+result[0].user_password;
   },
+  removeCookie: function() {
+    document.cookie = "user_name=''";
+    document.cookie = "user_id=''";
+    document.cookie = "user_password=''";
+  },
   get: function (item){
     var result = db.getQuery("getUserbyUsername", [user.getCookie('user_name')]);
     if (typeof item === 'undefined') {
@@ -24,6 +29,7 @@ define(['app/database'], function (db) {
   check: function() {
     var user_name = user.getCookie("user_name");
     var result = db.getQuery("getUserbyUsername", [user_name]);
+    console.log(result.length);
     return (result.length!==0 && user.getCookie('user_password') === result[0].user_password);
   },
   getCookie:function(cname) {

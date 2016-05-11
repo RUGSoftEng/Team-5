@@ -7,7 +7,12 @@ define(['jquery', 'app/lang', 'app/timer', 'app/string'], function ($, lang, tim
   return {
     show: function(message, type, countdown) {
       if (countdown > 0) {
-        $("#show .message").html(message + "<br> <span class=\"countdownnotice\">" + lang("message_enterorwait", "<span class=\"countdown\" data-seconds=\"" + countdown + "\"></span>"));
+        $("#show .message").prepend(message+"<br>");
+        var notice = $('#countdownnotice').clone(true).removeClass('hidden');
+        notice.find('.countdown')
+        .append("second "+string.pluralIfAppropriate(countdown))
+        .attr('data-seconds',countdown);
+        $("#show .message").append(notice);
         timer.startCountdown(".countdown", countdown);
       } else {
         $("#show .message").html(message);

@@ -1,4 +1,4 @@
-define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, lang, messages, config, string, slimstampen) {
+define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang'], function ($, messages, config, string, slimstampen,time,math, lang) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -64,8 +64,10 @@ define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/s
 
   function showProgress() {
     $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " " + lang("general_words") + "</p>" );
-    var percentageVal = percentage(itemsAnsweredCorrectly, totalLength);
-    $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
+    var percentageVal = math.percentage(itemsAnsweredCorrectly, totalLength);
+    $( "#progress-bar" ).html(percentageVal + "%")
+      .attr("aria-valuenow", percentageVal)
+      .css("width", percentageVal+"%");
   }
 
   function isWithinMarginOfError(answer, difference) {
@@ -77,33 +79,13 @@ define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/s
   function nextQuestion() {
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
-        // Use flaschcard method to determine next question
-        if (inTutorial) {
-          currentItemIndex++;
-          inTutorial = checkTutorialStatus();
-        } else if (answerWasCorrect) {
-          items.splice(currentItemIndex, 1);
-          currentItemIndex %= items.length;
-        } else {
-          currentItemIndex = (currentItemIndex + 1) % items.length;
-        }
+        nextQuestionFlashcard();
         break;
       case "slimstampen":
-        // Update the response list in order to determine next question
-        newResponse = {
-          factId: items[currentItemIndex].id,
-          timeCreated: timeCreated,
-          number: 0,
-          data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
-        };
-        responseList.push(newResponse);
-        console.log(responseList);
-        // Use slimstampen method to determine next question
-        var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
-        currentItemIndex = items.indexOf(newQuestion);
+        nextQuestionSlimStampen();
         break;
     }
-    timeCreated = measureTime(startTime);
+    timeCreated = time.measure(startTime);
     firstKeyPress = 0;
   }
 
@@ -123,18 +105,66 @@ define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/s
     }
   }
 
+  function constructMessage(type,answer,difference){
+  var message;
+    switch(type){
+      case 'success':
+          message =  lang("answer_correct");
+          break;
+      case 'warning':
+          message =  lang("answer_almost", answer, difference);
+          break;
+      case 'danger':
+          message =  lang("answer_wrong", answer);
+          break;
+      default:
+          message = '';
+    }
+    return message;
+  }
+
+  // Use flaschcard method to determine next question
+  function nextQuestionFlashcard(){
+    if (inTutorial) {
+      currentItemIndex++;
+      inTutorial = checkTutorialStatus();
+    } else if (answerWasCorrect) {
+      items.splice(currentItemIndex, 1);
+      currentItemIndex %= items.length;
+    } else {
+      currentItemIndex = (currentItemIndex + 1) % items.length;
+    }
+  }
+
+  // Update the response list in order to determine next question
+  function nextQuestionSlimStampen(){
+    newResponse = {
+      factId: items[currentItemIndex].id,
+      timeCreated: timeCreated,
+      number: 0,
+      data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
+    };
+    responseList.push(newResponse);
+    // Use slimstampen method to determine next question
+    var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
+    currentItemIndex = items.indexOf(newQuestion);
+  }
+
+  function  isAlphanumeric(key){
+    return key >= config.constant("0") && key <= config.constant("z");
+  }
+
   return {
     initialize: function(factList) {
         items = factList;
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
-        timeCreated = measureTime(startTime);
+        timeCreated = time.measure(startTime);
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed
-          if (!firstKeyPress && e.keyCode >= config.key("0") && e.keyCode <= config.key("z")) {
-            firstKeyPress = measureTime(startTime);
-            console.log(firstKeyPress);
+          if (!firstKeyPress && isAlphanumeric(e.keyCode)) {
+            firstKeyPress = time.measure(startTime);
           }
         };
     },
@@ -157,16 +187,15 @@ define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/s
       var input = document.getElementById("answer").value;
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
-
-      if (difference === 0) {
+      answerWasCorrect = (difference == 0);
+      if (answerWasCorrect) {
         handleScoreIncrease();
-        messages.show( lang("answer_correct"), "success", config.constant("FEEDBACK_DELAY_CORRECT") );
+        messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( lang("answer_almost", answer, difference), "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( constructMessage('warning',answer, difference), 'warning', config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
-        messages.show( lang("answer_wrong", answer), "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( constructMessage('danger',answer,difference), 'danger', config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
-      answerWasCorrect = (difference === 0);
     },
 
     nextQuestion: function() {

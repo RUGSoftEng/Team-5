@@ -4,7 +4,7 @@
  * version 1.0
  *
  * Description:
- * Main script for initiating the login page.
+ * Main script for initiating the welcome  page.
  */
 define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string'], function ($, config, db, parsley, forms, user, lang, string) {
 
