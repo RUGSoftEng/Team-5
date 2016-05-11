@@ -8,7 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready'], function ($, lang, string, bootstrap, config, db, messages, question, timer, ready) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user'], function ($, lang, string, bootstrap, config, db, messages, question, timer, ready, user) {
 
   const THOUSAND = 1000;
   var waitingForEnter = false;
@@ -63,6 +63,14 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
 	
   disableAutocomplete();
+	
+	// Replace user data in view from database
+	$("span[data-replace]").each(function() {
+		var user_info = $(this).data("replace");
+		var text = user.get(user_info);
+		$(this).html(text);
+	});
+	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
