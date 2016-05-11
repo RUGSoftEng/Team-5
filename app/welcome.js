@@ -64,8 +64,17 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
         message = lang("success_opendataset");
         break;
       case "login":
-        message = "You have succesfully logged in.";
+        message = lang("success_login");
         break;
+			case "logout":
+				message = lang("success_logout");
+				break;
+			case "logout_unknown_cookie":
+				message = lang("error_logout");
+				break;
+			case "register":
+				message = lang("success_register");
+				break;
       default:
         message = lang("message_default");
     }
@@ -86,6 +95,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 
 	// Write localisable text to the page
 	string.fillinTextClasses();
+	$("#username").prop("placeholder", lang("label_username"));
+	$("#password").prop("placeholder", lang("label_password"));
+	$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
 
 	$(document).ready(function () {
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
