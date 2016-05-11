@@ -49,7 +49,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
         message = "You have succesfully logged in.";
         break;
 			case "logout":
-				message = "You have logged out.";
+				message = "You have been logged out.";
 				break;
 			case "logout_unknown_cookie":
 				message = "Something went wrong, so you have been logged out. Contact the administrator if this errors keeps occuring.";
