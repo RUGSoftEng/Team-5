@@ -7,51 +7,72 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database'], function ($, bootstrap, config, db, messages, question, timer,db) {
-  timer.startTimer(".timer", config.constant("TIME_LIMIT"));
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready','app/time'], function ($, bootstrap, config, db, messages, questions, timer,db,ready,time) {
   var waitingForEnter = false;
-  
+
   function disableAutocomplete() {
     $('input').attr('autocomplete', 'off');
   }
-  
+
+	function inputIsEmpty() {
+		return $.trim($("#answer").val()).length == 0;
+	}
+
   function nextQuestion() {
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
+    questions.nextQuestion();
     $( "#answer" ).prop("disabled", false);
     $( "#answer" ).val( "" );
     $( "#answer" ).focus();
-    question.show();
+    questions.show();
     waitingForEnter = false;
   }
-  
+
   function handleEnter() {
     if (waitingForEnter) {
       nextQuestion();
-    } else {
+    } else if (!inputIsEmpty()) {
       $( "#answer" ).prop("disabled", true);
-      question.checkAnswer();
+      questions.checkAnswer();
       waitingForEnter = true;
-      timeout = setTimeout(nextQuestion, config.constant("FEEDBACK_DELAY"));
+      console.log( $(".countdown").data("seconds"));
+      timeout = setTimeout(nextQuestion,time.secondsToMilliseconds( $(".countdown").data("seconds") ) );
     }
   }
 
+  function formatFactList(items) {
+    var newList = [];
+    items.forEach(function(item) {
+      newItem = {
+        id: item.item_id,
+        text: item.item_question,
+        answer: item.item_answer,
+        hint: item.item_hint
+      };
+      newList.push(newItem);
+    });
+    return newList;
+  }
+
   disableAutocomplete();
-  
-  // When the page is loaded we get the datasetId from the page url and load the dataset from the databese
-  $(document).ready(function() {
-    var url =   window.location.href
+
+  // When the page is loaded we get the datasetId from the page url and load the dataset from the database
+  ready.on(function() {
+    var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
-    var datasetItems = db.getQuery("getDatasetItems",[datasetId]);
-    question.initialise(datasetItems);
-  	question.show();
+    var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+    questions.initialize(factList);
+  	questions.show();
+
+    timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    if (question.hint()!=="")
-      messages.showHint(question.hint());
+    if (questions.hint()!=="")
+      messages.showHint(questions.hint());
   });
 
   // Read the user input when the Enter key is pressed and evaluate it.

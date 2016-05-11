@@ -1,57 +1,91 @@
 /* file: welcome.js
  * authors: H. Bouakaz, S. de Vliet, S. de Jong & E. Werkema
- * date: 17/3/2016
- * version 1.1
+ * date: 23/4/2016
+ * version 1.2
  *
  * Description:
- * Main script for initiating the welcome  page.
+ * Main script for initiating the welcome page.
  */
 
-define(['jquery', 'app/database', 'bootstrap'], function ($, db, bootstrap) {
+define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
+  
+  
 
 	function createSidebarElements() {
-		var li1 = "<li class=\"sidebar_li\" subject_id=\"";
-    var li2 = "\" language_id=\"";
-		var li3 = "\"><a  href=\"#\"  >";
-		var li4 = "<br><span class=\"sidebar_item\" >for ";
-    var li5 = " speakers</span></a></li>\n";
 		var rows = db.getUnique('getModules', 'subject_name', []);
-		var sidebar = "";
-
 		for (var i = 0; i < rows.length; i++) {
-			sidebar += li1 + rows[i].subject_id + li2 + rows[i].language_id + li3 + rows[i].subject_name + li4 + rows[i].language_name + li5;
+      var newElement = $('#sidebar_ul').cloneLayout();
+      newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
+        [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 		}
-
-		var container = document.getElementById("sidebar_ul");
-		container.innerHTML = sidebar;
 	}
 
 	function createDatasetsGrid(subjectid, languageid) {
-		var grid = "";
+    // Clear dataset grid
+    $("#container .dataset_item").not("#layout").remove();
+    // And load all new datasets
 		var rows = db.getQuery('getDatasets', [languageid, subjectid]);
-		var gridItem1 = "<div class=\"col-md-3 col-sm-6\">\n<div class=\"btn mybutton\" id=\"";
-		var gridItem2 = "\" >\n<h3>";
-		var gridItem3 = "</h3>\n <br><h4>Strength:</h4><center>\n<div class=\"progress\" style=\"width:80%\"><div class=\"progress-bar progress-bar-success progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"68\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: 68%;\"></div></div></center></div></div>\n";
 		for (var i = 0; i < rows.length; i++) {
-			grid += gridItem1+ rows[i].dataset_id + gridItem2 + rows[i].dataset_name + gridItem3;
+      var newElement = $('#container').cloneLayout();
+      newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
+      // Goto learn page on click
+      newElement.on("click", ".mybutton", function() {
+        var id = $(this).data("id");
+        window.location = "learn.html?"+id;
+      })
 		}
-		var container = document.getElementById("container");
-		container.innerHTML = grid;
-		$(".mybutton").click(function () {
-				var datasetId = $(this).attr("id");
-				window.location.href = "learn.html?"+datasetId ;
-		});
 	}
 
+  // Function for displaying messages on main screen
+  function showMessage(message) {
+    var element = $("#messages");
+    switch(message) {
+      case "create_dataset":
+        message = "You have succesfully created a new dataset."
+        break;
+      case "open_dataset":
+        message = "You have succesfully uploaded a new dataset."
+        break;
+      default:
+        message = "This message is unknown.";
+    }
+    element.append("<p>"+message+"</p>").show();
+  }
+
+  function hideMessage() {
+    var element = $("#messages");
+    element.hide();
+  }
+
+  // Function for obtaining the GET data from the url
+  function $_GET(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp(q+'=([^&]*)','i');
+    return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
+  }
+
 	$(document).ready(function () {
+    var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
+    var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
+
+    // Show message if there is any
+    if ($_GET('message')) {
+      showMessage($_GET('message'));
+    }
+
 		createSidebarElements();
-    createDatasetsGrid(1,1);
-		$(".sidebar_li").click(function () {
-			createDatasetsGrid($(this).attr("subject_id"), $(this).attr("language_id"));
+    createDatasetsGrid(currentSubject,currentLanguage);
+		$(".sidebar_li a").click(function () {
+      var subject = $(this).data("subject-id");
+      var language = $(this).data("language-id");
+      hideMessage();
+			createDatasetsGrid(subject, language);
+			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
+	    $(this).addClass('active');
 		});
 	});
 });

@@ -1,19 +1,23 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, messages, config, string) {
-  var currentItemIndex = 0;
-  var inTutorial = config.constant("TUTORIAL_MODE");
+define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math'], function ($, messages, config, string, slimstampen,time,math) {
   var items;
+  var currentItemIndex = 0;
   var totalLength;
 
-  // Calculate the percentage of 'part out of total'
-  function percentage(part, total) {
-   return Math.round(part / total * 100);
-  }
+  var itemsAnsweredCorrectly = 0;
+  var answerWasCorrect;
+
+  var tutorialLength;
+  var inTutorial = config.constant("TUTORIAL_MODE");
+
+  var startTime = new Date();
+  var firstKeyPress = 0;
+  var responseList = [];
 
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
     if (inTutorial) {
-      if (currentItemIndex == config.constant("NUMBER_TUTORIAL_QUESTIONS")) {
+      if (currentItemIndex == tutorialLength) {
         currentItemIndex = 0;
       } else {
         return true;
@@ -48,9 +52,11 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + (totalLength - items.length) + "/" + totalLength + " words</p>" );
-    var percentageVal = percentage(totalLength - items.length, totalLength);
-    $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
+    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
+    var percentageVal = math.percentage(itemsAnsweredCorrectly, totalLength);
+    $( "#progress-bar" ).html(percentageVal + "%")
+      .attr("aria-valuenow", percentageVal)
+      .css("width", percentageVal+"%");
   }
 
   function isWithinMarginOfError(answer, difference) {
@@ -58,30 +64,103 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
   }
 
   // Handle how to move to the next question
-  // depending on the tutorial status.
+  // depending on the tutorial status and algorithm.
   function nextQuestion() {
-    if (!inTutorial) {
-      items.splice(currentItemIndex,1);
-      currentItemIndex %= items.length;
-    } else {
-      currentItemIndex++;
-      inTutorial = checkTutorialStatus();
+    switch(config.constant("ALGORITHM")) {
+      case "flashcard":
+        nextQuestionFlashcard();
+        break;
+      case "slimstampen":
+        nextQuestionSlimStampen();
+        break;
     }
+    timeCreated = time.measure(startTime);
+    firstKeyPress = 0;
   }
 
   function showTutorialInstruction() {
-    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].item_answer);
+    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].answer);
+  }
+
+  function handleScoreIncrease() {
+    if (!inTutorial) {
+      itemsAnsweredCorrectly++;
+    }
+    showProgress();
+
+    if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
+      alert("Done!");
+      window.location = 'index.html';
+    }
+  }
+
+  function constructMessage(type,answer,difference){
+  var message;
+    switch(type){
+      case 'success':
+          message =  "Well done!";
+          break;
+      case 'warning':
+          message =  "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)";
+          break;
+      case 'danger':
+          message =  "Wrong answer! Expected answer: <b>" + answer + "</b>";
+          break;
+      default:
+          message = '';
+    }
+    return message;
+  }
+
+  // Use flaschcard method to determine next question
+  function nextQuestionFlashcard(){
+    if (inTutorial) {
+      currentItemIndex++;
+      inTutorial = checkTutorialStatus();
+    } else if (answerWasCorrect) {
+      items.splice(currentItemIndex, 1);
+      currentItemIndex %= items.length;
+    } else {
+      currentItemIndex = (currentItemIndex + 1) % items.length;
+    }
+  }
+
+  // Update the response list in order to determine next question
+  function nextQuestionSlimStampen(){
+    newResponse = {
+      factId: items[currentItemIndex].id,
+      timeCreated: timeCreated,
+      number: 0,
+      data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
+    };
+    responseList.push(newResponse);
+    // Use slimstampen method to determine next question
+    var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
+    currentItemIndex = items.indexOf(newQuestion);
+  }
+
+  function  isAlphanumeric(key){
+    return key >= config.constant("0") && key <= config.constant("z");
   }
 
   return {
-    initialise: function(datasetItems) {
-        items = datasetItems;
+    initialize: function(factList) {
+        items = factList;
         totalLength = items.length;
+        tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
+        timeCreated = time.measure(startTime);
+
+        window.onkeyup = function(e) {
+          // Measure first key press if a letter or number was pressed
+          if (!firstKeyPress && isAlphanumeric(e.keyCode)) {
+            firstKeyPress = time.measure(startTime);
+          }
+        };
     },
 
     show: function() {
       showProgress();
-      $("#question").html(items[currentItemIndex].item_question);
+      $("#question").html(items[currentItemIndex].text);
 
       if (inTutorial) {
         showTutorialInstruction();
@@ -95,29 +174,25 @@ define(['jquery', 'app/messages', 'app/config', 'app/string'], function ($, mess
       * that it was almost correct.
       */
       var input = document.getElementById("answer").value;
-      var answer = items[currentItemIndex].item_answer;
-
+      var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
-
-      if (difference == 0) {
-        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY") );
-        nextQuestion();
+      answerWasCorrect = (difference == 0);
+      if (answerWasCorrect) {
+        handleScoreIncrease();
+        messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( "Almost there! Your answer: " + input + " - Expected answer: " + answer + " (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY") );
-        currentItemIndex = (currentItemIndex + 1) % items.length;
+        messages.show( constructMessage('warning',answer, difference), 'warning', config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
-        messages.show( "Wrong answer! Expected answer: " + answer , "danger", config.constant("FEEDBACK_DELAY") );
-        currentItemIndex = (currentItemIndex + 1) % items.length;
-      }
-      showProgress();
-
-      if (items.length == 0) {
-        alert("Done!");
+        messages.show( constructMessage('danger',answer,difference), 'danger', config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
     },
 
+    nextQuestion: function() {
+      nextQuestion();
+    },
+
     hint: function() {
-        return items[currentItemIndex].item_hint;
+        return items[currentItemIndex].hint;
     }
   }
 });

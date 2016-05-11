@@ -13,7 +13,45 @@
     <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   </head>
 	<body>
-    <div include-HTML="resources/html/header.html"><!-- Content of header will be placed here --></div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+     <div class="navbar-header" >
+       <ul class="nav navbar-nav " id="nav-left">
+         <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" >SlimStampen</a></li>
+       </ul>
+
+       <div class="btn-group center-menu" role="group">
+         <button type="button" class="btn btn-default" onclick="window.location='create.html'">
+           <span class="glyphicon glyphicon-file" aria-hidden="true"></span> New
+         </button>
+         <button type="button" class="btn btn-default" onclick="window.location='open.html'">
+           <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; Open
+         </button>
+         <button type="button" class="btn btn-default">
+           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
+         </button>
+         <button type="button" class="btn btn-default">
+           <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> Upload
+         </button>
+       </div>
+
+       <div class="btn-group right-menu" role="group">
+         <button type="button" class="btn btn-default">
+           <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Hedderik
+         </button>
+         <button type="button" class="btn btn-default">
+           <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+         </button>
+         <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
+         </button>
+         <ul class="dropdown-menu dropdown-menu-right">
+           <li><a href="#">Quit Program</a></li>
+           <li role="separator" class="divider"></li>
+           <li><a href="#">Help</a></li>
+         </ul>
+       </div>
+     </div>
+    </nav>
 		<div id="content">
       <div class="container">
 				<div class="row">
@@ -21,7 +59,28 @@
             You have not entered all fields!
           </div>
           <form id="createForm" data-parsley-validate="">
+            <div class="col-md-8">
+              <h1>Create new dataset</h1>
+              <div id="items">
+                <table class="table">
+                  <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Hint (optional)</th>
+                    <th>Remove</th>
+                  </tr>
+                  <tr id="layout">
+                    <td><input type="text" class="form-control" name="question{i}" {required} data-parsley-errors-messages-disabled placeholder="Question" /></td>
+                    <td><input type="text" class="form-control" name="answer{i}" {required} data-parsley-errors-messages-disabled placeholder="Answer" /></td>
+                    <td><input type="text" class="form-control" name="hint{i}" placeholder="Hint" /></td>
+                    <td><span class="glyphicon glyphicon-remove remove"></span></td>
+                  </tr>
+                </table>
+              </div>
+              <button class="btn btn-lg add btn-warning">Add item</button>
+            </div>
             <div class="col-md-4">
+              <h1>Dataset information</h1>
               <label for="name">Name:</label>
               <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
               <label for="language">Language:</label>
@@ -38,28 +97,10 @@
               <input type="submit" name="create" class="btn btn-lg btn-success submit createdataset" value="Create dataset" />
               <div class="clear"></div>
             </div>
-            <div class="col-md-8">
-              <div id="items">
-                <table class="table">
-                  <tr>
-                    <th>Question</th>
-                    <th>Answer</th>
-                    <th>Hint (optional)</th>
-                    <th>Remove</th>
-                  </tr>
-                  <tr id="item-layout">
-                    <td><input type="text" class="form-control" name="question{i}" {required} data-parsley-errors-messages-disabled placeholder="Question" /></td>
-                    <td><input type="text" class="form-control" name="answer{i}" {required} data-parsley-errors-messages-disabled placeholder="Answer" /></td>
-                    <td><input type="text" class="form-control" name="hint{i}" placeholder="Hint" /></td>
-                    <td><span class="glyphicon glyphicon-remove remove"></span></td>
-                  </tr>
-                </table>
-              </div>
-              <button class="btn btn-lg add btn-warning">Add item</button>
-            </div>
           </form>
 				</div>
 			</div>
 		</div>
+    <div id='loadFrame'><h1>Loading...</h1></div>
 	</body>
 </html>

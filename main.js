@@ -20,9 +20,13 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
+  const page = mainWindow.webContents;
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
+  page.openDevTools();
+  // Enable navigation
+  page.on('will-navigate', function (e, url) {
+    page.loadURL('file://' + __dirname + '/' + url)
+  });
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -37,11 +41,6 @@ function createWindow () {
 app.on('ready', function() {
   createWindow();
 });
-
-ipc.on('loadURL', function(e, url) {
-  console.log(url);
-  mainWindow.loadURL('file://' + __dirname + '/'+url);
-})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

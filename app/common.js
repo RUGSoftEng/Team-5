@@ -19,7 +19,12 @@ requirejs.config({
         xlsx : "xlsx/xlsx",
         jszip : "xlsx/jszip",
         parsley : "parsleyjs/dist/parsley.min",
-        "bootstrap-select": "bootstrap-select/dist/js/bootstrap-select.min"
+        "bootstrap-select": "bootstrap-select/dist/js/bootstrap-select.min",
+        async : "async/dist/async",
+        underscore : "underscore/underscore-min",
+        utils : "../lib/slimstampen/utils",
+        slimstampenModel : "../lib/slimstampen/model",
+	       "electron-sudo": "../lib/electronsudo.min"
     }
 
 });
