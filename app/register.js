@@ -27,8 +27,11 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 	string.fillinTextClasses();
 	$("#username").prop("placeholder", lang("label_username"));
 	$("#email").prop("placeholder", lang("label_emailaddress"));
+	$("#firstname").prop("placeholder", lang("label_firstname"));
+	$("#lastname").prop("placeholder", lang("label_lastname"));
 	$("#password").prop("placeholder", lang("label_password"));
 	$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+	
   
   $(document).ready(function(){
     window.Parsley.addValidator('userName', {

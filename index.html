@@ -104,19 +104,19 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Profile</h4>
+            <h4 class="modal-title"><span class="text_profile_header"></span></h4>
           </div>
           <div class="modal-body">
             <ul>
-              <li>Username: <span data-replace="user_name"></span></li>
-              <li>First name: <span data-replace="user_firstname"></span></li>
-              <li>Last name: <span data-replace="user_lastname"></span></li>
-              <li>Email: <span data-replace="user_email"></span></li>
-              <li>Birthdate: <span data-replace="user_bday"></span></li>
+              <li><span class="text_label_username"></span>: <span data-replace="user_name"></span></li>
+              <li><span class="text_label_firstname"></span>: <span data-replace="user_firstname"></span></li>
+              <li><span class="text_label_lastname"></span>: <span data-replace="user_lastname"></span></li>
+              <li><span class="text_label_emailaddress"></span>: <span data-replace="user_email"></span></li>
+              <li><span class="text_label_dateofbirth"></span>: <span data-replace="user_bday"></span></li>
             </ul>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="text_general_close"></span></button>
           </div>
         </div>
 
@@ -129,51 +129,51 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Settings</h4>
+            <h4 class="modal-title"><span class="text_settings_header"></span></h4>
           </div>
           <div class="modal-body">
             <form role="form" data-parsley-validate="">
               <div class="form-group">
-                <p>Change profile information:</p>
+                <p><span class="text_settings_changeinfo"></span>:</p>
                 <div class="row">
                   <div class="col-sm-6">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Username" data-parsley-user-name="1" data-parsley-required = "true">
+                    <label for="username"><span class="text_label_username"></span></label>
+                    <input type="text" class="form-control" id="username" data-parsley-user-name="1" data-parsley-required = "true">
                   </div>
 
                 </div>
                 <div class="row">
                   <div class="col-sm-6">
-                    <label for="gender">Gender</label>
+                    <label for="gender"><span class="text_label_gender"></span></label>
                     <select class="form-control" id="gender" data-parsley-required = "true">
-                      <option selected disabled>Select your gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
+                      <option selected disabled class="text_placeholder_gender"></option>
+                      <option value="male" class="text_label_gendermale"></option>
+                      <option value="female" class="text_label_genderfemale"></option>
                     </select>
                   </div>
                   <div class="col-sm-6">
-                    <label for="dateofbirth">Date of birth</label>
+                    <label for="dateofbirth"><span class="text_label_dateofbirth"></span></label>
                     <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
                   </div>
                 </div>
                 <hr>
-                <p>Change password:</p>
+                <p><span class="text_settings_changepassword"></span>:</p>
                 <div class="row">
                   <div class="col-sm-6">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" required="">
+                    <label for="password"><span class="text_label_password"></span></label>
+                    <input type="password" class="form-control" id="password" required="">
                   </div>
                   <div class="col-sm-6">
-                    <label for="password">Confirm password</label>
-                    <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
+                    <label for="confirm_password"><span class="text_label_passwordconfirm"></span></label>
+                    <input type="password" class="form-control" id="confirm_password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
                   </div>
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default left" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal">Save settings</button>
+            <button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
+            <button type="button" class="btn btn-success" data-dismiss="modal"><span class="text_settings_buttonsave"></span></button>
           </div>
         </div>
 
