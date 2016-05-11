@@ -20,7 +20,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 
     db.executeQuery("addUser",[email,username,gen,dateofbirth,sha256(password), firstname, lastname]);
     db.close();
-    window.location="login.html?message=register"
+    window.location="login.html?message=register";
 
   }
 	// Write localisable text to the page

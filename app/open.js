@@ -17,7 +17,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	}
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html(lang("open_busysaving"))
+		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 	

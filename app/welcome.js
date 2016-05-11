@@ -31,6 +31,13 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 		}
 	}
+  
+  function navigateToLearn(newElement) {   
+    newElement.on("click", ".mybutton", function() {
+    var id = $(this).data("id");
+    window.location = "learn.html?"+id;
+   	});
+  }
 
 	function createDatasetsGrid(subjectid, languageid) {
     // Clear dataset grid
@@ -41,10 +48,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
       var newElement = $('#container').cloneLayout();
       newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
       // Goto learn page on click
-      newElement.on("click", ".mybutton", function() {
-        var id = $(this).data("id");
-        window.location = "learn.html?"+id;
-      });
+      navigateToLearn(newElement);
+
 		}
 	}
 
@@ -94,14 +99,14 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     // Logout button
     $("#logout").click(function() {
       logout("logout");
-    })
+    });
 
     // Replace user data in view from database
     $("span[data-replace]").each(function() {
       var user_info = $(this).data("replace");
       var text = user.get(user_info);
       $(this).html(text);
-    })
+    });
     $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 		createSidebarElements();

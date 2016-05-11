@@ -7,7 +7,9 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, lang, string, bootstrap, config, db, messages, question, timer, db, ready) {
+/*jshint esversion: 6 */
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready'], function ($, lang, string, bootstrap, config, db, messages, question, timer, ready) {
+
   const THOUSAND = 1000;
   var waitingForEnter = false;
 
@@ -16,7 +18,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   }
 
 	function inputIsEmpty() {
-		return $.trim($("#answer").val()).length == 0;
+		return $.trim($("#answer").val()).length === 0;
 	}
 
   function nextQuestion() {

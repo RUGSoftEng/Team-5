@@ -78,7 +78,8 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	function getUser() {
 		var user = $("#username").val().toLowerCase();
 		var query = user.indexOf("@") != -1 ? "getUserbyEmail" : "getUserbyUsername";
-		return result = db.getQuery(query, [user]);
+		result = db.getQuery(query, [user]);
+		return result;
 	}
 
 	function handleLogin() {
