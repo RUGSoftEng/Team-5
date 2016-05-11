@@ -68,9 +68,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
       case "login":
         message = lang("success_login");
         break;
- case "login_automatic":
-        message = "Welcome back "+user.get("user_firstname")+"! You have been logged in automatically.";
-        break;
+			case "login_automatic":
+				message = lang("success_loginautomatic", user.get("user_firstname"));
+				break;
 			case "logout":
 				message = lang("success_logout");
 				break;
