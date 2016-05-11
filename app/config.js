@@ -17,7 +17,11 @@ define(function (require) {
 		DATABASE_USER: __dirname + "/database/user.sqlite",
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
 		ALGORITHM: "slimstampen", // flashcard; slimstampen;
-		LANGUAGE: "nl"
+		LANGUAGE: "nl",
+		ONLINE_HOST: "db4free.net",
+		ONLINE_USER: "enricdz148_slim",
+		ONLINE_DATABASE: "enricdz148_slim",
+		ONLINE_PASSWORD: "exVhqZJas"
 	};
 
 	var keys = {

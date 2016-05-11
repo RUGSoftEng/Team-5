@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the login page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string'], function ($, config, db, parsley, forms,user, lang, string) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string'], function ($, config, db, parsley, forms, user, lang, string) {
 
 	// Ask for permission to write to the database on Linux and Mac OSX
 	if (navigator.appVersion.indexOf("Mac")!=-1){
@@ -27,8 +27,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 					ps.stdout.on('data', function (data) {});
 					setTimeout(function () {
 						ps.kill();
-					}
-						.bind(ps), 50000);
+					}.bind(ps), 50000);
 				}
 			}
 		};
@@ -114,7 +113,11 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 			en : lang("error_passwordincorrect")
 		}
 	});
-	
+
+	if (user.check()) {
+		window.location = "index.html?message=login_automatic";
+	}
+
 	// Write localisable text to the page
 	string.fillinTextClasses();
 	$("#username").prop("placeholder", lang("label_username"));

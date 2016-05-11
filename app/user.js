@@ -9,10 +9,9 @@ require('electron-cookies');
 define(['app/database'], function (db) {
   var user={
   setCookie: function(result){
-    document.cookie ='user_name='+result[0].user_name;
+    document.cookie = 'user_name='+result[0].user_name;
     document.cookie = 'user_id='+result[0].user_id;
     document.cookie = 'user_password='+result[0].user_password;
-    document.cookie = 'expires=Thu, 18 Dec 2013 12:00:00 UTC';
   },
   get: function (item){
     var result = db.getQuery("getUserbyUsername", [user.getCookie('user_name')]);
