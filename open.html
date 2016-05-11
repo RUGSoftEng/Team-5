@@ -22,16 +22,16 @@
 
        <div class="btn-group center-menu" role="group">
          <button type="button" class="btn btn-default" onclick="window.location='create.html'">
-           <span class="glyphicon glyphicon-file" aria-hidden="true"></span> New
+           <span class="glyphicon glyphicon-file" aria-hidden="true"></span> <span class="text_navigation_new"></span>
          </button>
          <button type="button" class="btn btn-default" onclick="window.location='open.html'">
-           <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; Open
+           <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; <span class="text_navigation_open"></span>
          </button>
          <button type="button" class="btn btn-default">
-           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
+           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> <span class="text_navigation_download"></span>
          </button>
          <button type="button" class="btn btn-default">
-           <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> Upload
+           <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> <span class="text_navigation_upload"></span>
          </button>
        </div>
 
@@ -46,9 +46,9 @@
            <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
          </button>
          <ul class="dropdown-menu dropdown-menu-right">
-           <li><a href="#">Quit Program</a></li>
+           <li><a href="#"><span class="text_general_quit"></span></a></li>
            <li role="separator" class="divider"></li>
-           <li><a href="#">Help</a></li>
+           <li><a href="#"><span class="text_general_help"></span></a></li>
          </ul>
        </div>
      </div>
@@ -57,30 +57,30 @@
       <div class="container">
 				<div class="row">
           <div class="alert alert-danger bs-callout-warning hidden" role="alert">
-            You have not entered all fields!
+            <span class="text_error_notenteredallfields"></span>
           </div>
           <form id="uploadForm" data-parsley-validate="">
-            <div class="col-md-8">
-  						<h1>Upload a new dataset</h1>
-  						<p>Drop a XLSX / XLSM / XLSB / ODS / XLS / XML file below:</p>
+            <div class="col-md-6">
+  						<h1><span class="text_open_headerselectfile"></span></h1>
+  						<p><span class="text_open_dropfile"></span></p>
   						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
   					</div>
-  					<div class="col-md-4">
-  						<h1>Dataset information</h1>
-						  <label for="name">Name:</label>
-						  <input type="text" class="form-control" name="name" required="" placeholder="Name of the dataset*" data-parsley-dataset-name="1" />
+  					<div class="col-md-6">
+  						<h1><span class="text_open_headerenterinformation"></span></h1>
+						  <label for="name"><span class="text_label_name"></span>:</label>
+						  <input id="datasetname" type="text" class="form-control" name="name" required="" data-parsley-dataset-name="1" />
 
-						  <label for="language">Language:</label>
+						  <label for="language"><span class="text_label_language"></span>:</label>
               <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
                 <!-- Items are loaded in selectLanguage.js  -->
               </select>
               <div class="clear"></div>
 
-						  <label for="subject">Subject:</label>
-              <select class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5" title="Select a subject*">
+						  <label for="subject"><span class="text_label_subject"></span>:</label>
+              <select id="datasetsubject" class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5">
                 <!-- Items are loaded in selectSubject.js -->
               </select>
-              <input type="submit" name="upload" class="btn btn-lg btn-success right" value="Save dataset" />
+              <input id="buttonsave" type="submit" name="upload" class="btn btn-lg btn-success right"/>
   						<div class="clear"></div>
             </div>
           </form>

@@ -28,9 +28,9 @@
 						<span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="index.html">Quit program</a></li>
+						<li><a href="index.html"><span class="text_general_quit"></span></a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">Help</a></li>
+						<li><a href="#"><span class="text_general_help"></span></a></li>
 					</ul>
 				</div>
 			</div>
@@ -43,8 +43,8 @@
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
 								<p class="h1">
-									Welcome to the SlimStampen application.<br>
-									Please sign in below.
+									<span class="text_login_welcome"></span><br>
+									<span class="text_login_pleaselogin"></span>
 								</p>
 							</div>
 							<div class="panel-body text-info">
@@ -53,13 +53,13 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   </div>
 									<div class="form-group">
-										<label for="username">Username or email</label>
+										<label for="username"><span class="text_label_username"></span></label>
 										<input type="text" class="form-control" id="username" name="username" placeholder="Username or email" data-parsley-user-name="1" required>
 
-										<label for="password">Password</label>
+										<label for="password"><span class="text_label_password"></span></label>
 										<input type="password" class="form-control" id="password" name="password" placeholder="Password"  data-parsley-password required>
 									</div>
-									<button type="submit" class="btn btn-info btn-block" formaction="index.html">Sign in</button>
+									<button type="submit" class="btn btn-info btn-block" formaction="index.html"><span class="text_login_buttonlogin"></span></button>
 								</form>
 							</div>
 							<div class="panel-footer">
@@ -68,9 +68,9 @@
 										<img src="testlogo.png" />
 									</div>
 									<div class="col-sm-4 text-center text-info">
-										Need help?<br>
-										<a href="#">I forgot my password.</a><br>
-										<a href="register.html">I want to register a new account.</a>
+										<span class="text_login_needhelp"></span><br>
+										<a href="#"><span class="text_login_forgotpassword"></span></a><br>
+										<a href="register.html"><span class="text_login_register"></span></a>
 									</div>
 									<div class="col-sm-4 text-center">
 										<img src="testlogo.png" />

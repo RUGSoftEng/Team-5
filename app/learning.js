@@ -7,7 +7,7 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, bootstrap, config, db, messages, question, timer,db,ready) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready'], function ($, lang, string, bootstrap, config, db, messages, question, timer, db, ready) {
   const THOUSAND = 1000;
   var waitingForEnter = false;
 
@@ -55,7 +55,11 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     });
     return newList;
   }
-
+	
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
+	
   disableAutocomplete();
 
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database

@@ -16,7 +16,8 @@ define(function (require) {
 		FEEDBACK_DELAY_INCORRECT: 10,
 		DATABASE_USER: __dirname + "/database/user.sqlite",
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
-		ALGORITHM: "slimstampen" // flashcard; slimstampen;
+		ALGORITHM: "slimstampen", // flashcard; slimstampen;
+		LANGUAGE: "nl"
 	};
 
 	var keys = {

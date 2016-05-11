@@ -4,9 +4,9 @@
  * version 1.0
  *
  * Description:
- * Main script for initiating the welcome  page.
+ * Main script for initiating the login page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user'], function ($, config, db, parsley, forms,user) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string'], function ($, config, db, parsley, forms,user, lang, string) {
 
 	// Ask for permission to write to the database on Linux and Mac OSX
 	if (navigator.appVersion.indexOf("Mac")!=-1){
@@ -32,7 +32,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 				}
 			}
 		};
-		electronsudo.exec("chmod 755 database/", options, function (error) {});
+		electronsudo.exec("chmod 600 database/", options, function (error) {});
 	}
 
 	// Function for displaying messages on main screen
@@ -99,7 +99,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 			return (result.length!==0);
 		},
 		messages : {
-			en : 'This username/email does not exist.'
+			en : lang("error_usernameincorrect")
 		}
 	});
 
@@ -111,8 +111,13 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 			return (result.length!==0 && sha256(password) === result[0].user_password);
 		},
 		messages : {
-			en : 'The password is incorrect'
+			en : lang("error_passwordincorrect")
 		}
 	});
+	
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#username").prop("placeholder", lang("label_username"));
+	$("#password").prop("placeholder", lang("label_password"));
 
 });

@@ -6,8 +6,9 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/user'], function ($, db, bootstrap, clone,user) {
-  //check if the user is logged in
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user'], function ($, db, bootstrap, clone, lang, string, user) {
+
+	//check if the user is logged in
   if (!user.check()) {
     logout("logout_unknown_cookie");
   }
@@ -23,7 +24,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/user'], function
   }
 
 	function createSidebarElements() {
-		var rows = db.getUnique('getModules', 'subject_name', []);
+		var rows = db.getUnique2('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
@@ -52,16 +53,16 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/user'], function
     var element = $("#messages");
     switch(message) {
       case "create_dataset":
-        message = "You have succesfully created a new dataset.";
+        message = lang("success_createdataset");
         break;
       case "open_dataset":
-        message = "You have succesfully uploaded a new dataset.";
+        message = lang("success_opendataset");
         break;
       case "login":
         message = "You have succesfully logged in.";
         break;
       default:
-        message = "This message is unknown.";
+        message = lang("message_default");
     }
     element.append("<p>"+message+"</p>").show();
   }
@@ -77,6 +78,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone','app/user'], function
     var re = new RegExp(q+'=([^&]*)','i');
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
+
+	// Write localisable text to the page
+	string.fillinTextClasses();
 
 	$(document).ready(function () {
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;

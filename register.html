@@ -27,9 +27,9 @@
 						<span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="index.html">Quit program</a></li>
+						<li><a href="index.html"><span class="text_general_quit"></span></a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">Help</a></li>
+						<li><a href="#"><span class="text_general_help"></span></a></li>
 					</ul>
 				</div>
 			</div>
@@ -42,20 +42,21 @@
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
 								<p class="h1">
-									Account registration
+									<span class="text_register_header"></span>
 								</p>
 							</div>
 							<div class="panel-body text-info">
-                <form role="form" id="registerForm" data-parsley-validate="">
+                              <form role="form" data-parsley-validate="">
+                                  <fieldset>
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-6">
-												<label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="Username" data-parsley-user-name="1" data-parsley-required = "true">
+												<label for="username"><span class="text_label_username"></span></label>
+                                              <input type="text" class="form-control" id="username" data-parsley-user-name="1" data-parsley-required = "true">
 											</div>
 											<div class="col-sm-6">
-												<label for="email">Your email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email address" data-parsley-email-name="1" data-parsley-required = "true">
+												<label for="email"><span class="text_label_emailaddress"></span></label>
+                                              <input type="email" class="form-control" id="email" data-parsley-email-name="1" data-parsley-required = "true">
 											</div>
 										</div>
 
@@ -72,33 +73,34 @@
 
 										<div class="row">
 											<div class="col-sm-6">
-												<label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Password" required="">
+												<label for="password"><span class="text_label_password"></span></label>
+                                              <input type="password" class="form-control" id="password" required="">
 											</div>
 											<div class="col-sm-6">
-												<label for="password">Confirm password</label>
-                        <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Passwords are not the same">
+												<label for="password"><span class="text_label_passwordconfirm"></span></label>
+                                              <input type="password" class="form-control" id="confirm_password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
 											</div>
 										</div>
 
 										<div class="row">
 											<div class="col-sm-6">
-												<label for="gender">Gender</label>
-                        <select class="form-control" id="gender" data-parsley-required = "true">
-													<option selected disabled>Select your gender</option>
-													<option value="male">Male</option>
-													<option value="female">Female</option>
-											  </select>
+												<label for="gender"><span class="text_label_gender"></span></label>
+                                              <select class="form-control" id="gender" data-parsley-required = "true">
+													<option class="text_placeholder_gender" selected disabled></option>
+													<option class="text_label_gendermale" value="male"></option>
+													<option class="text_label_genderfemale" value="female"></option>
+												</select>
 											</div>
 											<div class="col-sm-6">
-												<label for="dateofbirth">Date of birth</label>
-                        <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
+												<label for="dateofbirth"><span class="text_label_dateofbirth"></span></label>
+                                              <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
 											</div>
 										</div>
 									</div>
-									<button type="submit" class="btn btn-info btn-block">Confirm and register account</button>
-                </form>
-                <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='login.html'">Cancel and return to log in screen</button>
+									<button type="submit" class="btn btn-info btn-block"><span class="text_register_buttonregister"></span></button>
+                                    </form>
+                                  <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='login.html'"><span class="text_register_buttoncancel"></span></button>
+								
 							</div>
 							<div class="panel-footer">
 								<div class="row">

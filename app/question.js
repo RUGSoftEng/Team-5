@@ -1,4 +1,4 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, messages, config, string, slimstampen) {
+define(['jquery', 'app/lang', 'app/messages', 'app/config', 'app/string', 'app/slimstampen'], function ($, lang, messages, config, string, slimstampen) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -27,7 +27,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
-    if (inTutorial) {
+    if (inTutorial && config.constant("ALGORITHM")!=="slimstampen") {
       if (currentItemIndex == tutorialLength) {
         currentItemIndex = 0;
       } else {
@@ -63,7 +63,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
+    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " " + lang("general_words") + "</p>" );
     var percentageVal = percentage(itemsAnsweredCorrectly, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%").attr("aria-valuenow", percentageVal).css("width", percentageVal+"%");
   }
@@ -97,6 +97,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
           data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
         };
         responseList.push(newResponse);
+        console.log(responseList);
         // Use slimstampen method to determine next question
         var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
         currentItemIndex = items.indexOf(newQuestion);
@@ -107,7 +108,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
   }
 
   function showTutorialInstruction() {
-    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].answer);
+    $("#question").append("<br>" + lang("tutorial_typeanswer", items[currentItemIndex].answer));
   }
 
   function handleScoreIncrease() {
@@ -117,7 +118,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
     showProgress();
 
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
-      alert("Done!");
+      alert(lang("learning_done"));
       window.location = 'index.html';
     }
   }
@@ -131,8 +132,9 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed
-          if (!firstKeyPress && e.keyCode >= config.constant("0") && e.keyCode <= config.constant("z")) {
+          if (!firstKeyPress && e.keyCode >= config.key("0") && e.keyCode <= config.key("z")) {
             firstKeyPress = measureTime(startTime);
+            console.log(firstKeyPress);
           }
         };
     },
@@ -141,7 +143,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
       showProgress();
       $("#question").html(items[currentItemIndex].text);
 
-      if (inTutorial) {
+      if (checkTutorialStatus()) {
         showTutorialInstruction();
       }
     },
@@ -158,11 +160,11 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen']
 
       if (difference === 0) {
         handleScoreIncrease();
-        messages.show( "Well done!", "success", config.constant("FEEDBACK_DELAY_CORRECT") );
+        messages.show( lang("answer_correct"), "success", config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
-        messages.show( "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)", "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( lang("answer_almost", answer, difference), "warning", config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
-        messages.show( "Wrong answer! Expected answer: <b>" + answer + "</b>", "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
+        messages.show( lang("answer_wrong", answer), "danger", config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
       answerWasCorrect = (difference === 0);
     },

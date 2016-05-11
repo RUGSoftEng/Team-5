@@ -1,5 +1,5 @@
-define(['jquery', 'app/config','app/database', 'parsley' ], function ($, config,db,parsley) {
-
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string'], function ($, config, db, parsley, lang, string) {
+  
   $("form").submit(function(e){
     e.preventDefault();
     handleRegister();
@@ -23,7 +23,13 @@ define(['jquery', 'app/config','app/database', 'parsley' ], function ($, config,
     window.location="login.html?message=register"
 
   }
-
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#username").prop("placeholder", lang("label_username"));
+	$("#email").prop("placeholder", lang("label_emailaddress"));
+	$("#password").prop("placeholder", lang("label_password"));
+	$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+  
   $(document).ready(function(){
     window.Parsley.addValidator('userName', {
       validateString: function(value, requirement) {
@@ -31,17 +37,17 @@ define(['jquery', 'app/config','app/database', 'parsley' ], function ($, config,
         return (result.length===0);
       },
       messages: {
-        en: 'This username is already used choose another username.'
+        en: lang("error_usernamenotunique")
       }
     });
-
+    
     window.Parsley.addValidator('emailName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyEmail", [value]);
         return (result.length===0);
       },
       messages: {
-        en: 'This username is already used choose another username.'
+        en: lang("error_emailnotunique")
       }
     });
 
