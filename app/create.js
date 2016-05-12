@@ -10,26 +10,25 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
-	// Function for removing elements from the form
-	function remove_element(element) {
+	function removeElementFromForm(element) {
 		if (numberOfFormItems > 1) {
 			element.parents("tr").remove();
 			numberOfFormItems--;
 		}
 	}
 
-	function add_element_to_form() {
+	function addElementToForm() {
 		var newElement = $('#items table').cloneLayout();
 		newElement.replaceClone(["i", "required"], [formItemId, "required"]);
 		// Remove when clicked on close
 		newElement.on("click", ".remove", function() {
-			remove_element($(this));
+			removeElementFromForm($(this));
 		});
 		// When the TAB is pressed, add a new line
 		keys.removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
 			if (keys.isTab(e.keyCode)) {
-					add_element_to_form();
+					addElementToForm();
 			}
 		});
 		numberOfFormItems++;
@@ -69,10 +68,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 
 	ready.on(function() {
 		// Add the first element
-		add_element_to_form();
+		addElementToForm();
 		// Bind the click method for adding elements
 		$(".add").click(function() {
-			add_element_to_form();
+			addElementToForm();
 			return false;
 		});
 
