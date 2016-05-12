@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user) {
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/keys'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user,keys) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -26,24 +26,14 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			remove_element($(this));
 		});
 		// When the TAB is pressed, add a new line
-		removeKeybinds("keydown");
+		keys.removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
-			if (isTab(e.keyCode)) {
+			if (keys.isTab(e.keyCode)) {
 					add_element_to_form();
 			}
 		});
 		numberOfFormItems++;
 		formItemId++;
-	}
-
-	function isTab(keyCode){
-		return keyCode == config.key("TAB");
-	}
-
-	function removeKeybinds(keybind) {
-		$("#items table input").each(function() {
-			$(this).unbind(keybind);
-		});
 	}
 
 	// Auxiliary form functions
