@@ -11,6 +11,7 @@ define(function (require) {
 		NUMBER_TUTORIAL_QUESTIONS: 3,
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true,
+		/* Time limit in seconds */
 		TIME_LIMIT: 600,
 		FEEDBACK_DELAY_CORRECT: 0.5,
 		FEEDBACK_DELAY_INCORRECT: 10,
