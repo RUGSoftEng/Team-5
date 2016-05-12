@@ -9,10 +9,12 @@
 define(function (require) {
 	var constants = {
 		NUMBER_TUTORIAL_QUESTIONS: 3,
+		/* Margin of error accepted by the Levenstein function */
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true,
-		/* Time limit in seconds */
+		/* Time limit for learning sessions in seconds */
 		TIME_LIMIT: 600,
+		/* Time before the next item is presented while learning */
 		FEEDBACK_DELAY_CORRECT: 0.5,
 		FEEDBACK_DELAY_INCORRECT: 10,
 		DATABASE_USER: __dirname + "/database/user.sqlite",
