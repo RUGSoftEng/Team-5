@@ -12,11 +12,11 @@ define(function (require) {
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true,
 		TIME_LIMIT: 600,
-		FEEDBACK_DELAY_CORRECT: 0.5,
+		FEEDBACK_DELAY_CORRECT: 1,
 		FEEDBACK_DELAY_INCORRECT: 10,
 		DATABASE_USER: __dirname + "/database/user.sqlite",
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
-		ALGORITHM: "flashcard", // flashcard; slimstampen;
+		ALGORITHM: "slimstampen", // flashcard; slimstampen;
 		LANGUAGE: "nl",
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",

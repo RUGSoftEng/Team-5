@@ -9,12 +9,14 @@
  * module is sqlite.
  */
 
+var mysql = require('mysql');
+
 define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
-		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
-		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+		addUserItem : "INSERT INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
+		addModule :  "INSERT INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
+		addDataset : "INSERT INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
@@ -32,22 +34,13 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 	};
 
 	// Check if SQL.js has been loaded through AMD
-	var sql;
+	var sql,db,db_online;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
 		alert(lang("error_requirefail", "sql.js"));
 	} else {
 		sql = sqlite;
 	}
-
-	// Initiate DB and check if there is an existing user DB
-	var read_database;
-	if (database_exists(config.constant("DATABASE_USER"))) {
-		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
-	} else {
-		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
-	}
-	var db = new sql.Database(read_database);
 
 	function database_exists(path) {
 		try {
@@ -73,7 +66,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
     }
     return true;
   }
-	
+
 	// Auxiluary uniqueness function
   function isUnique2(unique_name1, unique_name2, queryResult, row) {
     for (i = 0; i<queryResult.length;i++) {
@@ -85,6 +78,35 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
   }
 
 	var database = {
+		online: function() {
+			return navigator.onLine;
+		},
+		init: function() {
+			// Initiate DB and check if there is an existing user DB
+			var read_database;
+			if (database_exists(config.constant("DATABASE_USER"))) {
+				read_database = fs.readFileSync(config.constant("DATABASE_USER"));
+			} else {
+				read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
+			}
+			db = new sql.Database(read_database);
+
+			if (database.online()) {
+				db_online = mysql.createConnection({
+					host     : config.constant("ONLINE_HOST"),
+					user     : config.constant("ONLINE_USER"),
+					password : config.constant("ONLINE_PASSWORD"),
+					database : config.constant("ONLINE_DATABASE")
+				});
+
+				db_online.connect(function(err) {
+					if (err) {
+						console.error('Error connecting: ' + err.stack);
+						return;
+					}
+				});
+			}
+		},
 		save : function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
@@ -102,6 +124,13 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 				console.log(e);
 				console.log(d);
 			});
+			if (database.online()) {
+				db_online.query(query, args, function(err, result) {
+				  if (err) throw err;
+					var insertId = result.insertId;
+					
+				});
+			}
 		},
 		getQuery: function(queryname,args){
 			var queryResult = [];
@@ -141,5 +170,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			db.each(query,args, func);
 		}
 	};
+	database.init();
 	return database;
 });

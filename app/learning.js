@@ -85,7 +85,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    if (questions.hint()!=="")
+    if (questions.hint()!==null)
       messages.showHint(questions.hint());
   });
 

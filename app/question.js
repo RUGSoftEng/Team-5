@@ -145,13 +145,14 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
       data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
     };
     responseList.push(newResponse);
+    console.log(responseList);
     // Use slimstampen method to determine next question
     var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
     currentItemIndex = items.indexOf(newQuestion);
   }
 
   function  isAlphanumeric(key){
-    return key >= config.constant("0") && key <= config.constant("z");
+    return key >= config.key("0") && key <= config.key("z");
   }
 
   return {
