@@ -97,6 +97,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqli
 						synchronizeDataset(localdatasets[i],onlinedatasets[i]);
 						break;
 					}
+					if(j === onlinedataset.length){
+						console.log(online.dataset_id);
+					}
 				}
 			}
 	}
