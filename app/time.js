@@ -25,5 +25,5 @@ define([], function () {
         seconds = time%60;
         return format(minutes)+":"+format(seconds);
     }
-  };
+  }
 });

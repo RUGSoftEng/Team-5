@@ -6,5 +6,5 @@ define([], function () {
        return Math.round(part / total * 100);
       }
 
-    };
+    }
 });

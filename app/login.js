@@ -108,7 +108,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 			var password = $("#password").val();
 
 			var result = getUser();
-			return (result.length!==0 && sha256(password) === result[0].user_password);
+			return (result.length!==0 && hash.verify(password,result[0].user_password) );
 		},
 		messages : {
 			en : lang("error_passwordincorrect")

@@ -5,8 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
-    "pretest": "jshint ./tests && jshint ./app",
-    "test": "intern-client config=tests/internLocal"
+    "pretest": "chromedriver --port=4444 --url-base=wd/hub 1> /dev/null & ./node_modules/jshint/bin/jshint ./tests/*.js && ./node_modules/jshint/bin/jshint ./app/*.js",
+    "test": "./node_modules/.bin/intern-runner config=tests/internLocal",
+    "posttest": "echo 'Hallo!' && pkill chromedriver"
   },
   "repository": {
     "type": "git",
@@ -28,12 +29,10 @@
     "async": "^2.0.0-rc.3",
     "bootstrap": "^3.3.6",
     "bootstrap-select": "^1.10.0",
-    "chromedriver": "^2.21.2",
     "electron-sudo": "^3.0.4",
     "intern": "^3.1.1",
     "jquery": "^2.2.2",
     "jshint": "^2.9.2",
-    "mysql": "^2.10.2",
     "parsleyjs": "^2.3.7",
     "sha256": "^0.2.0",
     "sprintf-js": "^1.0.3",

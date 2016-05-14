@@ -8,7 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
 
   var waitingForEnter = false;
 
@@ -84,7 +84,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    if (questions.hint()!==null)
+    if (questions.hint()!=="")
       messages.showHint(questions.hint());
   });
 
