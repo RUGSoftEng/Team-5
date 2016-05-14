@@ -74,11 +74,22 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 	});
 	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
+  function getDatasetIdFromURL(url) {
+  var datasetId = url.substring(url.indexOf('?')+1);
+  return datasetId;
+	}
+
+	function retrieveDataSet(datasetId) {
+  var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+  return factList;
+	}
+
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
-    var datasetId = url.substring(url.indexOf('?')+1);
-    var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+    var datasetId = getDatasetIdFromURL(url);
+    var factList = retrieveDataSet(datasetId)
+
     questions.initialize(factList);
   	questions.show();
 
