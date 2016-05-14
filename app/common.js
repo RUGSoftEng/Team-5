@@ -30,5 +30,8 @@ requirejs.config({
       nls: "../nls/lang",
       printf: "sprintf-js/dist/sprintf.min",
       mysql: "mysql/index"
-    }
+    },
+    include: [
+      'jquery'
+    ]
 });

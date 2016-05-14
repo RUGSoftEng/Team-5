@@ -11,7 +11,7 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
+define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, $, lang) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -82,7 +82,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			return navigator.onLine;
 		},
 		init: function() {
-			// Initiate DB and check if there is an existing user DB
 			var read_database;
 			if (database_exists(config.constant("DATABASE_USER"))) {
 				read_database = fs.readFileSync(config.constant("DATABASE_USER"));

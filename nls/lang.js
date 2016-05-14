@@ -11,6 +11,7 @@ define({
 		error_datasetnamenotunique: "This name is already used for another dataset!",
 		error_emailnotunique: "An account is already registered for this email adress.",
 		error_logout: "Something went wrong, so you have been signed out. Contact the administrator if this errors keeps occuring.",
+		error_nointernetconnection: "You're internet connection is down. Please make sure that you go back online in order to save your account.",
 		error_notenteredallfields: "You have not entered all fields!",
 		error_passwordincorrect: "Incorrect password.",
 		error_requirefail: "Failed to require %s through AMD.",

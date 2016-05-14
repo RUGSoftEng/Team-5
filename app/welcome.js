@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user'], function ($, db, bootstrap, clone, lang, string, user) {
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user', 'app/messages'], function ($, db, bootstrap, clone, lang, string, user, messages) {
 
 	//check if the user is logged in
   if (!user.check()) {
@@ -55,42 +55,6 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 		}
 	}
 
-  // Function for displaying messages on main screen
-  function showMessage(message) {
-    var element = $("#messages");
-    switch(message) {
-      case "create_dataset":
-        message = lang("success_createdataset");
-        break;
-      case "open_dataset":
-        message = lang("success_opendataset");
-        break;
-      case "login":
-        message = lang("success_login");
-        break;
-			case "login_automatic":
-				message = lang("success_loginautomatic", user.get("user_firstname"));
-				break;
-			case "logout":
-				message = lang("success_logout");
-				break;
-			case "logout_unknown_cookie":
-				message = lang("error_logout");
-				break;
-			case "register":
-				message = lang("success_register");
-				break;
-      default:
-        message = lang("message_default");
-    }
-    element.append("<p>"+message+"</p>").show();
-  }
-
-  function hideMessage() {
-    var element = $("#messages");
-    element.hide();
-  }
-
   // Function for obtaining the GET data from the url
   function $_GET(q,s) {
     s = (s) ? s : window.location.search;
@@ -110,7 +74,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 
     // Show message if there is any
     if ($_GET('message')) {
-      showMessage($_GET('message'));
+      messages.show("#messages", $_GET('message'));
     }
 
     // Logout button
@@ -131,7 +95,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 		$(".sidebar_li a").click(function () {
       var subject = $(this).data("subject-id");
       var language = $(this).data("language-id");
-      hideMessage();
+      messages.hide("#messages");
 			createDatasetsGrid(subject, language);
 			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
 	    $(this).addClass('active');
