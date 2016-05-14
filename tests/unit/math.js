@@ -2,13 +2,13 @@ define(['intern!object', 'intern/chai!assert', 'app/math'],
   function (registerSuite, assert, math) {
 
     registerSuite({
-        name: 'math',
+        name: 'Percentage',
 
-        moveTwo: function () {
-            assert.strictEqual(math.moveTwo(3), 5,
-                'math.moveTwo should move the first argument two away from zero.');
-            assert.strictEqual(math.moveTwo(-3), -5,
-                'math.moveTwo should move the first argument two away from zero.');
+        percentage: function () {
+            assert.strictEqual(math.percentage(1,2), 50,
+                'math.percentage should return a correct percentage.');
+            assert.strictEqual(math.percentage(1,100), 1,
+                'math.percentage should return a correct percentage.');
         }
     });
 

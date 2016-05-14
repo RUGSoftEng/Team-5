@@ -37,7 +37,7 @@ define({
 	},
 
 	// Non-functional test suite(s) to run in each browser
-	suites: ['tests/unit/math'],
+	suites: ['tests/unit/*.js'],
 
 	// Functional test suite(s) to execute against each browser once non-functional tests are completed
 	functionalSuites: ['tests/functional/index'],
