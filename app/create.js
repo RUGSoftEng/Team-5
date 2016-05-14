@@ -43,15 +43,15 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
-	// Write localisable text to the page
-	string.fillinTextClasses();
-	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
-	$("#datasetsubject").prop("title", lang("placeholder_subject"));
-	$("#buttoncreate").prop("value", lang("create_buttoncreate"));
-	$("#inputquestion").prop("placeholder", lang("label_question"));
-	$("#inputanswer").prop("placeholder", lang("label_answer"));
-	$("#inputhint").prop("placeholder", lang("label_hint"));
-	
+  	function localisePage() {
+		string.fillinTextClasses();
+		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
+		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#buttoncreate").prop("value", lang("create_buttoncreate"));
+		$("#inputquestion").prop("placeholder", lang("label_question"));
+		$("#inputanswer").prop("placeholder", lang("label_answer"));
+		$("#inputhint").prop("placeholder", lang("label_hint"));
+	}
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
 		var user_info = $(this).data("replace");
@@ -61,6 +61,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 	ready.on(function() {
+		localisePage();
 		// Add the first element
 		addElementToForm();
 		$(".add").click(function() {

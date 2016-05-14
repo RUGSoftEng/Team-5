@@ -21,12 +21,12 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 	
-	// Write localisable text to the page
-	string.fillinTextClasses();
-	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
-	$("#datasetsubject").prop("title", lang("placeholder_subject"));
-	$("#buttonsave").prop("value", lang("open_buttonsave"));
-	
+	function localisePage() {
+		string.fillinTextClasses();
+		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
+		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#buttonsave").prop("value", lang("open_buttonsave"));
+	}
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
 		var user_info = $(this).data("replace");
@@ -193,4 +193,8 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	if (xlf.addEventListener) {
 		xlf.addEventListener('change', handleFile, false);
 	}
+
+  	ready.on(function() {
+		localisePage();
+	})
 });

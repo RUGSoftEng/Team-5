@@ -4,7 +4,8 @@
   "description": "An application for learning all kinds of subjects",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron main.js",
+  	"pretest": "chromedriver --port=4444 --url-base=wd/hub 1> /dev/null & ./node_modules/jshint/bin/jshint ./tests/*.js && ./node_modules/jshint/bin/jshint ./app/*.js"  
   },
   "repository": {
     "type": "git",
