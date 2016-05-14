@@ -8,7 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -19,14 +19,18 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 		return $.trim($("#answer").val()).length === 0;
 	}
 
+	function prepareAnswerField() {
+	  $( "#answer" ).prop("disabled", false);
+    $( "#answer" ).val( "" );
+    $( "#answer" ).focus();
+  }
+
   function nextQuestion() {
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
     questions.nextQuestion();
-    $( "#answer" ).prop("disabled", false);
-    $( "#answer" ).val( "" );
-    $( "#answer" ).focus();
+
     questions.show();
     waitingForEnter = false;
   }
@@ -90,7 +94,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {
-  	if (e.keyCode == config.key("ENTER")) {
+  	if (e.keyCode == keys.ENTER) {
       handleEnter();
   	}
   });

@@ -34,10 +34,6 @@ define(function (require) {
 	return {
 		constant: function(name) {
 			return constants[name];
-		},
-
-		key: function(name) {
-			return keys[name];
 		}
 	};
 });

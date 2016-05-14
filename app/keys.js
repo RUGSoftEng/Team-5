@@ -11,10 +11,7 @@ define(['jquery'], function($) {
     TAB: 9,
     ENTER: 13,
     "0": 48,
-    "z": 90
-  };
-
-	return {
+    "z": 90,
 		isTab: function(keyCode) {
     return keyCode == keys.TAB;
   	},
@@ -24,5 +21,6 @@ define(['jquery'], function($) {
 	    $(this).unbind(keybind);
 	  	});
 		}
-	}  
+	}
+	return keys;  
 });
