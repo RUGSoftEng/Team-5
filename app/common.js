@@ -9,6 +9,9 @@ requirejs.config({
         xlsx: {
             deps: ['jszip'],
             exports: "XLSX"
+        },
+        jquery: {
+          deps: ['app/config']
         }
     },
     paths: {
@@ -30,8 +33,5 @@ requirejs.config({
       nls: "../nls/lang",
       printf: "sprintf-js/dist/sprintf.min",
       mysql: "mysql/index"
-    },
-    include: [
-      'jquery'
-    ]
+    }
 });

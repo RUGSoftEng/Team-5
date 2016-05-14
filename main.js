@@ -14,7 +14,7 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({minWidth: 800});
+  mainWindow = new BrowserWindow({minWidth: 800, backgroundColor: "#282c34"});
   mainWindow.maximize();
 
   // and load the index.html of the app.

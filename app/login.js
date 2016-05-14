@@ -6,7 +6,8 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms'], function ($, config, db, user, lang, string, messages, parsley, forms) {
+
+define(["app/config", "jquery", "app/database", "app/user", "app/lang", "app/string", "app/messages", 'parsley', 'app/forms'], function (config, $, db, user, lang, string, messages, parsley, forms) {
 	// Ask for permission to write to the database on Linux and Mac OSX
 	if (navigator.appVersion.indexOf("Mac")!=-1){
 		var options = {
