@@ -63,19 +63,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		console.log("this error " + error.message);
 		alert('Something went wrong while excuting your request\n please try again! ')
 	}
-
-  // Auxiluary uniqueness function
-  function isUnique(unique_name, queryResult, row) {
-    for (i = 0; i<queryResult.length;i++) {
-      if (queryResult[i][unique_name]==row[unique_name]) {
-        return false;
-      }
-    }
-    return true;
-  }
 	
 	// Auxiluary uniqueness function
-  function isUnique2(unique_name1, unique_name2, queryResult, row) {
+  function isUnique(unique_name1, unique_name2, queryResult, row) {
     for (i = 0; i<queryResult.length;i++) {
       if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
         return false;
@@ -111,20 +101,11 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			});
 			return queryResult;
 		},
-		getUnique: function(queryname,unique_name, args) {
+		getUnique: function(queryname, unique_name1, unique_name2, args) {
 			var queryResult = [];
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
-				if (isUnique(unique_name, queryResult, row))
-					queryResult.push(row);
-			});
-			return queryResult;
-		},
-		getUnique2: function(queryname, unique_name1, unique_name2, args) {
-			var queryResult = [];
-			var query = queries[queryname] ;
-			db.each(query,args, function(row, err) {
-				if (isUnique2(unique_name1, unique_name2, queryResult, row))
+				if (isUnique(unique_name1, unique_name2, queryResult, row))
 					queryResult.push(row);
 			});
 			return queryResult;
