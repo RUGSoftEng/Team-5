@@ -6,32 +6,32 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string'], function ($, config, db, parsley, forms, user, lang, string) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string', 'app/ready'], function ($, config, db, parsley, forms, user, lang, string, ready) {
+	function getPermissionsForDatabase() {
+		if (navigator.appVersion.indexOf("Mac")!=-1){
+			var options = {
+				name : 'SlimStampen',
+				//icns: '/path/to/icns/file', // (optional, only for MacOS),
+				process : {
+					options : {
+						// Can use custom environment variables for your privileged subprocess
+						env : {
+							'VAR' : 'VALUE'
+						}
 
-	// Ask for permission to write to the database on Linux and Mac OSX
-	if (navigator.appVersion.indexOf("Mac")!=-1){
-		var options = {
-			name : 'SlimStampen',
-			//icns: '/path/to/icns/file', // (optional, only for MacOS),
-			process : {
-				options : {
-					// Can use custom environment variables for your privileged subprocess
-					env : {
-						'VAR' : 'VALUE'
+						// ... and all other subprocess options described here
+						// https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
+					},
+					on : function (ps) {
+						ps.stdout.on('data', function (data) {});
+						setTimeout(function () {
+							ps.kill();
+						}.bind(ps), 50000);
 					}
-
-					// ... and all other subprocess options described here
-					// https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
-				},
-				on : function (ps) {
-					ps.stdout.on('data', function (data) {});
-					setTimeout(function () {
-						ps.kill();
-					}.bind(ps), 50000);
 				}
-			}
-		};
-		electronsudo.exec("chmod 700 database/", options, function (error) {});
+			};
+			electronsudo.exec("chmod 700 database/", options, function (error) {});
+		}
 	}
 
 	// Function for displaying messages on main screen
@@ -123,5 +123,8 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	string.fillinTextClasses();
 	$("#username").prop("placeholder", lang("label_username"));
 	$("#password").prop("placeholder", lang("label_password"));
+	ready.on(function() {
+		getPermissionsForDatabase();
+	})
 
 });
