@@ -35,44 +35,44 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	}
 
 	// Function for displaying messages on main screen
-  function showMessage(message) {
-    var element = $("#messages");
-    switch(message) {
-      case "create_dataset":
-        message = lang("success_createdataset");
-        break;
-      case "open_dataset":
-        message = lang("success_opendataset");
-        break;
-      case "login":
-        message = lang("success_login");
-        break;
-			case "logout":
-				message = lang("success_logout");
-				break;
-			case "logout_unknown_cookie":
-				message = lang("error_logout");
-				break;
-			case "register":
-				message = lang("success_register");
-				break;
-      default:
-        message = lang("message_default");
-    }
-    element.append("<p>"+message+"</p>").show();
-  }
+	function showMessage(message) {
+		var element = $("#messages");
+		switch(message) {
+		case "create_dataset":
+			message = lang("success_createdataset");
+			break;
+		case "open_dataset":
+			message = lang("success_opendataset");
+			break;
+		case "login":
+			message = lang("success_login");
+			break;
+		case "logout":
+			message = lang("success_logout");
+			break;
+		case "logout_unknown_cookie":
+			message = lang("error_logout");
+			break;
+		case "register":
+			message = lang("success_register");
+			break;
+		default:
+			message = lang("message_default");
+		}
+		element.append("<p>"+message+"</p>").show();
+	}
 
 	// Function for obtaining the GET data from the url
-  function $_GET(q,s) {
-    s = (s) ? s : window.location.search;
-    var re = new RegExp(q+'=([^&]*)','i');
-    return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
-  }
+	function $_GET(q,s) {
+		s = (s) ? s : window.location.search;
+		var re = new RegExp(q+'=([^&]*)','i');
+		return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
+	}
 
-  function hideMessage() {
-    var element = $("#messages");
-    element.hide();
-  }
+	function hideMessage() {
+		var element = $("#messages");
+		element.hide();
+	}
 
 	function getUser() {
 		var user = $("#username").val().toLowerCase();

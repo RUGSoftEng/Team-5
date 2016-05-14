@@ -13,11 +13,6 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
   var firstKeyPress = 0;
   var responseList = [];
 
-  // Calculate the percentage of 'part out of total'
-  function percentage(part, total) {
-   return Math.round(part / total * 100);
-  }
-
   // Calculate the time difference in milliseconds
   function measureTime(start) {
     var end = new Date();
