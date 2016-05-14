@@ -144,6 +144,10 @@
     line-height: 60px;
 }
 
+.nav-left{
+  direction:ltr !important;
+}
+
 .sidebar-nav > .sidebar-brand a {
     color: #999999;
 }

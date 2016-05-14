@@ -9,16 +9,18 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
+define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqlite, config, lang,user) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		addDataset : "INSERT INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,'user_createdate','user_lastedited') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
+		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
+		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getDatasetItems : "SELECT * FROM tblitems WHERE item_dataset_id=?" ,
 		getUserSubjects : "SELECT * FROM tblsubjects",
@@ -28,7 +30,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
-		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id"
+		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id",
+		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id= ?"
 	};
 
 	// Check if SQL.js has been loaded through AMD
@@ -73,7 +76,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
     }
     return true;
   }
-	
+
 	// Auxiluary uniqueness function
   function isUnique2(unique_name1, unique_name2, queryResult, row) {
     for (i = 0; i<queryResult.length;i++) {
@@ -83,6 +86,40 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
     }
     return true;
   }
+
+	function synchronizeDatasets(){
+			var userId = user.getCookie('user_id');
+			var localdatasets = db.query('getUserDatasets',[userId]);
+			var onlinedatasets = onlinequery('getUserdatasets',[userId]);
+			for(var i=0; i< localdatasets.length; i++){
+				for(var j=0 ;j<onlinedatasets; j++){
+					if(localdatasets[i].dataset_id === onlinedatasets[j].dataset_id){
+						synchronizeDataset(localdatasets[i],onlinedatasets[i]);
+						break;
+					}
+				}
+			}
+	}
+
+	function sychronizeDataset(local,online){
+		var recent = db.query('getRecentDataset',[local.dataset_id,online.dataset_lastedited,online.dataset_lastedited]).length > 0;
+		var old = db.query('getRecentDataset',[online.dataset_id,local.dataset_lastedited,online.dataset_lastedited]).length > 0;
+
+		if(recent){
+			db.query('deleteDatasetbyId',[local.dataset_id]);
+		}else if(old){
+			online.query('deleteDatasetbyId',[online.dataset_id]);
+		}
+	}
+
+	function onlinequery(queryname,args){
+		var queryResult = [];
+		var query = queries[queryname];
+		con.each(query,args, function(row, err) {
+			queryResult.push(row);
+		});
+		return queryResult;
+	}
 
 	var database = {
 		save : function () {

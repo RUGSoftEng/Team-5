@@ -1,5 +1,5 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string'], function ($, config, db, parsley, lang, string) {
-  
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash'.'app/date'], function ($, config, db, parsley, lang, string,hash,date) {
+
   $("form").submit(function(e){
     e.preventDefault();
     handleRegister();
@@ -13,13 +13,17 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var confirm_password = $("#confirm_password").val();
     var email = $("#email").val();
     var gender = $("#gender").val();
-    var dateofbirth = $("#dateofbirth").val();
     var gen = (gender === "male") ? 1:0;
+    var dateofbirth = $("#dateofbirth").val();
     var date = dateofbirth.split("-");
     dateofbirth = date[2]+"-"+date[1]+"-"+date[0];
+    var hashed_password = hash.generate(password);
+    var datetime = date.dateToDATETIME(new Date());
 
-    db.executeQuery("addUser",[email,username,gen,dateofbirth,sha256(password), firstname, lastname]);
+
+    db.executeQuery("addUser",[email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime]);
     db.close();
+
     window.location="login.html?message=register";
 
   }
@@ -31,8 +35,8 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 	$("#lastname").prop("placeholder", lang("label_lastname"));
 	$("#password").prop("placeholder", lang("label_password"));
 	$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
-	
-  
+
+
   $(document).ready(function(){
     window.Parsley.addValidator('userName', {
       validateString: function(value, requirement) {
@@ -43,7 +47,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
         en: lang("error_usernamenotunique")
       }
     });
-    
+
     window.Parsley.addValidator('emailName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyEmail", [value]);
