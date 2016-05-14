@@ -70,8 +70,8 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		});
 
     function buildDatasetLanguageString(form, select, language)  {
-      var language = forms.getFormVal(form, select, language);
-      return language;
+      var lang = forms.getFormVal(form, select, language);
+      return lang;
     }
     function buildDatasetSubjectString(form, select, language)  {
       var subject = forms.getFormVal(form, select, subject);

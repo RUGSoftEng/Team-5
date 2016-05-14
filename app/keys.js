@@ -21,6 +21,6 @@ define(['jquery'], function($) {
 	    $(this).unbind(keybind);
 	  	});
 		}
-	}
+	};
 	return keys;  
 });

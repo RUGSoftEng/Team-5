@@ -125,6 +125,6 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	$("#password").prop("placeholder", lang("label_password"));
 	ready.on(function() {
 		getPermissionsForDatabase();
-	})
+	});
 
 });

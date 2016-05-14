@@ -52,4 +52,4 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley'], function
 		}
 	};
 	return forms;
-})
+});

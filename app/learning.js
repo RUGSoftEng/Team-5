@@ -95,7 +95,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   ready.on(function() {
     var url = window.location.href;
     var datasetId = getDatasetIdFromURL(url);
-    var factList = retrieveDataSet(datasetId)
+    var factList = retrieveDataSet(datasetId);
 
     questions.initialize(factList);
   	questions.show();
