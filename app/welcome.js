@@ -99,13 +99,24 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
 
-	// Write localisable text to the page
-	string.fillinTextClasses();
-	$("#username").prop("placeholder", lang("label_username"));
-	$("#password").prop("placeholder", lang("label_password"));
-	$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+	function localisePage() {
+		string.fillinTextClasses();
+		$("#username").prop("placeholder", lang("label_username"));
+		$("#password").prop("placeholder", lang("label_password"));
+		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+	}
+
+	function getUserDataFromDatabase() {    
+    $("span[data-replace]").each(function() {
+      var user_info = $(this).data("replace");
+      var text = user.get(user_info);
+      $(this).html(text);
+    });
+    $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
+	}
 
 	$(document).ready(function () {
+		localisePage();
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 
@@ -118,15 +129,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     $("#logout").click(function() {
       logout("logout");
     });
-
-    // Replace user data in view from database
-    $("span[data-replace]").each(function() {
-      var user_info = $(this).data("replace");
-      var text = user.get(user_info);
-      $(this).html(text);
-    });
-    $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
-
+    
+    getUserDataFromDatabase();
 		createSidebarElements(currentSubject, currentLanguage);
     createDatasetsGrid(currentSubject,currentLanguage);
 		$(".sidebar_li a").click(function () {

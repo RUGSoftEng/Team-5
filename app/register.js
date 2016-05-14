@@ -23,17 +23,18 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     window.location="login.html?message=register";
 
   }
-	// Write localisable text to the page
-	string.fillinTextClasses();
-	$("#username").prop("placeholder", lang("label_username"));
-	$("#email").prop("placeholder", lang("label_emailaddress"));
-	$("#firstname").prop("placeholder", lang("label_firstname"));
-	$("#lastname").prop("placeholder", lang("label_lastname"));
-	$("#password").prop("placeholder", lang("label_password"));
-	$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
-	
+  function localisePage() {
+		string.fillinTextClasses();
+		$("#username").prop("placeholder", lang("label_username"));
+		$("#email").prop("placeholder", lang("label_emailaddress"));
+		$("#firstname").prop("placeholder", lang("label_firstname"));
+		$("#lastname").prop("placeholder", lang("label_lastname"));
+		$("#password").prop("placeholder", lang("label_password"));
+		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+	}
   
   $(document).ready(function(){
+  	localisePage();
     window.Parsley.addValidator('userName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyUsername", [value]);
