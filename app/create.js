@@ -35,13 +35,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		formItemId++;
 	}
 
-	// Auxiliary form functions
-  function getItemVal(formName, formIndex) {
-    return $("#items input[name='" + formName + formIndex + "']").val();
-  }
-	function getFormVal(parentName, formType, formName) {
-    return $(parentName).find(formType + '[name="' + formName + '"]').val();
-  }
+
 
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
@@ -75,7 +69,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			return false;
 		});
 
-		// Script when the form is successfull
+		// Script when the form is successful
 		forms.initializeForm('#createForm', function() {
 			showLoading(function() {
 				// Save dataset
@@ -83,19 +77,9 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				forms.saveDataset(form);
 				// Save all items in the dataset
 				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-				for (i = 0; i<formItemId; i++) {
-					var question = getItemVal("question", i);
-					var answer = getItemVal("answer", i);
-					var hint = getItemVal("hint", i);
-					hint = (hint==="undefined") ? "" : hint;
-
-					console.log(i);
-
-					db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-				}
-				db.close();
-				var language = getFormVal(form, "select", "language");
-	      var subject = getFormVal(form, "select", "subject");
+        forms.getItemsFromCreateForm(id, formItemId);
+				var language = forms.getFormVal(form, "select", "language");
+	      var subject = forms.getFormVal(form, "select", "subject");
 				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 			});
 		});
