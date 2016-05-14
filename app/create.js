@@ -63,23 +63,28 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	ready.on(function() {
 		// Add the first element
 		addElementToForm();
-		// Bind the click method for adding elements
 		$(".add").click(function() {
 			addElementToForm();
 			return false;
 		});
 
+    function buildDatasetLanguageString(form, select, language)  {
+      var language = forms.getFormVal(form, select, language);
+      return language;
+    }
+    function buildDatasetSubjectString(form, select, language)  {
+      var subject = forms.getFormVal(form, select, subject);
+      return subject;
+    }    
 		// Script when the form is successful
 		forms.initializeForm('#createForm', function() {
 			showLoading(function() {
-				// Save dataset
 				var form = "#createForm";
 				forms.saveDataset(form);
-				// Save all items in the dataset
 				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
         forms.getItemsFromCreateForm(id, formItemId);
-				var language = forms.getFormVal(form, "select", "language");
-	      var subject = forms.getFormVal(form, "select", "subject");
+				var language = buildDatasetLanguageString(form, "select", "language");
+	      var subject = buildDatasetSubjectString;
 				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 			});
 		});
