@@ -6,8 +6,7 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string', 'app/saltedhash'], function ($, config, db, parsley, forms, user, lang, string,hash) {
-
+define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash'], function ($, config, db, user, lang, string, messages, parsley, forms, hash) {
 	// Ask for permission to write to the database on Linux and Mac OSX
 	if (navigator.appVersion.indexOf("Mac")!=-1){
 		var options = {
@@ -34,46 +33,12 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 		electronsudo.exec("chmod 700 database/", options, function (error) {});
 	}
 
-	// Function for displaying messages on main screen
-  function showMessage(message) {
-    var element = $("#messages");
-    switch(message) {
-      case "create_dataset":
-        message = lang("success_createdataset");
-        break;
-      case "open_dataset":
-        message = lang("success_opendataset");
-        break;
-      case "login":
-        message = lang("success_login");
-        break;
-			case "logout":
-				message = lang("success_logout");
-				break;
-			case "logout_unknown_cookie":
-				message = lang("error_logout");
-				break;
-			case "register":
-				message = lang("success_register");
-				break;
-      default:
-        message = lang("message_default");
-    }
-    element.append("<p>"+message+"</p>").show();
-  }
-
 	// Function for obtaining the GET data from the url
   function $_GET(q,s) {
     s = (s) ? s : window.location.search;
     var re = new RegExp(q+'=([^&]*)','i');
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
-
-  function hideMessage() {
-    var element = $("#messages");
-    element.hide();
-  }
-
 	function getUser() {
 		var user = $("#username").val().toLowerCase();
 		var query = user.indexOf("@") != -1 ? "getUserbyEmail" : "getUserbyUsername";
@@ -90,7 +55,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	forms.initializeForm('#loginForm', handleLogin);
 
 	if ($_GET('message')) {
-		showMessage($_GET('message'));
+		messages.show("#messages", $_GET('message'));
 	}
 
 	window.Parsley.addValidator('userName', {
