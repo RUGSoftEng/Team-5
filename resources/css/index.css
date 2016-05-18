@@ -47,8 +47,10 @@
 
 	.removebutton {
 		position: absolute;
+		top:0px;
+		right:0px;			
 		opacity: 0;
-		transition: opacity 0.5s ease;		
+		transition: opacity 0.5s ease;	
 	}	  
 
 	.dataset_item:hover .removebutton {
