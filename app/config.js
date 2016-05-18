@@ -17,7 +17,7 @@ define(function (require) {
 		DATABASE_USER: __dirname + "/database/user.sqlite",
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
 		ALGORITHM: "flashcard", // flashcard; slimstampen;
-		LANGUAGE: "arab",
+		LANGUAGE: "en",
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
 		ONLINE_DATABASE: "enricdz148_slim",

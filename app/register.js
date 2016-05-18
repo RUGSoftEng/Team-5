@@ -1,8 +1,12 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash'.'app/date'], function ($, config, db, parsley, lang, string,hash,date) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date'], function ($, config, db, parsley, lang, string,hash,date) {
 
   $("form").submit(function(e){
     e.preventDefault();
-    handleRegister();
+    if(db.online()){
+      handleRegister();
+    }else {
+        alert("you cannot register offline.\n please check your internet connection");
+    }
   });
 
   function handleRegister(inputs){
@@ -15,13 +19,16 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var gender = $("#gender").val();
     var gen = (gender === "male") ? 1:0;
     var dateofbirth = $("#dateofbirth").val();
-    var date = dateofbirth.split("-");
-    dateofbirth = date[2]+"-"+date[1]+"-"+date[0];
+    var dateArray = dateofbirth.split("-");
+    dateofbirth = dateArray[2]+"-"+dateArray[1]+"-"+dateArray[0];
     var hashed_password = hash.generate(password);
     var datetime = date.dateToDATETIME(new Date());
 
 
-    db.executeQuery("addUser",[email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime]);
+    db.executeQuery("addUser",[email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime],false,true);
+    row = db.getQueryOnline('getUserbyUsername',[username]);
+    console.log(row);
+    db.executeQuery("addUserOffline",[row[0].user_id, email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime],true,false);
     db.close();
 
     window.location="login.html?message=register";

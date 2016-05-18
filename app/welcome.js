@@ -13,6 +13,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     logout("logout_unknown_cookie");
   }
 
+  db.synchronize(user.getCookie('user_id'));
+
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
