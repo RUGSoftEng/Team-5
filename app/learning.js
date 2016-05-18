@@ -30,7 +30,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     timer.clearCountdown();
     messages.clear();
     questions.nextQuestion();
-
+    prepareAnswerField();
     questions.show();
     waitingForEnter = false;
   }
