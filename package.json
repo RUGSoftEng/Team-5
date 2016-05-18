@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "async": "^2.0.0-rc.3",
+    "bcryptjs": "^2.3.0",
     "bootstrap": "^3.3.6",
     "bootstrap-select": "^1.10.0",
     "chromedriver": "^2.21.2",

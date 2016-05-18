@@ -31,7 +31,6 @@ define(['jquery', 'i18n!nls', 'printf'], function ($, i18n, printf) {
   return function() {
 		var string = arguments[0];
 		var varargs = [];
-		console.log(language);
 		if (language==='arab'){
 					$('body').css('direction','rtl');
 		}

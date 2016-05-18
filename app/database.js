@@ -17,8 +17,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
 		addDataset : "INSERT INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,'user_createdate','user_lastedited') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addUserOffline:  "INSERT INTO tblusers  (user_id,user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,'user_createdate','user_lastedited') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addUserOffline:  "INSERT INTO tblusers  (user_id,user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
@@ -64,10 +64,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		}
 	}
 
-	// Function for Handeling query Error
-	function onError(db, error) {
-		console.log("this error " + error.message);
-		alert('Something went wrong while excuting your request\n please try again! ')
+	function onError(error) {
+		if (error) {
+			if (error.message !== undefined) {
+				console.log(error.message);
+			} else {
+				console.log(error);
+			}
+		}
 	}
 
   // Auxiluary uniqueness function
@@ -120,20 +124,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		}
 	}
 
-	function onlineQuery(queryname,args){
-		var queryResult = [];
-		var queryString = queries[queryname];
-		console.log("here "+queryString);
-		db_online.query(queryString,args, function(err, rows, fields) {
-	    if (err) throw err;
-	    for (var i in rows) {
-					queryResult.push(rows[i]);
-	        console.log('Post Titles: ', rows[i]);
-	    }
-		});
-		return queryResult;
-	}
-
 	var database = {
 		online: function() {
 					return navigator.onLine;
@@ -174,28 +164,35 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		},
-		executeQuery : function (queryname, args,local,remote) {
+		executeQuery : function (queryname, args, local, remote) {
 			var query = queries[queryname] ;
-				if(local){
-				db.run(query, args, function(e,d) {
-					console.log(e);
-					console.log(d);
+			if (local){
+				db.run(query, args, function(err) {
+					onError(err);
 				});
 			}
 			if (remote && database.online()) {
 				db_online.query(query, args, function(err, result) {
-				  if (err) throw err;
+					onError(err);
 					var insertId = result.insertId;
 				});
 			}
 		},
-		getQuery: function(queryname,args){
-			var queryResult = [];
+		getQuery: function(queryname, args) {
 			var query = queries[queryname];
+			var queryResult = [];
 			db.each(query,args, function(row, err) {
+				onError(err);
 				queryResult.push(row);
 			});
 			return queryResult;
+		},
+		getOnlineQuery: function(queryname, args, callback) {
+			var query = queries[queryname];
+			db_online.query(query, args, function(err, rows, fields) {
+				onError(err);
+				callback(rows);
+			});
 		},
 		getUnique: function(queryname,unique_name, args) {
 			var queryResult = [];
@@ -228,9 +225,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		},
 		synchronize : function(userId){
 			synchronizeDatasets(userId);
-		},
-		getQueryOnline(queryname,args){
-			onlineQuery(queryname,args);
 		}
 	};
 	database.init();
