@@ -35,6 +35,13 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 		}
 	}
 
+	function deleteDataset(newElement) {
+		newElement.on("click", ".removebutton", function() {
+			console.log("delete dataset");
+
+		});
+	}
+
   function navigateToLearn(newElement) {
     newElement.on("click", ".mybutton", function() {
     var id = $(this).data("id");
@@ -52,8 +59,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
       newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
       // Goto learn page on click
       navigateToLearn(newElement);
-
-		}
+      deleteDataset(newElement);
+    }
 	}
 
   // Function for displaying messages on main screen
@@ -115,8 +122,12 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 	}
 
+
 	$(document).ready(function () {
 		localisePage();
+  	$("#removebutton").click(function() {
+  		console.log("close");
+  	});		
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 
@@ -133,7 +144,7 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     getUserDataFromDatabase();
 		createSidebarElements(currentSubject, currentLanguage);
     createDatasetsGrid(currentSubject,currentLanguage);
-		$(".sidebar_li a").click(function () {
+    		$(".sidebar_li a").click(function () {
       var subject = $(this).data("subject-id");
       var language = $(this).data("language-id");
       hideMessage();

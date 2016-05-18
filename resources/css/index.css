@@ -40,6 +40,24 @@
 	background-color: #000;
   }
 
+  .gi-2x{font-size: 2em;}
+	.gi-3x{font-size: 3em;}
+	.gi-4x{font-size: 4em;}
+	.gi-5x{font-size: 5em;}
+
+	.removebutton {
+		position: absolute;
+		opacity: 0;
+		transition: opacity 0.5s ease;		
+	}	  
+
+	.dataset_item:hover .removebutton {
+		opacity: 1;	
+	}
+	.removebutton:hover {
+		cursor: pointer;
+	}
+
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
