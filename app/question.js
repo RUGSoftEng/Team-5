@@ -1,4 +1,4 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang'], function ($, messages, config, string, slimstampen,time,math, lang) {
+define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang'], function ($, messages, config, string, slimstampen,time,math, lang) {
   var items;
   var currentItemIndex = 0;
   var totalLength;

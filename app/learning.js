@@ -8,8 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
-
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -84,7 +83,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   // Temporary hint button
   $("#hintButton").click(function() {
-    if (questions.hint()!=="")
+    if (questions.hint()!==null)
       messages.showHint(questions.hint());
   });
 
