@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async, lang, string, user) {
+define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user', 'app/date'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async, lang, string, user, date) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -20,13 +20,13 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-	
+
 	// Write localisable text to the page
 	string.fillinTextClasses();
 	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 	$("#datasetsubject").prop("title", lang("placeholder_subject"));
 	$("#buttonsave").prop("value", lang("open_buttonsave"));
-	
+
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
 		var user_info = $(this).data("replace");
@@ -66,14 +66,27 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	  forms.initializeForm('#uploadForm', function() {
 			showLoading(function () {
 				var form = '#uploadForm';
-				forms.saveDataset(form);
-				// Save all items of the dataset
-		    var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
-				db.close();
-				var language = getFormVal(form, "select", "language");
+				// Save dataset
+				var name = getFormVal(form, "input", "name");
+	      var language = getFormVal(form, "select", "language");
 	      var subject = getFormVal(form, "select", "subject");
-				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+	      var user_id = user.getCookie('user_id');
+	      var currentdate = new Date();
+
+	      if (db.online()) {
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], false, true);
+	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+						console.log(name);
+	          db.executeQuery("addDatasetLocal", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+
+						// Save all items of the dataset
+						saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+						db.close();
+						window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+	        });
+	      } else {
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+	      }
 			});
 		});
 

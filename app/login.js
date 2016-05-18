@@ -47,38 +47,53 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	}
 
 	function handleLogin() {
-		var result = getUser();
-		user.setCookie(result);
-		window.location = "index.html?message=login";
+		var username = $("#username").val().toLowerCase();
+		var password = $("#password").val();
+		var field;
+		if (db.online()) {
+			db.getOnlineQuery("getUserbyUsername", [username], function(result) {
+				field = $("#username").parsley();
+				if (result.length !== 0) {
+					field.removeError('error');
+					field = $("#password").parsley();
+					if (hash.verify(password,result[0].user_password) ) {
+						user.setCookie(result);
+						db.synchronize(user.getCookie('user_id'));
+						// window.location = "index.html?message=login";
+					} else {
+						field.removeError('error');
+						field.addError('error', {message: lang("error_passwordincorrect")});
+					}
+				} else {
+					field.removeError('error');
+					field.addError('error', {message: lang("error_usernameincorrect")});
+				}
+			});
+		} else {
+			var result = db.getQuery("getUserbyUsername", [username]);
+			field = $("#username").parsley();
+			if (result.length !== 0) {
+				field.removeError('error');
+				field = $("#password").parsley();
+				if (hash.verify(password,result[0].user_password) ) {
+					user.setCookie(result);
+					window.location = "index.html?message=login";
+				} else {
+					field.removeError('error');
+					field.addError('error', {message: lang("error_passwordincorrect")});
+				}
+			} else {
+				field.removeError('error');
+				field.addError('error', {message: lang("error_usernameincorrect")});
+			}
+		}
 	}
 
 	forms.initializeForm('#loginForm', handleLogin);
 
 	if ($_GET('message')) {
-		messages.show("#messages", $_GET('message'));
+		messages.show(config.constant("MESSAGES"), $_GET('message'));
 	}
-
-	window.Parsley.addValidator('userName', {
-		validateString : function (value) {
-			var result = getUser();
-			return (result.length!==0);
-		},
-		messages : {
-			en : lang("error_usernameincorrect")
-		}
-	});
-
-	window.Parsley.addValidator('password', {
-		validateString : function (value) {
-			var password = $("#password").val();
-
-			var result = getUser();
-			return (result.length!==0 && hash.verify(password,result[0].user_password) );
-		},
-		messages : {
-			en : lang("error_passwordincorrect")
-		}
-	});
 
 	if (user.check()) {
 		window.location = "index.html?message=login_automatic";

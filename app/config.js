@@ -21,7 +21,9 @@ define(function (require) {
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
 		ONLINE_DATABASE: "enricdz148_slim",
-		ONLINE_PASSWORD: "exVhqZJas"
+		ONLINE_PASSWORD: "exVhqZJas",
+		MESSAGES: "#messages",
+		ERRORS: "#errors"
 	};
 
 	var keys = {

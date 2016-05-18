@@ -19,33 +19,37 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var gender = $("#gender").val();
     var gen = (gender === "male") ? 1:0;
     var dateofbirth = $("#dateofbirth").val();
-    var dateArray = dateofbirth.split("-");
-    var dateofbirth_local = dateArray[2]+"-"+dateArray[1]+"-"+dateArray[0];
     var hashed_password = hash.generate(password);
     var datetime = date.dateToDATETIME(new Date());
+    var field;
 
     db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
-      if (rows === undefined) {
-        db.getOnlineQuery("getUserIdbyEmail", [value], function(rows) {
-          if (rows === undefined) {
+      field = $("#username").parsley();
+      if (rows.length === 0) {
+        field.removeError('usernamenotunique');
+        db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
+          field = $("#email").parsley();
+          if (rows.length === 0) {
+            field.removeError('emailnotunique');
             db.executeQuery("addUser",[email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime],false,true);
             db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
               if (rows) {
-                db.executeQuery("addUserOffline",[rows[0].user_id, email,username,gen,dateofbirth_local,hashed_password, firstname, lastname,datetime,datetime],true,false);
+                db.executeQuery("addUserOffline",[rows[0].user_id, email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime],true,false);
                 db.close();
                 window.location="login.html?message=register";
               } else {
-
+                alert(lang("error_nointernet"));
+                window.location="register.html";
               }
             });
           } else {
-            // messages.show(lang("error_emailnotunique"));
-            alert(lang("error_emailnotunique"));
+            field.removeError('emailnotunique');
+            field.addError('emailnotunique', {message: lang("error_emailnotunique")});
           }
         });
       } else {
-        // messages.show(lang("error_usernamenotunique"));
-        alert(lang("error_usernamenotunique"));
+        field.removeError('usernamenotunique');
+        field.addError('usernamenotunique', {message: lang("error_usernamenotunique")});
       }
     });
   }

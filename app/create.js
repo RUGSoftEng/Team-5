@@ -46,10 +46,6 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		});
 	}
 
-	// Auxiliary form functions
-  function getItemVal(formName, formIndex) {
-    return $("#items input[name='" + formName + formIndex + "']").val();
-  }
 	function getFormVal(parentName, formType, formName) {
     return $(parentName).find(formType + '[name="' + formName + '"]').val();
   }
@@ -68,7 +64,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	$("#inputquestion").prop("placeholder", lang("label_question"));
 	$("#inputanswer").prop("placeholder", lang("label_answer"));
 	$("#inputhint").prop("placeholder", lang("label_hint"));
-	
+
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
 		var user_info = $(this).data("replace");
@@ -91,23 +87,33 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			showLoading(function() {
 				// Save dataset
 				var form = "#createForm";
-				forms.saveDataset(form);
-				// Save all items in the dataset
-				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-				for (i = 0; i<formItemId; i++) {
-					var question = getItemVal("question", i);
-					var answer = getItemVal("answer", i);
-					var hint = getItemVal("hint", i);
-					hint = (hint==="undefined") ? "" : hint;
-
-					console.log(i);
-
-					db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-				}
-				db.close();
-				var language = getFormVal(form, "select", "language");
+				var name = getFormVal(form, "input", "name");
+	      var language = getFormVal(form, "select", "language");
 	      var subject = getFormVal(form, "select", "subject");
-				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+	      var user_id = user.getCookie('user_id');
+	      var currentdate = new Date();
+
+	      if (db.online()) {
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], false, true);
+	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+	          db.executeQuery("addDatasetLocal", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+
+	          for (i = 0; i<formItemId; i++) {
+	            var question = getItemVal("question", i);
+	            var answer = getItemVal("answer", i);
+	            var hint = getItemVal("hint", i);
+	            hint = (hint==="undefined") ? "" : hint;
+	            db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+	          }
+	          db.close();
+
+						var language = getFormVal(form, "select", "language");
+			      var subject = getFormVal(form, "select", "subject");
+						window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+	        });
+	      } else {
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+	      }
 			});
 		});
 

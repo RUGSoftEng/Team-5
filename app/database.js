@@ -11,18 +11,20 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
+define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, $, lang) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDatasetAll: "INSERT INTO tbldatasets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDatasetLocal : "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		addUserOffline:  "INSERT INTO tblusers  (user_id,user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
-		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
 		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
+		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getDatasetItems : "SELECT * FROM tblitems WHERE item_dataset_id=?" ,
@@ -33,8 +35,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
-		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id",
-		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id= ?"
+		getUserModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
+		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id= ?",
+		deleteDatasetItemsbyId: "DELETE FROM tblitems WHERE item_dataset_id=?",
+		lastInsertedId: "SELECT ? FROM ? ORDER BY ? DESC LIMIT 1"
 	};
 
 	// Check if SQL.js has been loaded through AMD
@@ -96,12 +100,25 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 
 	function synchronizeDatasets(userId){
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
-			var remotedatasets = onlineQuery('getUserDatasets',[userId]);
-			console.log(localdatasets);
-			console.log(remotedatasets);
-			for(var i=0; i< localdatasets.length; i++){
-				for(var j=0 ;j<remotedatasets; j++){
-					if(localdatasets[i].dataset_id === remotedatasets[j].dataset_id){
+			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
+				console.log(localdatasets);
+				console.log(remotedatasets);
+
+				// Compare local with online
+				for (var i=0; i< localdatasets.length; i++) {
+					if (!localdatasets[i].dataset_online) {
+						pushDatasetOnline(localdatasets[i]);
+					} else {
+						var remote = $.grep(remotedatasets, function(e){ return e.dataset_id === localdatasets[i].dataset_id; });
+						console.log(localdatasets[i].dataset_id);
+						if (synchronizeDataset(localdatasets[i],remote)) {
+							remotedatasets.splice(remote, 1);
+						}
+					}
+				}
+				// Compare online with local
+				for (var j=0 ;j<remotedatasets; j++){
+					if(localdatasets[i].dataset_id === remotedatasets[j].dataset_id) {
 						synchronizeDataset(localdatasets[i],remotedatasets[i]);
 						break;
 					}
@@ -109,24 +126,33 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 						console.log(remote.dataset_id);
 					}
 				}
-			}
+			});
 	}
 
-	function sychronizeDataset(local,remote){
-		var recent = database.getQuery('getRecentDataset',[local.dataset_id,local.dataset_lastedited,remote.dataset_lastedited]).length > 0;
-		var old = database.getQuery('getRecentDataset',[local.dataset_id,remote.dataset_lastedited,local.dataset_lastedited]).length > 0;
-		console.log('recent ' +recent);
-		console.log('old '+old);
-		if(recent){
-			databse.executeQuery('deleteDatasetbyId',[local.dataset_id],true,false);
-		}else if(old){
-			databse.executeQuery('deleteDatasetbyId',[remote.dataset_id],false,true);
-		}
+	function pushDatasetOnline(dataset) {
+		database.executeQuery('addDatasetAll', dataset, false, true);
+	}
+
+	function synchronizeDataset(local,remote){
+		var localTime = Date.parse(local.dataset_lastedited);
+		var onlineTime = Date.parse(remote.dataset_lastedited);
+		alert(localTime+" "+onlineTime);
+		// if (recent) {
+		// 	database.executeQuery('deleteDatasetbyId',[remote.dataset_id], false, true);
+		// 	database.executeQuery('addDatasetAll', local, false, true);
+		//
+		// 	database.executeQuery('deleteDatasetItemsbyId', [remote.dataset_id], false, true);
+		// } else {
+		// 	database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
+		// 	database.executeQuery('addDatasetAll', remote, true, false);
+		//
+		// 	database.executeQuery('deleteDatasetItemsbyId', [remote.dataset_id], false, true);
+		// }
 	}
 
 	var database = {
 		online: function() {
-					return navigator.onLine;
+			return navigator.onLine;
 		},
 		init: function() {
 			var read_database;
@@ -164,7 +190,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		},
-		executeQuery : function (queryname, args, local, remote) {
+		executeQuery : function (queryname, args, local = true, remote = true) {
 			var query = queries[queryname] ;
 			if (local){
 				db.run(query, args, function(err) {
@@ -206,18 +232,26 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		getUnique2: function(queryname, unique_name1, unique_name2, args) {
 			var queryResult = [];
 			var query = queries[queryname] ;
-			db.each(query,args, function(row, err) {
+			db.each(query, args, function(row, err) {
 				if (isUnique2(unique_name1, unique_name2, queryResult, row))
 					queryResult.push(row);
 			});
 			return queryResult;
 		},
-		lastInsertRowId: function(table,row_id) {
-			var query = "SELECT "+row_id+" FROM "+table+ " ORDER BY "+row_id+ " DESC LIMIT 1";
-			db.each(query,"", function(row, err) {
+		lastInsertRowId: function(table_name, row_id) {
+			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id +" DESC LIMIT 1";
+			var queryResult;
+			db.each(query, function(row, err) {
 				queryResult = row[row_id];
 			});
 			return queryResult;
+		},
+		lastInsertIdOnline: function(table_name, row_id, callback) {
+			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
+			db_online.query(query, function(err, rows, fields) {
+				onError(err);
+				callback(rows[0][row_id]);
+			});
 		},
 		each : function(queryname, args, func) {
 			var query = queries[queryname];
