@@ -35,8 +35,6 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		formItemId++;
 	}
 
-
-
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
 		$("#loadFrame").children("h1").html(lang("create_busycreating"));
@@ -47,6 +45,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#customsubject").prop("placeholder", lang("label_customsubject"));
 		$("#buttoncreate").prop("value", lang("create_buttoncreate"));
 		$("#inputquestion").prop("placeholder", lang("label_question"));
 		$("#inputanswer").prop("placeholder", lang("label_answer"));
@@ -73,7 +72,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
       var lang = forms.getFormVal(form, select, language);
       return lang;
     }
-    function buildDatasetSubjectString(form, select, language)  {
+    function buildDatasetSubjectString(form, select, subject)  {
       var subject = forms.getFormVal(form, select, subject);
       return subject;
     }    
@@ -85,7 +84,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
         forms.getItemsFromCreateForm(id, formItemId);
 				var language = buildDatasetLanguageString(form, "select", "language");
-	      var subject = buildDatasetSubjectString;
+	      var subject = $("#datasetsubject").data("subject");
 				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 			});
 		});
@@ -102,6 +101,30 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			},
 			messages: {
 				en: lang("error_datasetnamenotunique")
+			}
+		});
+		window.Parsley.addValidator('subjectName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getSubjectByName", [value]);
+				return result.length === 0;
+			},
+			messages: {
+				en: lang("error_subjectnamenotunique")
+			}
+		});
+		
+		// Display the input for custom subject only if appropriate
+		$("#datasetsubject").change(function() {
+			var id = forms.getFormVal("#createForm", "select", "subject");
+			
+			if (id == 0) {
+				$("#newsubject").attr("hidden", false);
+				$("#customsubject").attr("required", "");
+				$("#customsubject").attr("data-parsley-subject-name", "1");
+			} else {
+				$("#newsubject").attr("hidden", true);
+				$("#customsubject").removeAttr("required");
+				$("#customsubject").removeAttr("data-parsley-subject-name");
 			}
 		});
 	});

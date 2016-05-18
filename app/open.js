@@ -25,6 +25,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#customsubject").prop("placeholder", lang("label_customsubject"));
 		$("#buttonsave").prop("value", lang("open_buttonsave"));
 	}
 	function getUserDataFromDatabase() {
@@ -44,6 +45,35 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			},
 			messages: {
 				en: lang("error_datasetnamenotunique")
+			}
+		});
+	}
+	
+	function handleCustomSubject() {
+		window.Parsley.addValidator('subjectName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getSubjectByName", [value]);
+				return result.length === 0;
+			},
+			messages: {
+				en: lang("error_subjectnamenotunique")
+			}
+		});
+		
+		// Display the input for custom subject only if appropriate
+		$("#datasetsubject").change(function() {
+			var id = forms.getFormVal("#uploadForm", "select", "subject");
+			
+			if (id == 0) {
+				console.log("show");
+				$("#newsubject").attr("hidden", false);
+				$("#customsubject").attr("required", "");
+				$("#customsubject").attr("data-parsley-subject-name", "1");
+			} else {
+				console.log("hide");
+				$("#newsubject").attr("hidden", true);
+				$("#customsubject").removeAttr("required");
+				$("#customsubject").removeAttr("data-parsley-subject-name");
 			}
 		});
 	}
@@ -75,7 +105,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
 				db.close();
 				var language = getFormVal(form, "select", "language");
-				var subject = getFormVal(form, "select", "subject");
+				var subject = $("#datasetsubject").data("subject");
 				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 			});
 		});		
@@ -109,6 +139,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		localisePage();
 		getUserDataFromDatabase();
 		checkIfDatasetExists();
+		handleCustomSubject();
 		checkCorrectnessFile();
 		evaluateInputOfForm();
 
