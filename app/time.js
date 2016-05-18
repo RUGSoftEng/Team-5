@@ -12,7 +12,7 @@ define([], function () {
       return time*60;
     },
     start: function(){
-      return "00:00"
+      return "00:00";
     },
     // Calculate the time difference in milliseconds
     measure: function(start) {
@@ -25,5 +25,5 @@ define([], function () {
         seconds = time%60;
         return format(minutes)+":"+format(seconds);
     }
-  }
+  };
 });

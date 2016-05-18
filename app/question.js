@@ -1,4 +1,4 @@
-define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math'], function ($, messages, config, string, slimstampen,time,math) {
+define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang'], function ($, messages, config, string, slimstampen,time,math, lang) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -13,10 +13,16 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
   var firstKeyPress = 0;
   var responseList = [];
 
+  // Calculate the time difference in milliseconds
+  function measureTime(start) {
+    var end = new Date();
+    return end.getTime() - start.getTime();
+  }
+
   // Check whether the user is in tutorial mode.
   // If the user leaves tutorial mode, roll back to the first item.
   function checkTutorialStatus() {
-    if (inTutorial) {
+    if (inTutorial && config.constant("ALGORITHM")!=="slimstampen") {
       if (currentItemIndex == tutorialLength) {
         currentItemIndex = 0;
       } else {
@@ -52,7 +58,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " words</p>" );
+    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " " + lang("general_words") + "</p>" );
     var percentageVal = math.percentage(itemsAnsweredCorrectly, totalLength);
     $( "#progress-bar" ).html(percentageVal + "%")
       .attr("aria-valuenow", percentageVal)
@@ -79,7 +85,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
   }
 
   function showTutorialInstruction() {
-    $("#question").append("<br><b>Type the answer:</b> " + items[currentItemIndex].answer);
+    $("#question").append("<br>" + lang("tutorial_typeanswer", items[currentItemIndex].answer));
   }
 
   function handleScoreIncrease() {
@@ -89,7 +95,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
     showProgress();
 
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
-      alert("Done!");
+      alert(lang("learning_done"));
       window.location = 'index.html';
     }
   }
@@ -98,13 +104,13 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
   var message;
     switch(type){
       case 'success':
-          message =  "Well done!";
+          message =  lang("answer_correct");
           break;
       case 'warning':
-          message =  "Almost there! Expected answer: <b>" + answer + "</b> (" + difference + " letter" + string.pluralIfAppropriate(difference) + " difference)";
+          message =  lang("answer_almost", answer, difference);
           break;
       case 'danger':
-          message =  "Wrong answer! Expected answer: <b>" + answer + "</b>";
+          message =  lang("answer_wrong", answer);
           break;
       default:
           message = '';
@@ -162,7 +168,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
       showProgress();
       $("#question").html(items[currentItemIndex].text);
 
-      if (inTutorial) {
+      if (checkTutorialStatus()) {
         showTutorialInstruction();
       }
     },
@@ -176,7 +182,7 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
       var input = document.getElementById("answer").value;
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
-      answerWasCorrect = (difference == 0);
+      answerWasCorrect = (difference === 0);
       if (answerWasCorrect) {
         handleScoreIncrease();
         messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
@@ -194,5 +200,5 @@ define(['jquery', 'app/messages', 'app/config', 'app/string', 'app/slimstampen',
     hint: function() {
         return items[currentItemIndex].hint;
     }
-  }
+  };
 });

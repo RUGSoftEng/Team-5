@@ -10,5 +10,5 @@ define(['jquery'], function($) {
         $("#loadFrame").fadeOut(300);
       }, 1);
     }
-  }
+  };
 });

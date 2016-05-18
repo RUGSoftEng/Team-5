@@ -6,88 +6,86 @@
  * Description:
  */
 
-define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone'], function (config, db, $, bootstrap, select, forms, ready, clone) {
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/keys'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user,keys) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
-	// Function for removing elements from the form
-	function remove_element(element) {
+	function removeElementFromForm(element) {
 		if (numberOfFormItems > 1) {
 			element.parents("tr").remove();
 			numberOfFormItems--;
 		}
 	}
 
-	function add_element_to_form() {
+	function addElementToForm() {
 		var newElement = $('#items table').cloneLayout();
 		newElement.replaceClone(["i", "required"], [formItemId, "required"]);
 		// Remove when clicked on close
 		newElement.on("click", ".remove", function() {
-			remove_element($(this));
+			removeElementFromForm($(this));
 		});
 		// When the TAB is pressed, add a new line
-		removeKeybinds("keydown");
+		keys.removeKeybinds("keydown");
 		newElement.find("input:last").on('keydown', function(e) {
-			if (isTab(e.keyCode)) {
-					add_element_to_form();
+			if (keys.isTab(e.keyCode)) {
+					addElementToForm();
 			}
 		});
 		numberOfFormItems++;
 		formItemId++;
 	}
 
-	function isTab(keyCode){
-		return keyCode == config.key("TAB");
-	}
 
-	function removeKeybinds(keybind) {
-		$("#items table input").each(function() {
-			$(this).unbind(keybind);
-		})
-	}
-
-	// Auxiliary form functions
-  function getItemVal(formName, formIndex) {
-    return $("#items input[name='" + formName + formIndex + "']").val();
-  }
-	function getFormVal(parentName, formType, formName) {
-    return $(parentName).find(formType + '[name="' + formName + '"]').val();
-  }
 
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html("Creating dataset...")
+		$("#loadFrame").children("h1").html(lang("create_busycreating"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
+  	function localisePage() {
+		string.fillinTextClasses();
+		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
+		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#buttoncreate").prop("value", lang("create_buttoncreate"));
+		$("#inputquestion").prop("placeholder", lang("label_question"));
+		$("#inputanswer").prop("placeholder", lang("label_answer"));
+		$("#inputhint").prop("placeholder", lang("label_hint"));
+	}
+	// Replace user data in view from database
+	$("span[data-replace]").each(function() {
+		var user_info = $(this).data("replace");
+		var text = user.get(user_info);
+		$(this).html(text);
+	});
+	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
+
 	ready.on(function() {
+		localisePage();
 		// Add the first element
-		add_element_to_form();
-		// Bind the click method for adding elements
+		addElementToForm();
 		$(".add").click(function() {
-			add_element_to_form();
+			addElementToForm();
 			return false;
 		});
 
-		// Script when the form is successfull
+    function buildDatasetLanguageString(form, select, language)  {
+      var lang = forms.getFormVal(form, select, language);
+      return lang;
+    }
+    function buildDatasetSubjectString(form, select, language)  {
+      var subject = forms.getFormVal(form, select, subject);
+      return subject;
+    }    
+		// Script when the form is successful
 		forms.initializeForm('#createForm', function() {
 			showLoading(function() {
-				// Save dataset
 				var form = "#createForm";
 				forms.saveDataset(form);
-				// Save all items in the dataset
 				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-				for (i = 0; i<=formItemId; i++) {
-					var question = getItemVal("question", i);
-					var answer = getItemVal("answer", i);
-					var hint = getItemVal("hint", i);
-					hint = (hint==="undefined") ? "" : hint;
-
-					db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-				}
-				db.close();
-				var language = getFormVal(form, "select", "language");
-	      var subject = getFormVal(form, "select", "subject");
+        forms.getItemsFromCreateForm(id, formItemId);
+				var language = buildDatasetLanguageString(form, "select", "language");
+	      var subject = buildDatasetSubjectString;
 				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 			});
 		});
@@ -100,10 +98,10 @@ define(['app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/
 		window.Parsley.addValidator('datasetName', {
 			validateString: function(value, requirement) {
 				var result = db.getQuery("getDatasetByName", [value]);
-				return result.length == 0;
+				return result.length === 0;
 			},
 			messages: {
-				en: 'This name is already used for another dataset.'
+				en: lang("error_datasetnamenotunique")
 			}
 		});
 	});

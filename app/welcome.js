@@ -6,23 +6,41 @@
  * Description:
  * Main script for initiating the welcome page.
  */
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user'], function ($, db, bootstrap, clone, lang, string, user) {
 
-define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bootstrap, clone) {
+	//check if the user is logged in
+  if (!user.check()) {
+    logout("logout_unknown_cookie");
+  }
+
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
     $("#wrapper").toggleClass("toggled");
   });
-  
-  
 
-	function createSidebarElements() {
-		var rows = db.getUnique('getModules', 'subject_name', []);
+  function logout(message) {
+    user.removeCookie();
+    window.location = 'login.html?message='+message;
+  }
+
+	function createSidebarElements(currentSubject, currentLanguage) {
+		var rows = db.getUnique('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
+			if (rows[i].subject_id == currentSubject && rows[i].language_id == currentLanguage) {
+				newElement.find('a').addClass("active");
+			}
 		}
 	}
+
+  function navigateToLearn(newElement) {
+    newElement.on("click", ".mybutton", function() {
+    var id = $(this).data("id");
+    window.location = "learn.html?"+id;
+   	});
+  }
 
 	function createDatasetsGrid(subjectid, languageid) {
     // Clear dataset grid
@@ -33,10 +51,8 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
       var newElement = $('#container').cloneLayout();
       newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
       // Goto learn page on click
-      newElement.on("click", ".mybutton", function() {
-        var id = $(this).data("id");
-        window.location = "learn.html?"+id;
-      })
+      navigateToLearn(newElement);
+
 		}
 	}
 
@@ -45,13 +61,28 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     var element = $("#messages");
     switch(message) {
       case "create_dataset":
-        message = "You have succesfully created a new dataset."
+        message = lang("success_createdataset");
         break;
       case "open_dataset":
-        message = "You have succesfully uploaded a new dataset."
+        message = lang("success_opendataset");
         break;
+      case "login":
+        message = lang("success_login");
+        break;
+			case "login_automatic":
+				message = lang("success_loginautomatic", user.get("user_firstname"));
+				break;
+			case "logout":
+				message = lang("success_logout");
+				break;
+			case "logout_unknown_cookie":
+				message = lang("error_logout");
+				break;
+			case "register":
+				message = lang("success_register");
+				break;
       default:
-        message = "This message is unknown.";
+        message = lang("message_default");
     }
     element.append("<p>"+message+"</p>").show();
   }
@@ -68,7 +99,24 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
 
+	function localisePage() {
+		string.fillinTextClasses();
+		$("#username").prop("placeholder", lang("label_username"));
+		$("#password").prop("placeholder", lang("label_password"));
+		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+	}
+
+	function getUserDataFromDatabase() {    
+    $("span[data-replace]").each(function() {
+      var user_info = $(this).data("replace");
+      var text = user.get(user_info);
+      $(this).html(text);
+    });
+    $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
+	}
+
 	$(document).ready(function () {
+		localisePage();
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 
@@ -77,7 +125,13 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone'], function ($, db, bo
       showMessage($_GET('message'));
     }
 
-		createSidebarElements();
+    // Logout button
+    $("#logout").click(function() {
+      logout("logout");
+    });
+    
+    getUserDataFromDatabase();
+		createSidebarElements(currentSubject, currentLanguage);
     createDatasetsGrid(currentSubject,currentLanguage);
 		$(".sidebar_li a").click(function () {
       var subject = $(this).data("subject-id");

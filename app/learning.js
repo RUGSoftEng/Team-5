@@ -7,7 +7,8 @@
  * Main script for initiating the learning app.
  */
 
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer','app/database', 'app/ready','app/time'], function ($, bootstrap, config, db, messages, questions, timer,db,ready,time) {
+/*jshint esversion: 6 */
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -15,17 +16,21 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
   }
 
 	function inputIsEmpty() {
-		return $.trim($("#answer").val()).length == 0;
+		return $.trim($("#answer").val()).length === 0;
 	}
+
+	function prepareAnswerField() {
+	  $( "#answer" ).prop("disabled", false);
+    $( "#answer" ).val( "" );
+    $( "#answer" ).focus();
+  }
 
   function nextQuestion() {
     clearTimeout(timeout);
     timer.clearCountdown();
     messages.clear();
     questions.nextQuestion();
-    $( "#answer" ).prop("disabled", false);
-    $( "#answer" ).val( "" );
-    $( "#answer" ).focus();
+
     questions.show();
     waitingForEnter = false;
   }
@@ -37,7 +42,6 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
       $( "#answer" ).prop("disabled", true);
       questions.checkAnswer();
       waitingForEnter = true;
-      console.log( $(".countdown").data("seconds"));
       timeout = setTimeout(nextQuestion,time.secondsToMilliseconds( $(".countdown").data("seconds") ) );
     }
   }
@@ -56,29 +60,53 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'ap
     return newList;
   }
 
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
+
   disableAutocomplete();
+
+	// Replace user data in view from database
+	$("span[data-replace]").each(function() {
+		var user_info = $(this).data("replace");
+		var text = user.get(user_info);
+		$(this).html(text);
+	});
+	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
+
+  function getDatasetIdFromURL(url) {
+  var datasetId = url.substring(url.indexOf('?')+1);
+  return datasetId;
+	}
+
+	function retrieveDataSet(datasetId) {
+  var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+  return factList;
+	}
+
+	function addTemporaryHintButton() { 
+	  $("#hintButton").click(function() {
+	    if (questions.hint()!=="")
+	      messages.showHint(questions.hint());
+	  });
+	}	
 
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
-    var datasetId = url.substring(url.indexOf('?')+1);
-    var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+    var datasetId = getDatasetIdFromURL(url);
+    var factList = retrieveDataSet(datasetId);
+
     questions.initialize(factList);
   	questions.show();
 
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
-
-  // Temporary hint button
-  $("#hintButton").click(function() {
-    if (questions.hint()!=="")
-      messages.showHint(questions.hint());
-  });
-
+  addTemporaryHintButton();
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {
-  	if (e.keyCode == config.key("ENTER")) {
+  	if (e.keyCode == keys.ENTER) {
       handleEnter();
   	}
   });

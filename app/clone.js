@@ -21,5 +21,5 @@ define(['jquery'], function ($) {
   // Clone layout function and return it
   $.fn.cloneLayout = function() {
     return this.find("#layout").clone(true).appendTo(this).removeAttr("id");
-  }
+  };
 });

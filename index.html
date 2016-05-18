@@ -21,36 +21,36 @@
     	  </ul>
 
         <div class="btn-group center-menu" role="group">
-          <button type="button" class="btn btn-default" onclick="window.location='create.html'">
-            <span class="glyphicon glyphicon-file" aria-hidden="true"></span> New
-          </button>
-          <button type="button" class="btn btn-default" onclick="window.location='open.html'">
-            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; Open
-          </button>
-         <button type="button" class="btn btn-default" onclick="window.location='login.html'">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download
-          </button>
-          <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> Upload
-          </button>
-        </div>
+         <button type="button" class="btn btn-default" onclick="window.location='create.html'">
+           <span class="glyphicon glyphicon-file" aria-hidden="true"></span> <span class="text_navigation_new"></span>
+         </button>
+         <button type="button" class="btn btn-default" onclick="window.location='open.html'">
+           <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; <span class="text_navigation_open"></span>
+         </button>
+         <button type="button" class="btn btn-default">
+           <span class="glyphicon glyphicon-save" aria-hidden="true"></span> <span class="text_navigation_download"></span>
+         </button>
+         <button type="button" class="btn btn-default">
+           <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> <span class="text_navigation_upload"></span>
+         </button>
+       </div>
 
         <div class="btn-group right-menu" role="group">
-          <button type="button" class="btn btn-default">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Hedderik
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalProfile">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span data-replace="user_firstname"></span> <span data-replace="user_lastname"></span>
           </button>
-          <button type="button" class="btn btn-default">
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalSettings">
             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
           </button>
           <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li><a href="#">Pause lesson</a></li>
-            <li><a href="#">Quit lesson</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Help</a></li>
-          </ul>
+           <li><a href="#" id="logout"><span class="text_general_logout"></span></a></li>
+					 <li><a href="#"><span class="text_general_quit"></span></a></li>
+           <li role="separator" class="divider"></li>
+           <li><a href="#"><span class="text_general_help"></span></a></li>
+         </ul>
         </div>
       </div>
     </nav>
@@ -61,7 +61,7 @@
         <ul class="sidebar-nav" id="sidebar_ul">
           <!-- Clone layout -->
           <li id="layout" class="sidebar_li">
-            <a href="#" data-subject-id="{subject_id}" data-language-id="{language_id}">{subject_name}<br /><span class="sidebar_item">for {language_name} speakers</span></a>
+            <a href="#" data-subject-id="{subject_id}" data-language-id="{language_id}">{subject_name}<br /><span class="sidebar_item"><span class="text_index_forspeakers1"></span>{language_name}<span class="text_index_forspeakers2"></span></span></a>
           </li>
         </ul>
       </div>
@@ -84,7 +84,7 @@
                 <div class="btn mybutton" data-id="{dataset_id}">
                   <h3>{dataset_name}</h3>
                   <br>
-                  <h4>Strength:</h4>
+                  <h4><span class="text_label_strength"></span>:</h4>
                   <center>
                     <div class="progress" style="width: 80%;">
                       <div class="progress-bar progress-bar-success progress-bar-stiped" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width:100%;"></div>
@@ -97,5 +97,88 @@
         </div>
       </div>
   	</div>
+    <!-- Profile -->
+    <div id="modalProfile" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><span class="text_profile_header"></span></h4>
+          </div>
+          <div class="modal-body">
+            <ul>
+              <li><span class="text_label_username"></span>: <span data-replace="user_name"></span></li>
+              <li><span class="text_label_firstname"></span>: <span data-replace="user_firstname"></span></li>
+              <li><span class="text_label_lastname"></span>: <span data-replace="user_lastname"></span></li>
+              <li><span class="text_label_emailaddress"></span>: <span data-replace="user_email"></span></li>
+              <li><span class="text_label_dateofbirth"></span>: <span data-replace="user_bday"></span></li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="text_general_close"></span></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Settings -->
+    <div id="modalSettings" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><span class="text_settings_header"></span></h4>
+          </div>
+          <div class="modal-body">
+            <form role="form" data-parsley-validate="">
+              <div class="form-group">
+                <p><span class="text_settings_changeinfo"></span>:</p>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label for="username"><span class="text_label_username"></span></label>
+                    <input type="text" class="form-control" id="username" data-parsley-user-name="1" data-parsley-required = "true">
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label for="gender"><span class="text_label_gender"></span></label>
+                    <select class="form-control" id="gender" data-parsley-required = "true">
+                      <option selected disabled class="text_placeholder_gender"></option>
+                      <option value="male" class="text_label_gendermale"></option>
+                      <option value="female" class="text_label_genderfemale"></option>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="dateofbirth"><span class="text_label_dateofbirth"></span></label>
+                    <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
+                  </div>
+                </div>
+                <hr>
+                <p><span class="text_settings_changepassword"></span>:</p>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label for="password"><span class="text_label_password"></span></label>
+                    <input type="password" class="form-control" id="password" required="">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="confirm_password"><span class="text_label_passwordconfirm"></span></label>
+                    <input type="password" class="form-control" id="confirm_password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
+            <button type="button" class="btn btn-success" data-dismiss="modal"><span class="text_settings_buttonsave"></span></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </body>
 </html>

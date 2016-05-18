@@ -9,23 +9,25 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
+define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
 	var queries = {
-		addDatasetItem : "INSERT OR IGNORE INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
+		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
 		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password) VALUES (?, ?, ?, ?, ?)",
+    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
-        getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
+    getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getDatasetItems : "SELECT * FROM tblitems WHERE item_dataset_id=?" ,
 		getUserSubjects : "SELECT * FROM tblsubjects",
-        getUser : "SELECT * FROM tblsubjects where user_id= ? ",
-        getUserIdbyEmail : "SELECT user_id,user_password FROM tblusers where user_email= ?",
-        getUserIdbyUsername : "SELECT user_id,user_password FROM tblusers where user_name= ?",
-        getLanguages: "SELECT * FROM tbllanguages",
+    getUser : "SELECT * FROM tblsubjects where user_id= ? ",
+    getUserbyEmail : "SELECT * FROM tblusers where user_email= ?",
+    getUserbyUsername : "SELECT * FROM tblusers where user_name= ?",
+		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
+		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
+    getLanguages: "SELECT * FROM tbllanguages",
 		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id"
 	};
 
@@ -33,7 +35,7 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	var sql;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
-		alert("Failed to require sql.js through AMD");
+		alert(lang("error_requirefail", "sql.js"));
 	} else {
 		sql = sqlite;
 	}
@@ -59,13 +61,13 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	// Function for Handeling query Error
 	function onError(db, error) {
 		console.log("this error " + error.message);
-		alert('Something went wrong while excuting your request\n please try again! ')
+		alert('Something went wrong while excuting your request\n please try again! ');
 	}
-
-  // Auxiluary uniqueness function
-  function isUnique(unique_name, queryResult, row) {
+	
+	// Auxiluary uniqueness function
+  function isUnique(unique_name1, unique_name2, queryResult, row) {
     for (i = 0; i<queryResult.length;i++) {
-      if (queryResult[i][unique_name]==row[unique_name]) {
+      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
         return false;
       }
     }
@@ -86,22 +88,24 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 		},
 		executeQuery : function (queryname, args) {
 			var query = queries[queryname] ;
-			db.run(query, args);
+			db.run(query, args, function(e,d) {
+				console.log(e);
+				console.log(d);
+			});
 		},
 		getQuery: function(queryname,args){
 			var queryResult = [];
-			var query = queries[queryname] ;
-          console.log(query);
+			var query = queries[queryname];
 			db.each(query,args, function(row, err) {
 				queryResult.push(row);
 			});
 			return queryResult;
 		},
-		getUnique: function(queryname,unique_name, args) {
+		getUnique: function(queryname, unique_name1, unique_name2, args) {
 			var queryResult = [];
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
-				if (isUnique(unique_name, queryResult, row))
+				if (isUnique(unique_name1, unique_name2, queryResult, row))
 					queryResult.push(row);
 			});
 			return queryResult;
@@ -117,6 +121,6 @@ define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 			var query = queries[queryname];
 			db.each(query,args, func);
 		}
-	}
+	};
 	return database;
 });

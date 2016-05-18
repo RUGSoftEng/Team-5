@@ -54,5 +54,5 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
         $(this).parent().removeClass("parsley-error");
       });
     }
-  }
+  };
 });
