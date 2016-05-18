@@ -32,13 +32,17 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
 	}
+
+  function inputFieldExists(result) {
+    return (result.length===0);
+  }
   
   $(document).ready(function(){
   	localisePage();
     window.Parsley.addValidator('userName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyUsername", [value]);
-        return (result.length===0);
+        return inputFieldExists(result);
       },
       messages: {
         en: lang("error_usernamenotunique")
@@ -48,7 +52,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     window.Parsley.addValidator('emailName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyEmail", [value]);
-        return (result.length===0);
+        return inputFieldExists(result);
       },
       messages: {
         en: lang("error_emailnotunique")

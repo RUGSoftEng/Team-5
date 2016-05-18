@@ -7,6 +7,7 @@
  * Main script for initiating the welcome  page.
  */
 define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string', 'app/ready'], function ($, config, db, parsley, forms, user, lang, string, ready) {
+
 	function getPermissionsForDatabase() {
 		if (navigator.appVersion.indexOf("Mac")!=-1){
 			var options = {
@@ -30,7 +31,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 					}
 				}
 			};
-			electronsudo.exec("chmod 700 database/", options, function (error) {});
+			electronsudo.exec("chmod 600 database/user.sqlite", options, function (error) {});
 		}
 	}
 
@@ -123,6 +124,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	string.fillinTextClasses();
 	$("#username").prop("placeholder", lang("label_username"));
 	$("#password").prop("placeholder", lang("label_password"));
+
 	ready.on(function() {
 		getPermissionsForDatabase();
 	});
