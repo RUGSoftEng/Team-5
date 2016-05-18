@@ -9,13 +9,16 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqlite, config, lang,user) {
+var mysql = require('mysql');
+
+define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
 		addDataset : "INSERT INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,'user_createdate','user_lastedited') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addUserOffline:  "INSERT INTO tblusers  (user_id,user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,'user_createdate','user_lastedited') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
@@ -35,7 +38,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqli
 	};
 
 	// Check if SQL.js has been loaded through AMD
-	var sql;
+	var sql,db,db_online;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
 		alert(lang("error_requirefail", "sql.js"));
@@ -50,7 +53,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqli
 	} else {
 		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
 	}
-	var db = new sql.Database(read_database);
+	db = new sql.Database(read_database);
 
 	function database_exists(path) {
 		try {
@@ -87,44 +90,79 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqli
     return true;
   }
 
-	function synchronizeDatasets(){
-			var userId = user.getCookie('user_id');
-			var localdatasets = db.query('getUserDatasets',[userId]);
-			var onlinedatasets = onlinequery('getUserdatasets',[userId]);
+	function synchronizeDatasets(userId){
+			var localdatasets = database.getQuery('getUserDatasets',[userId]);
+			var remotedatasets = onlineQuery('getUserDatasets',[userId]);
+			console.log(localdatasets);
+			console.log(remotedatasets);
 			for(var i=0; i< localdatasets.length; i++){
-				for(var j=0 ;j<onlinedatasets; j++){
-					if(localdatasets[i].dataset_id === onlinedatasets[j].dataset_id){
-						synchronizeDataset(localdatasets[i],onlinedatasets[i]);
+				for(var j=0 ;j<remotedatasets; j++){
+					if(localdatasets[i].dataset_id === remotedatasets[j].dataset_id){
+						synchronizeDataset(localdatasets[i],remotedatasets[i]);
 						break;
 					}
-					if(j === onlinedataset.length){
-						console.log(online.dataset_id);
+					if(j === remotedataset.length){
+						console.log(remote.dataset_id);
 					}
 				}
 			}
 	}
 
-	function sychronizeDataset(local,online){
-		var recent = db.query('getRecentDataset',[local.dataset_id,online.dataset_lastedited,online.dataset_lastedited]).length > 0;
-		var old = db.query('getRecentDataset',[online.dataset_id,local.dataset_lastedited,online.dataset_lastedited]).length > 0;
-
+	function sychronizeDataset(local,remote){
+		var recent = database.getQuery('getRecentDataset',[local.dataset_id,local.dataset_lastedited,remote.dataset_lastedited]).length > 0;
+		var old = database.getQuery('getRecentDataset',[local.dataset_id,remote.dataset_lastedited,local.dataset_lastedited]).length > 0;
+		console.log('recent ' +recent);
+		console.log('old '+old);
 		if(recent){
-			db.query('deleteDatasetbyId',[local.dataset_id]);
+			databse.executeQuery('deleteDatasetbyId',[local.dataset_id],true,false);
 		}else if(old){
-			online.query('deleteDatasetbyId',[online.dataset_id]);
+			databse.executeQuery('deleteDatasetbyId',[remote.dataset_id],false,true);
 		}
 	}
 
-	function onlinequery(queryname,args){
+	function onlineQuery(queryname,args){
 		var queryResult = [];
-		var query = queries[queryname];
-		con.each(query,args, function(row, err) {
-			queryResult.push(row);
+		var queryString = queries[queryname];
+		console.log("here "+queryString);
+		db_online.query(queryString,args, function(err, rows, fields) {
+	    if (err) throw err;
+	    for (var i in rows) {
+					queryResult.push(rows[i]);
+	        console.log('Post Titles: ', rows[i]);
+	    }
 		});
 		return queryResult;
 	}
 
 	var database = {
+		online: function() {
+					return navigator.onLine;
+		},
+		init: function() {
+			var read_database;
+			if (database_exists(config.constant("DATABASE_USER"))) {
+				read_database = fs.readFileSync(config.constant("DATABASE_USER"));
+			} else {
+				read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
+			}
+			db = new sql.Database(read_database);
+
+			if (database.online()) {
+				db_online = mysql.createConnection({
+					host     : config.constant("ONLINE_HOST"),
+					user     : config.constant("ONLINE_USER"),
+					password : config.constant("ONLINE_PASSWORD"),
+					database : config.constant("ONLINE_DATABASE")
+				});
+
+				db_online.connect(function(err) {
+					if (err) {
+						console.error('Error connecting: ' + err.stack);
+						return;
+					}
+				});
+			}
+		},
 		save : function () {
 			var data = db.export();
 			var buffer = new Buffer(data);
@@ -136,12 +174,20 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqli
 			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		},
-		executeQuery : function (queryname, args) {
+		executeQuery : function (queryname, args,local,remote) {
 			var query = queries[queryname] ;
-			db.run(query, args, function(e,d) {
-				console.log(e);
-				console.log(d);
-			});
+				if(local){
+				db.run(query, args, function(e,d) {
+					console.log(e);
+					console.log(d);
+				});
+			}
+			if (remote && database.online()) {
+				db_online.query(query, args, function(err, result) {
+				  if (err) throw err;
+					var insertId = result.insertId;
+				});
+			}
 		},
 		getQuery: function(queryname,args){
 			var queryResult = [];
@@ -179,7 +225,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang','app/user'], function (sqli
 		each : function(queryname, args, func) {
 			var query = queries[queryname];
 			db.each(query,args, func);
+		},
+		synchronize : function(userId){
+			synchronizeDatasets(userId);
+		},
+		getQueryOnline(queryname,args){
+			onlineQuery(queryname,args);
 		}
 	};
+	database.init();
 	return database;
 });
