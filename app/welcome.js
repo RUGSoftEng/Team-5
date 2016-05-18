@@ -29,8 +29,9 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 		var rows = db.getUnique2('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
-      if (i==0)
+      if (i==0) {
         newElement.addClass("active");
+      }
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 		}
@@ -46,14 +47,11 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
 	function createDatasetsGrid(subjectid, languageid) {
     // Clear dataset grid
     $("#container .dataset_item").not("#layout").remove();
-    // And load all new datasets
 		var rows = db.getQuery('getDatasets', [languageid, subjectid]);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#container').cloneLayout();
       newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
-      // Goto learn page on click
       navigateToLearn(newElement);
-
 		}
 	}
 
