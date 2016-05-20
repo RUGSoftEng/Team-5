@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user) {
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/date'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user, date) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -49,11 +49,23 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	function getFormVal(parentName, formType, formName) {
     return $(parentName).find(formType + '[name="' + formName + '"]').val();
   }
+	function getItemVal(formName, formIndex) {
+    return $("#items input[name='" + formName + formIndex + "']").val();
+  }
 
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
 		$("#loadFrame").children("h1").html(lang("create_busycreating"));
 		$("#loadFrame").fadeIn(300, onSuccess);
+	}
+
+	function saveDatasetsLocal(data, form) {
+		db.executeQuery("addDatasetAll", data, true, false);
+		db.close();
+
+		var language = getFormVal(form, "select", "language");
+		var subject = getFormVal(form, "select", "subject");
+		window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 	}
 
 	// Write localisable text to the page
@@ -93,26 +105,23 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = new Date();
 
+				var dataset_items = [];
+				for (i = 0; i<formItemId; i++) {
+					var question = getItemVal("question", i);
+					var answer = getItemVal("answer", i);
+					var hint = getItemVal("hint", i);
+					hint = (hint==="undefined") ? "" : hint;
+					dataset_items.push({"id": i, "text": question, "answer": answer, "hint": hint});
+				}
+				dataset_items = JSON.stringify(dataset_items);
+
 	      if (db.online()) {
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], false, true);
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], false, true);
 	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-	          db.executeQuery("addDatasetLocal", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
-
-	          for (i = 0; i<formItemId; i++) {
-	            var question = getItemVal("question", i);
-	            var answer = getItemVal("answer", i);
-	            var hint = getItemVal("hint", i);
-	            hint = (hint==="undefined") ? "" : hint;
-	            db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-	          }
-	          db.close();
-
-						var language = getFormVal(form, "select", "language");
-			      var subject = getFormVal(form, "select", "subject");
-						window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], form);
 	        });
 	      } else {
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+	        saveDatasetsLocal(['', user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], form);
 	      }
 			});
 		});

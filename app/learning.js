@@ -44,15 +44,15 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   function formatFactList(items) {
     var newList = [];
-    items.forEach(function(item) {
+    for (var i in items) {
       newItem = {
-        id: item.item_id,
-        text: item.item_question,
-        answer: item.item_answer,
-        hint: item.item_hint
+        id: items[i].id,
+        text: items[i].text,
+        answer: items[i].answer,
+        hint: items[i].hint
       };
       newList.push(newItem);
-    });
+    };
     return newList;
   }
 
@@ -74,7 +74,8 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   ready.on(function() {
     var url = window.location.href;
     var datasetId = url.substring(url.indexOf('?')+1);
-    var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+    var dataset_items = db.getQuery("getDatasetItems",[datasetId]);
+    var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
     questions.initialize(factList);
   	questions.show();
 

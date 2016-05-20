@@ -4,16 +4,20 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	var correctUpload = false;
 
 	// Function for saving all items in the dataset
-	function saveDatasetItemsIntoDatabase(data,id) {
+	function createDatasetItems(data) {
+		var data = JSON.parse(data);
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
+		var dataset_items = [];
 
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
 			var hint = (output[sheetName][i].hint === null) ? "" : output[sheetName][i].hint;
-			db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+			dataset_items.push({"id": i, "text": question, "answer": answer, "hint": hint});
 		});
+
+		return JSON.stringify(dataset_items);
 	}
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
@@ -73,20 +77,20 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = new Date();
 
-	      if (db.online()) {
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], false, true);
-	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						console.log(name);
-	          db.executeQuery("addDatasetLocal", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+				var dataset_items = createDatasetItems(saveData);
 
-						// Save all items of the dataset
-						saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+				if (db.online()) {
+					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], false, true);
+					db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], true, false);
 						db.close();
 						window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
-	        });
-	      } else {
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
-	      }
+					});
+				} else {
+					db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], true, false);
+					db.close();
+					window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+				}
 			});
 		});
 

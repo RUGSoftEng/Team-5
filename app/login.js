@@ -58,8 +58,8 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 					field = $("#password").parsley();
 					if (hash.verify(password,result[0].user_password) ) {
 						user.setCookie(result);
-						db.synchronize(user.getCookie('user_id'));
-						// window.location = "index.html?message=login";
+						// db.synchronize(user.getCookie('user_id'));
+						window.location = "index.html?message=login";
 					} else {
 						field.removeError('error');
 						field.addError('error', {message: lang("error_passwordincorrect")});
