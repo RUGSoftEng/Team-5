@@ -133,8 +133,20 @@
             <h4 class="modal-title"><span class="text_settings_header"></span></h4>
           </div>
           <div class="modal-body">
-            <form role="form" data-parsley-validate="">
+            <form id="settingsForm" role="form" data-parsley-validate="">
               <div class="form-group">
+								<p><span class="text_settings_changelanguage"></span>:</p>
+                <div class="row">
+                  <div class="col-sm-6">
+										<select id="language" class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
+											<!-- Items are loaded in selectLanguage.js  -->
+										</select>
+										<div class="clear"></div>
+                  </div>
+                  <div class="col-sm-6"></div>
+                </div>
+								<!--
+								<hr>
                 <p><span class="text_settings_changeinfo"></span>:</p>
                 <div class="row">
                   <div class="col-sm-6">
@@ -169,13 +181,15 @@
                     <input type="password" class="form-control" id="confirm_password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
                   </div>
                 </div>
+								-->
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
-            <button type="button" class="btn btn-success" data-dismiss="modal"><span class="text_settings_buttonsave"></span></button>
-          </div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
+							<!--button type="button" class="btn btn-success" data-dismiss="modal"><span class="text_settings_buttonsave"></span></button-->
+							<input id="buttonsave" type="submit" name="save" class="btn btn-success submit saveSettings"/>
+						</div>
+					</form>
         </div>
 
       </div>

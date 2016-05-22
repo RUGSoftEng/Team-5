@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user'], function ($, db, bootstrap, clone, lang, string, user) {
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user', 'app/select', 'app/ready', 'app/forms'], function ($, db, bootstrap, clone, lang, string, user, select, ready, forms) {
 
 	//check if the user is logged in
   if (!user.check()) {
@@ -115,11 +115,24 @@ define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/str
     $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 	}
 
-	$(document).ready(function () {
+	ready.on(function() {
+		// Initiate select boxes
+		select.initiate("gui_languages", ".selectLanguage");
+		
+		// Script when the settings form is successful
+		forms.initializeForm('#settingsForm', function() {
+			var newLanguage = $("#language").val();
+			var userid = user.getCookie("user_id")
+			db.executeQuery("updateGUILanguage", [newLanguage, userid]);
+			user.setCookie(db.getQuery("getUser", [userid]));
+			db.close();
+			window.location = window.location; // refresh
+		});
+		
 		localisePage();
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
-
+		
     // Show message if there is any
     if ($_GET('message')) {
       showMessage($_GET('message'));

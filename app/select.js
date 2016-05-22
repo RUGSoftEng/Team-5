@@ -7,6 +7,16 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select'], function (lan
         .text(row.language_name));
     });
   }
+	
+	// Load GUI languages from database
+  function loadGUILanguages(item){
+    db.each("getGUILanguages", "", function (row,err) {
+      $(item).append($("<option></option>")
+        .attr("value",row.language_short)
+        .text(row.language_name));
+    });
+  }
+	
     // Load subjects from database
   function loadSubjects(item){
     var rows = db.getQuery('getUserSubjects',[]);
@@ -30,6 +40,9 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select'], function (lan
         case 'languages':
           loadLanguages(item);
           break;
+				case 'gui_languages':
+					loadGUILanguages(item);
+					break;
         case 'subjects':
           loadSubjects(item);
           break;
