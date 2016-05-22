@@ -20,7 +20,7 @@ define(['i18n!nls', 'printf'], function (i18n, printf) {
 		for (i = 1; i < arguments.length; i++) {
 			varargs[i-1] = arguments[i];
 		}
-		
+
 		return vsprintf(i18n[string], varargs);
 	};
 });

@@ -6,12 +6,11 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user', 'app/messages', 'app/select', 'app/ready', 'app/forms'], function ($, db, config, bootstrap, clone, lang, string, user, messages, select, ready, forms) {
-
+define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms) {
 	//check if the user is logged in
-  if (!user.check()) {
-    logout("logout_unknown_cookie");
-  }
+  // if (!user.check()) {
+  //   logout("logout_unknown_cookie");
+  // }
 
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
@@ -80,50 +79,47 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
       var text = user.get(user_info);
       $(this).html(text);
     });
-    $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 	}
 
-	ready.on(function() {
-		// Initiate select boxes
-		select.initiate("gui_languages", ".selectLanguage");
-		
-		// Script when the settings form is successful
-		forms.initializeForm('#settingsForm', function() {
-			var newLanguage = $("#language").val();
-			var userid = user.getCookie("user_id")
-			db.executeQuery("updateGUILanguage", [newLanguage, userid]);
-			user.setCookie(db.getQuery("getUser", [userid]));
-			db.close();
-			window.location = window.location; // refresh
-		});
-		
-		localisePage();
-  	$("#removebutton").click(function() {
-  		console.log("close");
-  	});
-    var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
-    var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
+	// Initiate select boxes
+	select.initiate("gui_languages", ".selectLanguage");
 
-    // Show message if there is any
-    if ($_GET('message')) {
-      messages.show(config.constant("MESSAGES"), $_GET('message'));
-    }
+	// Script when the settings form is successful
+	forms.initializeForm('#settingsForm', function() {
+		var newLanguage = $("#language").val();
+		var userid = user.getCookie("user_id")
+		db.executeQuery("updateGUILanguage", [newLanguage, userid]);
+		user.setCookie(db.getQuery("getUser", [userid]));
+		db.close();
+		window.location = window.location; // refresh
+	});
 
-    // Logout button
-    $("#logout").click(function() {
-      logout("logout");
-    });
+	localisePage();
+	$("#removebutton").click(function() {
+		console.log("close");
+	});
+  var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
+  var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 
-    getUserDataFromDatabase();
-		createSidebarElements(currentSubject, currentLanguage);
-    createDatasetsGrid(currentSubject,currentLanguage);
-		$(".sidebar_li a").click(function () {
-      var subject = $(this).data("subject-id");
-      var language = $(this).data("language-id");
-      messages.hide(config.constant("MESSAGES"));
-			createDatasetsGrid(subject, language);
-			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
-	    $(this).addClass('active');
-		});
+  // Show message if there is any
+  if ($_GET('message')) {
+    messages.show(config.constant("MESSAGES"), $_GET('message'));
+  }
+
+  // Logout button
+  $("#logout").click(function() {
+    logout("logout");
+  });
+
+  getUserDataFromDatabase();
+	createSidebarElements(currentSubject, currentLanguage);
+  createDatasetsGrid(currentSubject,currentLanguage);
+	$(".sidebar_li a").click(function () {
+    var subject = $(this).data("subject-id");
+    var language = $(this).data("language-id");
+    messages.hide(config.constant("MESSAGES"));
+		createDatasetsGrid(subject, language);
+		$(this).parents('.sidebar-nav').find('.active').removeClass('active');
+    $(this).addClass('active');
 	});
 });

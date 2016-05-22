@@ -1,7 +1,6 @@
 // General functions for forms
 
 define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user'], function ($, db, date, select, parsley, user) {
-
   var parsleyInitiated = false;
 
   var forms = {

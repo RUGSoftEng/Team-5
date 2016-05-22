@@ -11,7 +11,7 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], function (sqlite, config, $, lang, date, async) {
+define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config, $, date) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -20,8 +20,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
-		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",	
-		updateGUILanguage : "UPDATE tblusers SET user_language = ? WHERE user_id = ?",		
+		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ? WHERE id=? ",
+		updateGUILanguage : "UPDATE tblusers SET user_language = ? WHERE user_id = ?",
 		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
 		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
@@ -44,26 +44,16 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		getSubjectByName : "SELECT * FROM tblsubjects WHERE subject_name=?"
 	};
 
-	var synchronizing = false;
 	var lastId = 0;
 
 	// Check if SQL.js has been loaded through AMD
 	var sql,db,db_online;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
-		alert(lang("error_requirefail", "sql.js"));
+		alert("Failed to require sqlite through AMD.");
 	} else {
 		sql = sqlite;
 	}
-
-	// Initiate DB and check if there is an existing user DB
-	var read_database;
-	if (database_exists(config.constant("DATABASE_USER"))) {
-		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
-	} else {
-		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
-	}
-	db = new sql.Database(read_database);
 
 	function database_exists(path) {
 		try {
