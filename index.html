@@ -55,11 +55,19 @@
     </div>
     <!-- End Navbar-->
 
+    <!--div class="hero-unit landing">
+        <div class="container">
+            <div class="row" id="main_div">
+            </div>
+        </div>
+    </div-->
 
     <div class="hero-unit landing">
         <div class="container">
-            <div class="row">
-                <div class="promotext">
+            <div class="row"  >
+
+
+                <div class="promotext span5">
                     <h1>Welcome to the SlimStampen Alpha test</h1>
                     <p>
                         You've been invited to the Alpha test of the SlimStampen desktop app. On this page you can find information about the project and download links.
@@ -73,6 +81,7 @@
                     </p>
                     <button type="button" class="btn" id="transparent" data-toggle="collapse" data-target="#platforms">Download SlimStampen for another platform</button>
                 </div>
+                  <div class="span7 animated bounceInRight" id="main_div"></div>
             </div>
         </div>
     </div>
@@ -266,11 +275,21 @@
       font-size: 15px !important;
       text-transform: none;
     }
+    #main_div{
+      background-size: 100%;
+      background-image: url("assets/img/slimstampen.png");
+      background-repeat: no-repeat;
+      height:400px;
+      margin-top:80px;
+    }
     #transparent:hover, #transparet:active{
       color: #fff;
     }
     #selectOs{
       margin:0 auto;
+    }
+    .promotext{
+    /*  background:rgba(255,255,255,0.5);*/
     }
   </style>
 </body>
