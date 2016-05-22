@@ -7,16 +7,18 @@
  * Main script for initiating the welcome  page.
  */
 define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready'], function ($, config, db, user, lang, string, messages, parsley, forms, hash, ready) {
-	// Ask for permission to write to the database on Linux and Mac OSX
-	if (navigator.appVersion.indexOf("Mac")!=-1){
-		var options = {
-			name : 'SlimStampen',
-			//icns: '/path/to/icns/file', // (optional, only for MacOS),
-			process : {
-				options : {
-					// Can use custom environment variables for your privileged subprocess
-					env : {
-						'VAR' : 'VALUE'
+
+	function getPermissionsForDatabase() {
+		if (navigator.appVersion.indexOf("Mac")!=-1){
+			var options = {
+				name : 'SlimStampen',
+				//icns: '/path/to/icns/file', // (optional, only for MacOS),
+				process : {
+					options : {
+						// Can use custom environment variables for your privileged subprocess
+						env : {
+							'VAR' : 'VALUE'
+						}
 					}
 				}
 			};

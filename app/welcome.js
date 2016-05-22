@@ -38,14 +38,13 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 	function deleteDataset(newElement) {
 		newElement.on("click", ".removebutton", function() {
 			console.log("delete dataset");
-
 		});
 	}
 
   function navigateToLearn(newElement) {
     newElement.on("click", ".mybutton", function() {
-    var id = $(this).data("id");
-    window.location = "learn.html?"+id;
+      var id = $(this).data("id");
+      window.location = "learn.html?"+id;
    	});
   }
 
@@ -75,7 +74,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
 	}
 
-	function getUserDataFromDatabase() {    
+	function getUserDataFromDatabase() {
     $("span[data-replace]").each(function() {
       var user_info = $(this).data("replace");
       var text = user.get(user_info);
@@ -89,7 +88,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		localisePage();
   	$("#removebutton").click(function() {
   		console.log("close");
-  	});		
+  	});
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 
@@ -102,7 +101,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     $("#logout").click(function() {
       logout("logout");
     });
-    
+
     getUserDataFromDatabase();
 		createSidebarElements(currentSubject, currentLanguage);
     createDatasetsGrid(currentSubject,currentLanguage);

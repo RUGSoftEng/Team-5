@@ -24,7 +24,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
@@ -62,21 +62,16 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				en: lang("error_unsupportedfiletype")
 			}
 		});
-	}	
-
-	function getFormVal(parentName, formType, formName) {
-    	return $(parentName).find(formType + '[name="' + formName + '"]').val();
-  	}
-
+	}
 
 	function evaluateInputOfForm() {
 		forms.initializeForm('#uploadForm', function() {
 			showLoading(function () {
 				var form = '#uploadForm';
 				// Save dataset
-				var name = getFormVal(form, "input", "name");
-	      var language = getFormVal(form, "select", "language");
-	      var subject = getFormVal(form, "select", "subject");
+				var name = forms.getFormVal(form, "input", "name");
+	      var language = forms.getFormVal(form, "select", "language");
+	      var subject = forms.getFormVal(form, "select", "subject");
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = date.formatDatetime(new Date(), true);
 
@@ -96,6 +91,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				}
 			});
 		});
+	}
 
 	function highlightUploadOnDrag() {
 		$(document).on("dragenter", function() {
@@ -103,7 +99,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		}).on("drop", function() {
 			$("#xlf").removeClass("dragging");
 		});
-	}	
+	}
 
 	function preventOpenOnDrag() {
 		document.addEventListener('dragover',function(event) {
@@ -112,14 +108,14 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		    return false;
 			}
 	  	},false);
-	}	
+	}
 
 	function initiateUploadBox() {
 		var xlf = document.getElementById('xlf');
 		if (xlf.addEventListener) {
 			xlf.addEventListener('change', handleFile, false);
 		}
-	}	
+	}
 
 	ready.on(function() {
 		localisePage();
@@ -229,5 +225,4 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		reader.readAsBinaryString(f);
 	}
 	initiateUploadBox();
-
 });

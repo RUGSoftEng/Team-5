@@ -1,16 +1,16 @@
 // General functions for forms
 
 define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user'], function ($, db, date, select, parsley, user) {
-  function getItemVal(formName, formIndex) {
-    return $("#items input[name='" + formName + formIndex + "']").val();
-  }
-  function getFormVal(parentName, formType, formName) {
-    return $(parentName).find(formType + '[name="' + formName + '"]').val();
-  }
 
   var parsleyInitiated = false;
 
-  return {
+  var forms = {
+    getItemVal: function(formName, formIndex) {
+      return $("#items input[name='" + formName + formIndex + "']").val();
+    },
+    getFormVal: function(parentName, formType, formName) {
+      return $(parentName).find(formType + '[name="' + formName + '"]').val();
+    },
     initializeForm: function(formName, onSuccess) {
       var parsley = $(formName).parsley();
       window.Parsley.on('field:validated', function() {
@@ -53,4 +53,5 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
       }
     }
   };
+  return forms;
 });

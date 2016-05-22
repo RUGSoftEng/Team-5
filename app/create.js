@@ -47,11 +47,11 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		db.executeQuery("addDatasetAll", data, true, false);
 		db.close();
 
-		var language = getFormVal(form, "select", "language");
-		var subject = getFormVal(form, "select", "subject");
+		var language = forms.getFormVal(form, "select", "language");
+		var subject = forms.getFormVal(form, "select", "subject");
 		window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 	}
-  	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
@@ -67,7 +67,6 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		var text = user.get(user_info);
 		$(this).html(text);
 	});
-	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 	ready.on(function() {
 		localisePage();
@@ -85,22 +84,22 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
     function buildDatasetSubjectString(form, select, language)  {
       var subject = forms.getFormVal(form, select, subject);
       return subject;
-    }    
+    }
 		// Script when the form is successful
 		forms.initializeForm('#createForm', function() {
 			showLoading(function() {
 				var form = "#createForm";
-				var name = getFormVal(form, "input", "name");
-	      var language = getFormVal(form, "select", "language");
-	      var subject = getFormVal(form, "select", "subject");
+				var name = forms.getFormVal(form, "input", "name");
+	      var language = forms.getFormVal(form, "select", "language");
+	      var subject = forms.getFormVal(form, "select", "subject");
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = date.formatDatetime(new Date(), true);
 
 				var dataset_items = [];
 				for (i = 0; i<formItemId; i++) {
-					var question = getItemVal("question", i);
-					var answer = getItemVal("answer", i);
-					var hint = getItemVal("hint", i);
+					var question = forms.getItemVal("question", i);
+					var answer = forms.getItemVal("answer", i);
+					var hint = forms.getItemVal("hint", i);
 					hint = (hint==="undefined") ? "" : hint;
 					dataset_items.push({"id": i, "text": question, "answer": answer, "hint": hint});
 				}
