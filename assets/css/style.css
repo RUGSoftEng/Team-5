@@ -31,7 +31,11 @@
 }
 
 .brand img {
-  max-height: 100%;
+  height: 80px;
+}
+
+.navbar .nav > li {
+  line-height: 40px;
 }
 
 #back-to-top {
