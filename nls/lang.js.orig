@@ -179,6 +179,7 @@ define({
 		success_register: "De registratie is voltooid. Je kunt je hieronder aanmelden.",
 		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s"
 	},
+<<<<<<< HEAD
 	"arab": {
 		answer_almost: "تقريبا! الإجابة المتوقعة: <b>%s</b> (الفرق  %s  حرف )",
 		answer_correct: "! أحسنت",
@@ -263,5 +264,10 @@ define({
 		success_opendataset: "لقد تحميل مجموعة بيانات جديدة إلى البرنامج بنجاح.",
 		success_register: "لقد سجلت حسابا جديدا بنجاح. يمكنك تسجيل الدخول  أدناه..",
 		tutorial_typeanswer: "<b>أكتب الإجابة التالية:</b> %s"
+=======
+	"ar": {
+		answer_almost: "(رسائل <b>%2$s</b> زمني الفارق) <b>%1$s</b> :هناك تقريبا! الإجابة المتوقعة",
+		answer_correct: "أحسنت!"
+>>>>>>> 0643768375ea13ebaa0737af4a9d073d79f805eb
 	}
 });

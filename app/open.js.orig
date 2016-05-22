@@ -24,7 +24,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
@@ -98,6 +98,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		forms.initializeForm('#uploadForm', function() {
 			showLoading(function () {
 				var form = '#uploadForm';
+<<<<<<< HEAD
 				// Save dataset
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
@@ -119,6 +120,16 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 					db.close();
 					window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 				}
+=======
+				forms.saveDataset(form);
+				// Save all items of the dataset
+				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+				db.close();
+				var language = getFormVal(form, "select", "language");
+				var subject = $("#datasetsubject").data("subject");
+				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+>>>>>>> 0643768375ea13ebaa0737af4a9d073d79f805eb
 			});
 		});
 	}
@@ -256,5 +267,4 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		reader.readAsBinaryString(f);
 	}
 	initiateUploadBox();
-
 });

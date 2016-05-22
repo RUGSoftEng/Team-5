@@ -13,14 +13,35 @@
 // Then, in the JS file for that page, run:
 //     string.fillinTextClasses();
 
+<<<<<<< HEAD
+var language;
+
+requirejs(["app/config"], function (config) {
+	language = config.constant("LANGUAGE");
+
+	requirejs.config({
+		config: {
+			i18n: {
+				locale: language
+			}
+		}
+	});
+});
+
+define(['jquery', 'i18n!nls', 'printf'], function ($, i18n, printf) {
+=======
 define(['i18n!nls', 'printf'], function (i18n, printf) {
+>>>>>>> 0643768375ea13ebaa0737af4a9d073d79f805eb
   return function() {
 		var string = arguments[0];
 		var varargs = [];
+		if (language==='arab'){
+					$('body').css('direction','rtl');
+		}
 		for (i = 1; i < arguments.length; i++) {
 			varargs[i-1] = arguments[i];
 		}
-		
+
 		return vsprintf(i18n[string], varargs);
 	};
 });

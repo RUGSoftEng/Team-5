@@ -6,7 +6,11 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user', 'app/messages', 'app/select', 'app/ready', 'app/forms'], function ($, db, config, bootstrap, clone, lang, string, user, messages, select, ready, forms) {
+<<<<<<< HEAD
+define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user', 'app/messages'], function ($, db, config, bootstrap, clone, lang, string, user, messages) {
+=======
+define(['jquery', 'app/database', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/user', 'app/select', 'app/ready', 'app/forms'], function ($, db, bootstrap, clone, lang, string, user, select, ready, forms) {
+>>>>>>> 0643768375ea13ebaa0737af4a9d073d79f805eb
 
 	//check if the user is logged in
   if (!user.check()) {
@@ -83,6 +87,10 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     $("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 	}
 
+<<<<<<< HEAD
+
+	$(document).ready(function () {
+=======
 	ready.on(function() {
 		// Initiate select boxes
 		select.initiate("gui_languages", ".selectLanguage");
@@ -97,13 +105,14 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 			window.location = window.location; // refresh
 		});
 		
+>>>>>>> 0643768375ea13ebaa0737af4a9d073d79f805eb
 		localisePage();
   	$("#removebutton").click(function() {
   		console.log("close");
   	});
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
     var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
-
+		
     // Show message if there is any
     if ($_GET('message')) {
       messages.show(config.constant("MESSAGES"), $_GET('message'));

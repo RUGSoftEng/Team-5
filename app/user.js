@@ -12,6 +12,7 @@ define(['app/database'], function (db) {
     document.cookie = 'user_name='+result[0].user_name;
     document.cookie = 'user_id='+result[0].user_id;
     document.cookie = 'user_password='+result[0].user_password;
+		document.cookie = 'user_language='+result[0].user_language;
   },
   removeCookie: function() {
     document.cookie = "user_name=''";

@@ -80,7 +80,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
       var lang = forms.getFormVal(form, select, language);
       return lang;
     }
-    function buildDatasetSubjectString(form, select, language)  {
+    function buildDatasetSubjectString(form, select, subject)  {
       var subject = forms.getFormVal(form, select, subject);
       return subject;
     }
@@ -88,6 +88,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		forms.initializeForm('#createForm', function() {
 			showLoading(function() {
 				var form = "#createForm";
+<<<<<<< HEAD
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
 	      var subject = forms.getFormVal(form, "select", "subject");
@@ -111,6 +112,14 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	      } else {
 	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form);
 	      }
+=======
+				forms.saveDataset(form);
+				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+        forms.getItemsFromCreateForm(id, formItemId);
+				var language = buildDatasetLanguageString(form, "select", "language");
+	      var subject = $("#datasetsubject").data("subject");
+				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+>>>>>>> 0643768375ea13ebaa0737af4a9d073d79f805eb
 			});
 		});
 
@@ -126,6 +135,30 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			},
 			messages: {
 				en: lang("error_datasetnamenotunique")
+			}
+		});
+		window.Parsley.addValidator('subjectName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getSubjectByName", [value]);
+				return result.length === 0;
+			},
+			messages: {
+				en: lang("error_subjectnamenotunique")
+			}
+		});
+		
+		// Display the input for custom subject only if appropriate
+		$("#datasetsubject").change(function() {
+			var id = forms.getFormVal("#createForm", "select", "subject");
+			
+			if (id == 0) {
+				$("#newsubject").attr("hidden", false);
+				$("#customsubject").attr("required", "");
+				$("#customsubject").attr("data-parsley-subject-name", "1");
+			} else {
+				$("#newsubject").attr("hidden", true);
+				$("#customsubject").removeAttr("required");
+				$("#customsubject").removeAttr("data-parsley-subject-name");
 			}
 		});
 	});
