@@ -130,12 +130,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 			synchronizing = true;
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
 			var remotetolocaldatasets = [];
-			var lastId = 0;
 			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
 				for (var i=0; i<localdatasets.length;i++) {
 					if (!localdatasets[i].dataset_online) {
 						lastId = localdatasets[i].dataset_id;
 					}
+				}
+				if (lastId==0) {
+					callback();
 				}
 
 				// Compare local with online
@@ -158,9 +160,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 				}
 				database.close();
 			});
-			if (lastId==0) {
-				callback();
-			}
 	}
 
 	function pushDatasetOnline(dataset, callback) {
