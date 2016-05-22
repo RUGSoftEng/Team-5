@@ -30,6 +30,7 @@
     "bootstrap": "^3.3.6",
     "bootstrap-select": "^1.10.0",
     "chromedriver": "^2.21.2",
+    "dateformat": "^1.0.12",
     "electron-prebuilt": "^1.0.2",
     "electron-sudo": "^3.0.4",
     "intern": "^3.1.1",

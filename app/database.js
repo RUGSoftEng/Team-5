@@ -33,7 +33,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
 		getUserModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
-		replaceUser: "REPLACE INTO tblusers VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) WHERE user_id=?",
+		replaceUser: "REPLACE INTO tblusers VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id= ?",
 		deleteDatasetItemsbyId: "DELETE FROM tblitems WHERE item_dataset_id=?",
 		lastInsertedId: "SELECT ? FROM ? ORDER BY ? DESC LIMIT 1"
@@ -104,21 +104,21 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
 			online_user = online_user[0];
 			if (local_user.length === 0) {
-				online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? val.toLocaleString() : val; });
+				online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
 				database.executeQuery('addUser', online_user, true, false);
 			} else {
 				local_user = local_user[0];
 				var localTime = Date.parse(local_user.user_lastedited);
 				var onlineTime = Date.parse(online_user.user_lastedited);
 				var recent = localTime - onlineTime;
-				console.log(local_user.user_lastedited);
 				if (recent > 0) {
-					console.log("Replacing user from online:"+online_user);
-					database.executeQuery('replaceUser',[local_user, online_user.user_id], false, true, function() {
+					local_user = $.map(local_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
+					database.executeQuery('replaceUser', local_user, false, true, function() {
 						callback();
 					});
 				} else if (recent < 0) {
-					database.executeQuery('replaceUser',[online_user, local_user.user_id], true, false);
+					online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
+					database.executeQuery('replaceUser', online_user, true, false);
 				}
 			}
 			callback();
@@ -131,9 +131,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 			var remotetolocaldatasets = [];
 			var lastId = 0;
 			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
-				console.log(localdatasets);
-				console.log(remotedatasets);
-
 				for (var i=0; i<localdatasets.length;i++) {
 					if (!localdatasets[i].dataset_online) {
 						lastId = localdatasets[i].dataset_id;
@@ -179,7 +176,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 	}
 
 	function pushDatasetLocal(dataset) {
-		var dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? val.toLocaleString() : val; });
+		var dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
 		database.executeQuery('addDatasetAll', dataset, true, false);
 	}
 
@@ -188,13 +185,15 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		var onlineTime = Date.parse(remote[0].dataset_lastedited);
 		var recent = localTime - onlineTime;
 		if (recent > 0) {
+			local = $.map(local, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
 			alert("Synchronizing to online for "+remote[0].dataset_id);
 			database.executeQuery('deleteDatasetbyId',[remote[0].dataset_id], false, true);
 			database.executeQuery('addDatasetAll', local, false, true);
 		} else if (recent < 0) {
+			remote = $.map(remote, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
 			alert("Synchronizing to local for "+remote[0].dataset_id);
 			database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
-			database.executeQuery('addDatasetAll', remote[0], true, false);
+			database.executeQuery('addDatasetAll', remote, true, false);
 		}
 	}
 

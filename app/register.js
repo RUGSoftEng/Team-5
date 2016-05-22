@@ -31,10 +31,10 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
           field = $("#email").parsley();
           if (rows.length === 0) {
             field.removeError('emailnotunique');
-            db.executeQuery("addUser",[null, email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime],false,true);
+            db.executeQuery("addUser",[null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime],false,true);
             db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
               if (rows) {
-                db.executeQuery("addUser",[rows[0].user_id, email,username,gen,dateofbirth,hashed_password, firstname, lastname,datetime,datetime],true,false);
+                db.executeQuery("addUser",[rows[0].user_id, email,username,gen,dateofbirth,hashed_password,datetime, firstname, lastname,datetime],true,false);
                 db.close();
                 window.location="login.html?message=register";
               } else {
