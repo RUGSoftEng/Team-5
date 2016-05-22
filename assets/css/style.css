@@ -14,8 +14,8 @@
 * {
 
         -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;  
-    box-sizing: border-box;    
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .boxed {
@@ -28,6 +28,14 @@
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.25);
     -moz-box-shadow: 0 1px 1px rgba(0,0,0,.25);
     box-shadow: 0 1px 1px rgba(0,0,0,.25);
+}
+
+.brand img {
+  height: 80px;
+}
+
+.navbar .nav > li {
+  line-height: 40px;
 }
 
 #back-to-top {
@@ -380,7 +388,7 @@ footer {
 
     .hero-unit.landing.bgimg {
         background-image: url('../img/ams-img.jpg');
-        background-color: transparent; 
+        background-color: transparent;
         background-attachment: fixed;
         background-size: cover;
         background-position: center;
@@ -417,7 +425,7 @@ footer {
     .hero-unit.landing .iphone-hand {
         background: url('../img/iphone-hand.png') no-repeat;
         display: inline-block;
-        height: 500px; 
+        height: 500px;
     }
 
 .landing-tips {
