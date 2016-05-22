@@ -26,7 +26,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getDatasetItems : "SELECT dataset_items FROM tbldatasets WHERE dataset_id=?" ,
 		getUserSubjects : "SELECT * FROM tblsubjects",
-    getUser : "SELECT * FROM tblsubjects where user_id= ? ",
+    getUser : "SELECT * FROM tblusers where user_id= ? ",
     getUserbyEmail : "SELECT * FROM tblusers where user_email= ?",
     getUserbyUsername : "SELECT * FROM tblusers where user_name= ?",
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
@@ -111,7 +111,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 				var localTime = Date.parse(local_user.user_lastedited);
 				var onlineTime = Date.parse(online_user.user_lastedited);
 				var recent = localTime - onlineTime;
+				console.log(local_user.user_lastedited);
 				if (recent > 0) {
+					console.log("Replacing user from online:"+online_user);
 					database.executeQuery('replaceUser',[local_user, online_user.user_id], false, true, function() {
 						callback();
 					});
@@ -127,6 +129,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 			synchronizing = true;
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
 			var remotetolocaldatasets = [];
+			var lastId = 0;
 			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
 				console.log(localdatasets);
 				console.log(remotedatasets);
@@ -156,8 +159,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 					}
 				}
 				database.close();
-
 			});
+			if (lastId==0) {
+				callback();
+			}
 	}
 
 	function pushDatasetOnline(dataset, callback) {
@@ -168,7 +173,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
 			database.executeQuery('updateDatasetId', [id, local_id], true, false);
 			if (local_id==lastId) {
-				database.close();
 				callback();
 			}
 		});
