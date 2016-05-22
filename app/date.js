@@ -1,7 +1,8 @@
 define([], function () {
     return {
         dateToDATETIME: function(date) {
-            return date.getFullYear() + "-" + date.getMonth()+1 + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            var month = date.getMonth()+1;
+            return date.getFullYear() + "-" + month + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
         }
     };
 });
