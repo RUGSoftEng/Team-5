@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/bootstrap-transition.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-modal.js"></script>
+    <script src="assets/js/bootstrap-dropdown.js"></script>
+    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-tab.js"></script>
+    <script src="assets/js/bootstrap-tooltip.js"></script>
+    <script src="assets/js/bootstrap-popover.js"></script>
+    <script src="assets/js/bootstrap-button.js"></script>
+    <script src="assets/js/bootstrap-collapse.js"></script>
+    <script src="assets/js/bootstrap-carousel.js"></script>
+    <script src="assets/js/bootstrap-typeahead.js"></script>
+    <script src="assets/js/global.js"></script>
+    <script src="assets/js/waypoints.js"></script>
 
     <!-- Styles -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
@@ -29,8 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="#">
-                    <img src="assets/img/rugged.png" alt="logo" height = 136 width = 49 /></a>
+                <a class="brand" href="#"><img src="assets/img/rugged_slimstampen.png" alt="logo" /></a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li class="option active"><a href="index.html">Home</a></li>
@@ -44,42 +58,35 @@
     </div>
     <!-- End Navbar-->
 
+    <!--div class="hero-unit landing">
+        <div class="container">
+            <div class="row" id="main_div">
+            </div>
+        </div>
+    </div-->
+
     <div class="hero-unit landing">
         <div class="container">
-            <div class="row">
-                <div class="span6 promotext">
+            <div class="row"  >
+
+
+                <div class="promotext span5">
                     <h1>Welcome to the SlimStampen Alpha test</h1>
 
                     <p>
                         You've been invited to the Alpha test of the SlimStampen desktop app. On this page you can find information about the project and download links.
 			
 
-                    <p>
-                        Get the latest version for your computer:
-            
-                    </p>
-
-                    <form class="row special">
-                    <input type="text" name="" value="" id = "osbox" class="span5" />
-                    <button class="btn btn-success btn-large" id="downloadbox1">32-bit version</button>
-                    <button class="btn btn-success btn-large" id="downloadbox2">64-bit version</button>
+                    <form id="downloadForm">
+                    <button class="btn btn-success btn-large" id="downloadbox"></button>
+                    <!--button class="btn btn-success btn-large" id="downloadbox2">64-bit version</button-->
                     </form>
-                    <script>
-                    function showOS() {
-                        var osbox = document.getElementById('osbox');
-                        if (navigator.appVersion.indexOf("Mac")!=-1) {
-                            osbox.value = "SlimStampen for Mac OSX";
-                            document.getElementById('downloadbox1').style.visibility = 'hidden'; 
-                            document.getElementById('downloadbox1').value = "Download";  
-                        } else if(navigator.appVersion.indexof("Win")!=-1) {
-                            osbox.value = "SlimStampen for Windows";
-                        } else if (navigator.appVersion.indexof("Linux")!=-1) {
-                            osbox.value = "SlimStampen for Linux";
-                        }
-                     }
-                    </script>
-
+                    <p>
+                      <a data-toggle="collapse" data-target="#platfroms"  href="#"></a>
+                    </p>
+                    <button type="button" class="btn" id="transparent" data-toggle="collapse" data-target="#platforms">Download SlimStampen for another platform</button>
                 </div>
+                  <div class="span7 animated bounceInRight" id="main_div"></div>
             </div>
         </div>
     </div>
@@ -90,37 +97,26 @@
             <span class="green"></span>
         </div>
     </div>
-    <div class="container">
-        <div class="row landing-tips">
-            <div class="span4">
-                <img src="assets/img/flat-phone.png" alt="icon" />
-                <h3>Non-distracting design</h3>
-
-                <p>
-                    Focus on learning without getting distracted by the design.
-		
-                </p>
+    <div class="container collapse" id="platforms">
+        <div class="row landing-tips" id="selectOs">
+            <div class="span5">
+                <img src="assets/img/windows.png" alt="icon" />
+                <h4>SlimStampen for Windows</h4>
+                <button class="btn transparent" id="downloadbox">Download 32-bit</button>
+                <button class="btn transparent" id="downloadbox">Download 64-bit</button>
 
             </div>
-            <div class="span4">
-                <img src="assets/img/flat-user.png" alt="icon" />
-                <h3>Custom datasets</h3>
-
-                <p>
-                    Create your own datasets or import them from Excel files.
-		
-                </p>
+            <div class="span5">
+                <img src="assets/img/apple.png" alt="icon" />
+                <h4>SlimStampen for Mac OSX</h4>
+                <button class="btn transparent" id="downloadbox">Download</button>
 
             </div>
-            <div class="span4">
-                <img src="assets/img/flat-help.png" alt="icon" />
-                <h3>Online mode</h3>
-
-                <p>
-                    Create an account and log in from every computer with SlimStampen installed.
-		
-                </p>
-
+            <div class="span5">
+                <img src="assets/img/linux.png" alt="icon" />
+                <h4>SlimStampen for Linux</h4>
+                <button class="btn transparent" id="downloadbox">Download 32-bit</button>
+                <button class="btn transparent" id="downloadbox">Download 64-bit</button>
             </div>
         </div>
     </div>
@@ -144,8 +140,8 @@
                         Hichem Bouakaz <br>
                         Sander de Jong <br>
                         Sibren van Vliet <br>
-                        Enrico Werkema 
-			
+                        Enrico Werkema
+
                     </p>
 
                     <br>
@@ -154,11 +150,10 @@
                 <div id="reviews" class="span7 reviews-prod">
                     <h2>About SlimStampen</h2>
                     <ul>
-                    The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
+                    The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient.
                     <br>
                     <br>
                     The SlimStampen algorithm developed by Hedderik van Rijn increases learning by 20 to 30 percent. Using the decay rate of information impulses in the learner’s memory, the algorithm is designed to present facts at the moment in time when it is most beneficial for the learner to rehearse that fact again. Learning is most beneficial when the learner is just about to forget a certain fact.
-
                     </ul>
                 </div>
             </div>
@@ -166,34 +161,28 @@
     </div>
     <div class="container">
         <div id="features" class="row land-feat">
+            <!-- <div class="span6 phone">
+                <img src="assets/img/iphone.png" alt="iphone" />
+            </div> -->
             <div class="span6 list">
                 <h2>Application Features</h2>
                 <ul>
                     <li>
-                        <h4>Great Design</h4>
-
-                        <p>
-                            Using Electron technology, pages created with HTML5 and CSS3 were encapsulated in a desktop app to give it a modern look and feel. Everything in the app is focused on learning. 
-			
-                        </p>
-
-                    </li>
-                    <li>
                         <h4>Efficient learning</h4>
 
-                        <p>
-                            Learning facts is considered boring. Our app does not pretend otherwise, but makes learning more efficient to make sure you're time is well-spent.
-			
-                        </p>
+                        <p>Learning facts is considered boring. Our app does not pretend otherwise, but makes learning more efficient using the SlimStampen algorithm to make sure you're time is well-spent.</p>
 
                     </li>
                     <li>
-                        <h4>Customisation</h4>
+                        <h4>Modern design</h4>
 
-                        <p>
-                            Users are able to make an online account to log into the application from every computer with SlimStampen installed. All datasets that the user has added can then be used for learning.
-			
-                        </p>
+                        <p>Using Electron technology, pages created with HTML5 and CSS3 are encapsulated in a desktop app to give it a modern look and feel. Everything in the app is focused on learning. </p>
+
+                    </li>
+                    <li>
+                      <h4>Customisation</h4>
+
+                      <p>Users are able to make an online account to log into the application from every computer with SlimStampen installed. All datasets that the user has added can then be used for learning.</p>
 
                     </li>
                 </ul>
@@ -205,7 +194,7 @@
 	<div class="container">
 		<div class="row">
 			<p class="span6 copy">
-				Daphlex 2013 &copy; Designed and Developed by <a href="http://themeforest.net/user/UnzaThemes?ref=unzathemes" target="_blank">Unzathemes</a>
+				Softwar Engineering 2016 &copy; Designed and Developed by <a href="https://github.com/RUGSoftEng/Team-5" target="_blank">Team-5</a>
 			</p>
 			</div>
 		</p>
@@ -215,28 +204,89 @@
 </footer>
 
     <!-- JS -->
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/bootstrap-transition.js"></script>
-    <script src="assets/js/bootstrap-alert.js"></script>
-    <script src="assets/js/bootstrap-modal.js"></script>
-    <script src="assets/js/bootstrap-dropdown.js"></script>
-    <script src="assets/js/bootstrap-scrollspy.js"></script>
-    <script src="assets/js/bootstrap-tab.js"></script>
-    <script src="assets/js/bootstrap-tooltip.js"></script>
-    <script src="assets/js/bootstrap-popover.js"></script>
-    <script src="assets/js/bootstrap-button.js"></script>
-    <script src="assets/js/bootstrap-collapse.js"></script>
-    <script src="assets/js/bootstrap-carousel.js"></script>
-    <script src="assets/js/bootstrap-typeahead.js"></script> 
-    <script src="assets/js/global.js"></script>
-    <script src="assets/js/waypoints.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.actooltip').tooltip();
-            singlePage();
-            LandingAnimations();
-            showOS();
-        });
-	</script>
+
+  <script>
+    $(document).ready(function () {
+        $('.actooltip').tooltip();
+        singlePage();
+        LandingAnimations();
+        showOS();
+    });
+
+    function showOS() {
+      var os64 =  (navigator.userAgent.indexOf("WOW64") != -1 || navigator.userAgent.indexOf("Win64") != -1 );
+
+        if (navigator.appVersion.indexOf("Mac")!==-1) {
+            $('#downloadbox').text('Get SlimStampen for Mac OSX');
+        } else if(navigator.appVersion.indexOf("Win")!==-1) {
+          if(os64){
+              $('#downloadbox').text('Get SlimStampen for Windows 64-bit');
+          }else{
+              $('#downloadbox').text('Get SlimStampen for Windows 32-bit');
+          }
+        } else if (navigator.appVersion.indexOf("Linux")!==-1) {
+          if(os64){
+              $('#downloadbox').text('Get SlimStampen for Linux 64-bit');
+          }else{
+              $('#downloadbox').text('Get SlimStampen for Linux 32-bit');
+          }
+
+        }
+     }
+  </script>
+  <style>
+    #downloadbox{
+        text-transform: none;
+        font-size: 20px;
+    }
+    .hero-unit.landing h1, .hero-unit.landing p,.bounceInLeft{
+      text-align: center;
+    }
+    .collapse.in{
+      top: inherit;
+      position: inherit;
+      padding-bottom: 20px;
+      padding-top: 20px;
+    }
+    .transparent{
+      background-color: Transparent;
+      background-repeat:no-repeat;
+      border: none;
+      cursor:pointer;
+      overflow: hidden;
+      outline:none;
+      text-transform: none;
+      font-size: 15px !important;
+      color: rgb(30, 48, 66);
+
+    }
+    #transparent{
+      background-color: Transparent;
+      color: #fff;
+      background-repeat:no-repeat;
+      border: none;
+      cursor:pointer;
+      overflow: hidden;
+      outline:none;
+      font-size: 15px !important;
+      text-transform: none;
+    }
+    #main_div{
+      background-size: 100%;
+      background-image: url("assets/img/slimstampen.png");
+      background-repeat: no-repeat;
+      height:400px;
+      margin-top:80px;
+    }
+    #transparent:hover, #transparet:active{
+      color: #fff;
+    }
+    #selectOs{
+      margin:0 auto;
+    }
+    .promotext{
+    /*  background:rgba(255,255,255,0.5);*/
+    }
+  </style>
 </body>
 </html>
