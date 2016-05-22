@@ -20,7 +20,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var gen = (gender === "male") ? 1:0;
     var dateofbirth = $("#dateofbirth").val();
     var hashed_password = hash.generate(password);
-    var datetime = date.dateToDatetime(new Date());
+    var datetime = date.formatDatetime(new Date(), true);
     var field;
 
     db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {

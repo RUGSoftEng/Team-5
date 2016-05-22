@@ -1,7 +1,7 @@
 define(["dateformat"], function (dateFormat) {
     return {
-        dateToDatetime: function(date) {
-            return dateFormat(date, "yyyy-mm-dd HH:mm:ss", true);
+        formatDatetime: function(date, localise=false) {
+            return dateFormat(date, "yyyy-mm-dd HH:mm:ss", localise);
         },
         format: function(val, options) {
           return dateFormat(val, options, true);

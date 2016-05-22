@@ -103,7 +103,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	      var language = getFormVal(form, "select", "language");
 	      var subject = getFormVal(form, "select", "subject");
 	      var user_id = user.getCookie('user_id');
-	      var currentdate = date.dateToDatetime(new Date());
+	      var currentdate = date.formatDatetime(new Date(), true);
 
 				var dataset_items = [];
 				for (i = 0; i<formItemId; i++) {
