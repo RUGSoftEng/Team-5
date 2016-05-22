@@ -175,7 +175,7 @@ define({
 		success_register: "De registratie is voltooid. Je kunt je hieronder aanmelden.",
 		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s"
 	},
-	"arab": {
+	"ar": {
 		answer_almost: "(رسائل <b>%2$s</b> زمني الفارق) <b>%1$s</b> :هناك تقريبا! الإجابة المتوقعة",
 		answer_correct: "أحسنت!"
 	}

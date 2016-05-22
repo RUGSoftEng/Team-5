@@ -16,9 +16,10 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var dateofbirth = $("#dateofbirth").val();
     var gen = (gender === "male") ? 1:0;
     var date = dateofbirth.split("-");
+		var language = "root";
     dateofbirth = date[2]+"-"+date[1]+"-"+date[0];
 
-    db.executeQuery("addUser",[email,username,gen,dateofbirth,sha256(password), firstname, lastname]);
+    db.executeQuery("addUser",[email,username,gen,dateofbirth,sha256(password), firstname, lastname, language]);
     db.close();
     window.location="login.html?message=register";
 

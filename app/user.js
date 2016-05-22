@@ -12,6 +12,7 @@ define(['app/database'], function (db) {
     document.cookie = 'user_name='+result[0].user_name;
     document.cookie = 'user_id='+result[0].user_id;
     document.cookie = 'user_password='+result[0].user_password;
+		document.cookie = 'user_language='+result[0].user_language;
   },
   removeCookie: function() {
     document.cookie = "user_name=''";
@@ -29,7 +30,6 @@ define(['app/database'], function (db) {
   check: function() {
     var user_name = user.getCookie("user_name");
     var result = db.getQuery("getUserbyUsername", [user_name]);
-    console.log(result.length);
     return (result.length!==0 && user.getCookie('user_password') === result[0].user_password);
   },
   getCookie:function(cname) {

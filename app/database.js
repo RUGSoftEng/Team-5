@@ -9,14 +9,14 @@
  * module is sqlite.
  */
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, lang) {
+define(['sqlite', 'app/config', 'jquery'], function (sqlite, config) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
 		addDataset : "INSERT OR IGNORE INTO tbldatasets  (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_date, dataset_lastedited ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		addSubject : "INSERT OR IGNORE INTO tblsubjects (subject_id, subject_name) VALUES (?, ?)",
-    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname, user_language) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
 		getDatasets : "SELECT * FROM tbldatasets WHERE dataset_language=? AND dataset_subject=?",
@@ -30,14 +30,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
 		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id",
-		getSubjectByName : "SELECT * FROM tblsubjects WHERE subject_name=?",
+		getSubjectByName : "SELECT * FROM tblsubjects WHERE subject_name=?"
 	};
 
 	// Check if SQL.js has been loaded through AMD
 	var sql;
 	if (typeof sqlite !== 'object') {
 		document.body.style.backgroundColor = 'red';
-		alert(lang("error_requirefail", "sql.js"));
+		alert("Failed to require sql.js through AMD.");
 	} else {
 		sql = sqlite;
 	}

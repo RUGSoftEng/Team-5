@@ -22,15 +22,12 @@ define(function (require) {
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
 		ALGORITHM: "flashcard", // flashcard; slimstampen;
-		LANGUAGE: "nl",
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
 		ONLINE_DATABASE: "enricdz148_slim",
 		ONLINE_PASSWORD: "exVhqZJas"
 	};
-
-
-
+	
 	return {
 		constant: function(name) {
 			return constants[name];
