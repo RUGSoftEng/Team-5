@@ -55,6 +55,15 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		sql = sqlite;
 	}
 
+	// Initiate DB and check if there is an existing user DB
+	var read_database;
+	if (database_exists(config.constant("DATABASE_USER"))) {
+		read_database = fs.readFileSync(config.constant("DATABASE_USER"));
+	} else {
+		read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
+	}
+	var db = new sql.Database(read_database);
+
 	function database_exists(path) {
 		try {
 			fs.accessSync(path, fs.F_OK);
@@ -185,25 +194,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		}
 	}
 
-	function initOlineDB(){
-		if (database.online()) {
-			db_online = mysql.createConnection({
-				host     : config.constant("ONLINE_HOST"),
-				user     : config.constant("ONLINE_USER"),
-				password : config.constant("ONLINE_PASSWORD"),
-				database : config.constant("ONLINE_DATABASE")
-			});
-
-			db_online.connect(function(err) {
-				if (err) {
-					console.error('Error connecting: ' + err.stack);
-					return;
-				}
-			});
-		}
-
-	}
-
 	var database = {
 		online: function() {
 			return navigator.onLine;
@@ -217,7 +207,21 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			}
 			db = new sql.Database(read_database);
 
+			if (database.online()) {
+				db_online = mysql.createConnection({
+					host     : config.constant("ONLINE_HOST"),
+					user     : config.constant("ONLINE_USER"),
+					password : config.constant("ONLINE_PASSWORD"),
+					database : config.constant("ONLINE_DATABASE")
+				});
 
+				db_online.connect(function(err) {
+					if (err) {
+						console.error('Error connecting: ' + err.stack);
+						return;
+					}
+				});
+			}
 		},
 		save : function () {
 			var data = db.export();
@@ -238,9 +242,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 				});
 			}
 			if (remote && database.online()) {
-				if(db_online===undefined){
-					initOlineDB();
-				}
 				db_online.query(query, args, function(err, result) {
 					onError(err);
 					if (callback) {
@@ -259,9 +260,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			return queryResult;
 		},
 		getOnlineQuery: function(queryname, args, callback) {
-			if(db_online===undefined){
-				initOlineDB();
-			}
 			var query = queries[queryname];
 			db_online.query(query, args, function(err, rows, fields) {
 				onError(err);
@@ -287,9 +285,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			return queryResult;
 		},
 		lastInsertIdOnline: function(table_name, row_id, callback) {
-			if(db_online===undefined){
-				initOlineDB();
-			}
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
 			db_online.query(query, function(err, rows, fields) {
 				onError(err);
@@ -301,9 +296,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			db.each(query,args, func);
 		},
 		synchronize : function(userId, callback){
-			if(db_online===undefined){
-				initOlineDB();
-			}
 			synchronizeDatasets(userId, function() {
 				synchronizeUser(userId, callback);
 			});
