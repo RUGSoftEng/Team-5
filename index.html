@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Daphlex - Freebies Website</title>
+    <title>SlimStampen desktop app</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -19,6 +19,7 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body data-spy="scroll" data-target=".navbar" id="top">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
@@ -29,15 +30,15 @@
                     <span class="icon-bar"></span>
                 </a>
                 <a class="brand" href="#">
-                    <img src="assets/img/logo.png" alt="logo" /></a>
+                    <img src="assets/img/rugged.png" alt="logo" /></a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li class="option active"><a href="index.html">Home</a></li>
                         <li class="option"><a href="#about">About</a></li>
                         <li class="option"><a href="#reviews">Reviews</a></li>
                         <li class="option"><a href="#features">Features</a></li>
-                        <li class="option"><a href="#newsletter">Newsletter</a></li>
-                        <li class="option"><a href="#" class="btn btn-small btn-warning">Download</a></li>
+                        <li class="option"><a href="#newsletter">Download</a></li>
+
                     </ul>
                 </div>
             </div>
@@ -116,43 +117,33 @@
                     <h2>About us</h2>
 
                     <p>
-                        <strong>Daphlex - Landing Page</strong>
+                        <strong>Rugged Software : Team 5</strong>
                     </p>
 
                     <br>
 
                     <p>
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        For the course Software Engineering we were asked to make a desktop app based on the SlimStampen algorithm. etc etc
                         <br>
                         <br>
-                        Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate
-                        velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore
-                        te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+                        Contributors: <br>
+                        Hichem Bouakaz <br>
+                        Sander de Jong <br>
+                        Sibren van Vliet <br>
+                        Enrico Werkema 
 			
                     </p>
 
                     <br>
-                    <a href="#" class="btn btn-small btn-success">Learn More</a>
+                    <a href="https://github.com/RUGSoftEng/Team-5" class="btn btn-small btn-success">Github</a>
                 </div>
                 <div id="reviews" class="span7 reviews-prod">
-                    <h2>Product Reviews</h2>
+                    <h2>About SlimStampen</h2>
                     <ul>
-                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
-                            <img src="assets/img/testimonial-1.png" alt="testimonial img" />
-                            John Doe - Twitter</span>
-                        </li>
-                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
-                            <img src="assets/img/testimonial-2.png" alt="testimonial img" />
-                            Catherine Plim - Apple</span>
-                        </li>
-                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
-                            <img src="assets/img/testimonial-3.png" alt="testimonial img" />
-                            Vanessa Mia - Mashable</span>
-                        </li>
-                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
-                            <img src="assets/img/testimonial-2.png" alt="testimonial img" />
-                            Peter Earts - Smashing Magazine</span>
-                        </li>
+                    The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
+                    <br>
+                    <br>
+                    The SlimStampen algorithm developed by Hedderik van Rijn 
                     </ul>
                 </div>
             </div>
@@ -199,17 +190,32 @@
     </div>
     <div class="landing-wide nop">
         <div class="container">
-            <div id="newsletter" class="wide-newsletter gray opacity-none">
-                <h3>Subscribe to our newsletter</h3>
+            <div id=newsletter class="wide-newsletter gray opacity-none">
+                <script>
+                    function showOS() {
+                        var osbox = document.getElementById('osbox');
+                        if (navigator.appVersion.indexOf("Mac")!=-1) {
+                            osbox.value = "SlimStampen for Mac OSX";
+                            document.getElementById('downloadbox1').style.visibility = 'hidden'; 
+                            document.getElementById('downloadbox1').value = "Download";  
+                        } else if(navigator.appVersion.indexof("Win")!=-1) {
+                            osbox.value = "SlimStampen for Windows";
+                        } else if (navigator.appVersion.indexof("Linux")!=-1) {
+                            osbox.value = "SlimStampen for Linux";
+                        }
+                     }
+                </script>
+                <h3>Download SlimStampen</h3>
 
                 <p>
-                    Get our weekly newsletter in your email with the best resources around the web.
+                    Get the latest version for your computer.
 		
                 </p>
 
                 <form class="row special">
-                <input type="email" name="" value="" required placeholder="E-mail" class="span5" />
-                <button class="btn btn-success btn-large">Submit</button>
+                <input type="text" name="" value="" id = "osbox" class="span5" />
+                <button class="btn btn-success btn-large" id="downloadbox1">32-bit version</button>
+                <button class="btn btn-success btn-large" id="downloadbox2">64-bit version</button>
                 </form>
             </div>
             <!-- End Wide-newsletter -->
@@ -222,33 +228,6 @@
 			<p class="span6 copy">
 				Daphlex 2013 &copy; Designed and Developed by <a href="http://themeforest.net/user/UnzaThemes?ref=unzathemes" target="_blank">Unzathemes</a>
 			</p>
-			<div class="span6">
-				<ul class="mini-social pull-right">
-					<li>
-					<a href="#" title="Twitter" class="a-icon twitter"></a>
-					</li>
-					<li>
-					<a href="#" title="Facebook" class="a-icon facebook"></a>
-					</li>
-					<li>
-					<a href="#" title="Dribbble" class="a-icon dribbble"></a>
-					</li>
-					<li>
-					<a href="#" title="Instagram" class="a-icon instagram"></a>
-					</li>
-					<li>
-					<a href="#" title="Google Plus" class="a-icon googleplus"></a>
-					</li>
-					<li>
-					<a href="" title="YouTube" class="a-icon youtube"></a>
-					</li>
-					<li>
-					<a href="#" title="Email Us" class="a-icon email"></a>
-					</li>
-					<li>
-					<a href="" title="Subscribe via RSS" class="a-icon rss"></a>
-					</li>
-				</ul>
 			</div>
 		</p>
 	</div>
@@ -277,6 +256,7 @@
             $('.actooltip').tooltip();
             singlePage();
             LandingAnimations();
+            showOS();
         });
 	</script>
 </body>
