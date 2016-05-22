@@ -36,7 +36,6 @@
                         <li class="option active"><a href="index.html">Home</a></li>
                         <li class="option"><a href="#about">About</a></li>
                         <li class="option"><a href="#features">Features</a></li>
-                        <li class="option"><a href="#newsletter">Download</a></li>
 
                     </ul>
                 </div>
@@ -54,12 +53,31 @@
                     <p>
                         You've been invited to the Alpha test of the SlimStampen desktop app. On this page you can find information about the project and download links.
 			
-                    </p>
 
                     <p>
-                        <a href="#" class="appstore btn-store"></a>
-                        <a href="#" class="googleplay btn-store"></a>
+                        Get the latest version for your computer:
+            
                     </p>
+
+                    <form class="row special">
+                    <input type="text" name="" value="" id = "osbox" class="span5" />
+                    <button class="btn btn-success btn-large" id="downloadbox1">32-bit version</button>
+                    <button class="btn btn-success btn-large" id="downloadbox2">64-bit version</button>
+                    </form>
+                    <script>
+                    function showOS() {
+                        var osbox = document.getElementById('osbox');
+                        if (navigator.appVersion.indexOf("Mac")!=-1) {
+                            osbox.value = "SlimStampen for Mac OSX";
+                            document.getElementById('downloadbox1').style.visibility = 'hidden'; 
+                            document.getElementById('downloadbox1').value = "Download";  
+                        } else if(navigator.appVersion.indexof("Win")!=-1) {
+                            osbox.value = "SlimStampen for Windows";
+                        } else if (navigator.appVersion.indexof("Linux")!=-1) {
+                            osbox.value = "SlimStampen for Linux";
+                        }
+                     }
+                    </script>
 
                 </div>
                 <div class="span6 iphone-hand">
@@ -121,7 +139,7 @@
                     <br>
 
                     <p>
-                        For the course Software Engineering we were asked to make a desktop app based on the SlimStampen algorithm. etc etc
+                        For the course Software Engineering we were asked to make a desktop app based on the SlimStampen algorithm. 
                         <br>
                         <br>
                         Contributors: <br>
@@ -141,7 +159,7 @@
                     The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
                     <br>
                     <br>
-                    The SlimStampen algorithm developed by Hedderik van Rijn 
+                    The SlimStampen algorithm developed by Hedderik van Rijn increases learning by 20 to 30 percent.
                     </ul>
                 </div>
             </div>
@@ -184,39 +202,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    </div>
-    <div class="landing-wide nop">
-        <div class="container">
-            <div id=newsletter class="wide-newsletter gray opacity-none">
-                <script>
-                    function showOS() {
-                        var osbox = document.getElementById('osbox');
-                        if (navigator.appVersion.indexOf("Mac")!=-1) {
-                            osbox.value = "SlimStampen for Mac OSX";
-                            document.getElementById('downloadbox1').style.visibility = 'hidden'; 
-                            document.getElementById('downloadbox1').value = "Download";  
-                        } else if(navigator.appVersion.indexof("Win")!=-1) {
-                            osbox.value = "SlimStampen for Windows";
-                        } else if (navigator.appVersion.indexof("Linux")!=-1) {
-                            osbox.value = "SlimStampen for Linux";
-                        }
-                     }
-                </script>
-                <h3>Download SlimStampen</h3>
-
-                <p>
-                    Get the latest version for your computer.
-		
-                </p>
-
-                <form class="row special">
-                <input type="text" name="" value="" id = "osbox" class="span5" />
-                <button class="btn btn-success btn-large" id="downloadbox1">32-bit version</button>
-                <button class="btn btn-success btn-large" id="downloadbox2">64-bit version</button>
-                </form>
-            </div>
-            <!-- End Wide-newsletter -->
         </div>
     </div>
     <footer>
