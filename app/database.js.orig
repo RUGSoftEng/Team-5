@@ -70,6 +70,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		}
 	}
 
+<<<<<<< HEAD
 	function onError(error) {
 		if (error) {
 			if (error.message !== undefined) {
@@ -79,15 +80,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 			}
 		}
 	}
-	function isUnique(unique_name1, unique_name2, queryResult, row) {
-	    for (i = 0; i<queryResult.length;i++) {
-	      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
-		return false;
-	      }
-	    }
-	    return true;
-	}
-  function isUniqueOld(unique_name, queryResult, row) {
+
+  // Auxiluary uniqueness function
+  function isUnique(unique_name, queryResult, row) {
     for (i = 0; i<queryResult.length;i++) {
       if (queryResult[i][unique_name]==row[unique_name]) {
         return false;
@@ -95,6 +90,25 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
     }
     return true;
   }
+
+=======
+	// Function for Handeling query Error
+	function onError(db, error) {
+		console.log("this error " + error.message);
+		alert('Something went wrong while excuting your request\n please try again! ');
+	}
+	
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
+	// Auxiluary uniqueness function
+  function isUnique(unique_name1, unique_name2, queryResult, row) {
+    for (i = 0; i<queryResult.length;i++) {
+      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
@@ -256,6 +270,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 			});
 			return queryResult;
 		},
+<<<<<<< HEAD
 		getOnlineQuery: function(queryname, args, callback) {
 			var query = queries[queryname];
 			db_online.query(query, args, function(err, rows, fields) {
@@ -263,11 +278,27 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 				callback(rows);
 			});
 		},
+		getUnique: function(queryname,unique_name, args) {
+			var queryResult = [];
+			var query = queries[queryname] ;
+			db.each(query,args, function(row, err) {
+				if (isUnique(unique_name, queryResult, row))
+					queryResult.push(row);
+			});
+			return queryResult;
+		},
+		getUnique2: function(queryname, unique_name1, unique_name2, args) {
+			var queryResult = [];
+			var query = queries[queryname] ;
+			db.each(query, args, function(row, err) {
+				if (isUnique2(unique_name1, unique_name2, queryResult, row))
+=======
 		getUnique: function(queryname, unique_name1, unique_name2, args) {
 			var queryResult = [];
 			var query = queries[queryname] ;
 			db.each(query,args, function(row, err) {
 				if (isUnique(unique_name1, unique_name2, queryResult, row))
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 					queryResult.push(row);
 			});
 			return queryResult;
@@ -295,6 +326,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 			synchronizeDatasets(userId, function() {
 				synchronizeUser(userId, callback);
 			});
+		},
+		isSynchronizing: function() {
+			return synchronizing;
 		}
 	};
 	database.init();

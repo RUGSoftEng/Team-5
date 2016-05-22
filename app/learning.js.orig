@@ -8,7 +8,11 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
+<<<<<<< HEAD
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time) {
+=======
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -86,7 +90,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
 	function addTemporaryHintButton() { 
 	  $("#hintButton").click(function() {
-	    if (questions.hint()!==null)
+	    if (questions.hint()!=="")
 	      messages.showHint(questions.hint());
 	  });
 	}	
@@ -94,15 +98,31 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
+<<<<<<< HEAD
     var datasetId = url.substring(url.indexOf('?')+1);
     var dataset_items = db.getQuery("getDatasetItems",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
+=======
+    var datasetId = getDatasetIdFromURL(url);
+    var factList = retrieveDataSet(datasetId);
+
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
     questions.initialize(factList);
   	questions.show();
 
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
+<<<<<<< HEAD
+
+  // Temporary hint button
+  $("#hintButton").click(function() {
+    if (questions.hint()!==null)
+      messages.showHint(questions.hint());
+  });
+
+=======
   addTemporaryHintButton();
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {

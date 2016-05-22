@@ -9,12 +9,17 @@
 define(function (require) {
 	var constants = {
 		NUMBER_TUTORIAL_QUESTIONS: 3,
+		/* Margin of error accepted by the Levenstein function */
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true,
+		/* Time limit for learning sessions in seconds */
 		TIME_LIMIT: 600,
+		/* Time before the next item is presented while learning */
 		FEEDBACK_DELAY_CORRECT: 0.5,
 		FEEDBACK_DELAY_INCORRECT: 10,
+		/* Path to user database */
 		DATABASE_USER: __dirname + "/database/user.sqlite",
+		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
 		ALGORITHM: "slimstampen", // flashcard; slimstampen;
 		LANGUAGE: "en",
@@ -26,20 +31,11 @@ define(function (require) {
 		ERRORS: "#errors"
 	};
 
-	var keys = {
-		TAB: 9,
-		ENTER: 13,
-		"0": 48,
-		"z": 90
-	};
+
 
 	return {
 		constant: function(name) {
 			return constants[name];
-		},
-
-		key: function(name) {
-			return keys[name];
 		}
 	};
 });

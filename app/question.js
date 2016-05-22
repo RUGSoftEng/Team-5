@@ -13,11 +13,6 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   var firstKeyPress = 0;
   var responseList = [];
 
-  // Calculate the percentage of 'part out of total'
-  function percentage(part, total) {
-   return Math.round(part / total * 100);
-  }
-
   // Calculate the time difference in milliseconds
   function measureTime(start) {
     var end = new Date();
@@ -187,7 +182,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       var input = document.getElementById("answer").value;
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
-      answerWasCorrect = (difference == 0);
+      answerWasCorrect = (difference === 0);
       if (answerWasCorrect) {
         handleScoreIncrease();
         messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );

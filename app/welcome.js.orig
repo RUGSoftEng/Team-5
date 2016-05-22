@@ -23,10 +23,20 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     window.location = 'login.html?message='+message;
   }
 
+<<<<<<< HEAD
+	function createSidebarElements() {
+		var rows = db.getUnique2('getUserModules', 'subject_name', 'language_name', [user.getCookie('user_id')]);
+		for (var i = 0; i < rows.length; i++) {
+      var newElement = $('#sidebar_ul').cloneLayout();
+      if (i==0) {
+        newElement.addClass("active");
+      }
+=======
 	function createSidebarElements(currentSubject, currentLanguage) {
 		var rows = db.getUnique('getModules', 'subject_name', 'language_name', []);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
         [rows[i].subject_id, rows[i].language_id, rows[i].subject_name, rows[i].language_name]);
 			if (rows[i].subject_id == currentSubject && rows[i].language_id == currentLanguage) {
@@ -57,8 +67,12 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
       var newElement = $('#container').cloneLayout();
       newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
       navigateToLearn(newElement);
+<<<<<<< HEAD
+		}
+=======
       deleteDataset(newElement);
     }
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 	}
 
   // Function for obtaining the GET data from the url
@@ -106,7 +120,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     getUserDataFromDatabase();
 		createSidebarElements(currentSubject, currentLanguage);
     createDatasetsGrid(currentSubject,currentLanguage);
-		$(".sidebar_li a").click(function () {
+    		$(".sidebar_li a").click(function () {
       var subject = $(this).data("subject-id");
       var language = $(this).data("language-id");
       messages.hide(config.constant("MESSAGES"));

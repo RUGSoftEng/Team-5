@@ -24,6 +24,22 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
+<<<<<<< HEAD
+
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
+	$("#datasetsubject").prop("title", lang("placeholder_subject"));
+	$("#buttonsave").prop("value", lang("open_buttonsave"));
+
+	// Replace user data in view from database
+	$("span[data-replace]").each(function() {
+		var user_info = $(this).data("replace");
+		var text = user.get(user_info);
+		$(this).html(text);
+	});
+	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
+=======
 	
 	function localisePage() {
 		string.fillinTextClasses();
@@ -39,6 +55,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		});
 		$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 	}
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 
 	function checkIfDatasetExists() {
 		window.Parsley.addValidator('datasetName', {
@@ -73,6 +90,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		forms.initializeForm('#uploadForm', function() {
 			showLoading(function () {
 				var form = '#uploadForm';
+<<<<<<< HEAD
 				// Save dataset
 				var name = getFormVal(form, "input", "name");
 	      var language = getFormVal(form, "select", "language");
@@ -94,8 +112,19 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 					db.close();
 					window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 				}
+=======
+				forms.saveDataset(form);
+				// Save all items of the dataset
+				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
+				db.close();
+				var language = getFormVal(form, "select", "language");
+				var subject = getFormVal(form, "select", "subject");
+				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 			});
-		});
+		});		
+	}
 
 	function highlightUploadOnDrag() {
 		$(document).on("dragenter", function() {

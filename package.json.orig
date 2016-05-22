@@ -1,0 +1,51 @@
+{
+  "name": "language-learning",
+  "version": "1.0.0",
+  "description": "An application for learning all kinds of subjects",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+<<<<<<< HEAD
+    "pretest": "jshint ./tests && jshint ./app",
+    "test": "intern-client config=tests/internLocal"
+=======
+  	"pretest": "chromedriver --port=4444 --url-base=wd/hub 1> /dev/null & ./node_modules/jshint/bin/jshint ./tests/*.js && ./node_modules/jshint/bin/jshint ./app/*.js"  
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RUGSoftEng/Team-5"
+  },
+  "keywords": [
+    "language",
+    "learning",
+    "slimstampen"
+  ],
+  "author": "Language Learning team",
+  "license": "ISC",
+  "homepage": "https://github.com/RUGSoftEng/Team-5#readme",
+  "devDependencies": {
+    "electron-packager": "^5.2.1",
+    "electron-prebuilt": "^1.0.2"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.3",
+    "bcryptjs": "^2.3.0",
+    "bootstrap": "^3.3.6",
+    "bootstrap-select": "^1.10.0",
+    "chromedriver": "^2.21.2",
+    "dateformat": "^1.0.12",
+    "electron-prebuilt": "^1.0.2",
+    "electron-sudo": "^3.0.4",
+    "intern": "^3.1.1",
+    "jquery": "^2.2.2",
+    "jshint": "^2.9.2",
+    "mysql": "^2.10.2",
+    "parsleyjs": "^2.3.7",
+    "sha256": "^0.2.0",
+    "sprintf-js": "^1.0.3",
+    "sqlite": "0.0.4",
+    "underscore": "^1.8.3",
+    "xlsx": "^0.8.0"
+  }
+}

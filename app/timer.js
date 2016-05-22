@@ -28,13 +28,6 @@ define(['jquery','app/time', 'app/lang'], function($,time, lang) {
     return time < 10 ? "0"+time : time;
   }
 
-  // Create a string representation of time (mm:ss) for easy display
-  function timeToString(time) {
-    minutes = Math.floor(time/60);
-    seconds = time%60;
-    return timeFormat(minutes)+":"+timeFormat(seconds);
-  }
-
   // Clear the timer by setting it back to 00:00
   function clearTimer(timerid) {
     $(timerid+" .current").html(time.start());

@@ -6,7 +6,11 @@
  * Description:
  */
 
-define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/keys', 'app/date'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user,keys,date) {
+<<<<<<< HEAD
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/date'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user, date) {
+=======
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/keys'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user,keys) {
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -36,6 +40,15 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	}
 
 
+<<<<<<< HEAD
+	function getFormVal(parentName, formType, formName) {
+    return $(parentName).find(formType + '[name="' + formName + '"]').val();
+  }
+	function getItemVal(formName, formIndex) {
+    return $("#items input[name='" + formName + formIndex + "']").val();
+  }
+=======
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
@@ -43,6 +56,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
+<<<<<<< HEAD
 	function saveDatasetsLocal(data, form) {
 		db.executeQuery("addDatasetAll", data, true, false);
 		db.close();
@@ -51,8 +65,18 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		var subject = getFormVal(form, "select", "subject");
 		window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 	}
-  	
-	function localisePage() {
+
+	// Write localisable text to the page
+	string.fillinTextClasses();
+	$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
+	$("#datasetsubject").prop("title", lang("placeholder_subject"));
+	$("#buttoncreate").prop("value", lang("create_buttoncreate"));
+	$("#inputquestion").prop("placeholder", lang("label_question"));
+	$("#inputanswer").prop("placeholder", lang("label_answer"));
+	$("#inputhint").prop("placeholder", lang("label_hint"));
+
+=======
+  	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 		$("#datasetsubject").prop("title", lang("placeholder_subject"));
@@ -61,6 +85,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		$("#inputanswer").prop("placeholder", lang("label_answer"));
 		$("#inputhint").prop("placeholder", lang("label_hint"));
 	}
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
 		var user_info = $(this).data("replace");
@@ -90,6 +115,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		forms.initializeForm('#createForm', function() {
 			showLoading(function() {
 				var form = "#createForm";
+<<<<<<< HEAD
 				var name = getFormVal(form, "input", "name");
 	      var language = getFormVal(form, "select", "language");
 	      var subject = getFormVal(form, "select", "subject");
@@ -113,6 +139,14 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	      } else {
 	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form);
 	      }
+=======
+				forms.saveDataset(form);
+				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
+        forms.getItemsFromCreateForm(id, formItemId);
+				var language = buildDatasetLanguageString(form, "select", "language");
+	      var subject = buildDatasetSubjectString;
+				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+>>>>>>> 484316e98418b4f2c6b4bd72bca9e38b823bd728
 			});
 		});
 
