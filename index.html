@@ -1,85 +1,283 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>CodeCentral Basing</title>
-		<meta name="description" content="Description">
-		<meta name="author" content="Code Central">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<link rel="shortcut icon" href="images/favicon.png"/>
-		<link rel="stylesheet" href="style.css">
-		<link rel="stylesheet" href="bootstrap.css">
-		<script src="resources/js/jquery-1.11.1.min.js"></script>
-		<script src="resources/js/bootstrap.min.js"></script>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,600' rel='stylesheet' type='text/css'>
-		<script type="text/javascript">
-			$(document).ready(function () {
-					
-			});
-		</script>
-		<!--[if lt IE 9]>
-		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-	</head>
+<head>
+    <meta charset="utf-8">
+    <title>Daphlex - Freebies Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	<body>
-		<header>
-			<div class="container navbar">
-				<h1 id="logo" class='navbar-brand'><a href="#">Upgrade Groningen</a></h1>
-				
-				<button class="navbar-toggle" data-toggle='collapse' data-target='.navHeaderCollapse'>
-					<h2>Menu</h2>
-					<div class="icons">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</div>
-					<div class="clear"></div>
-				</button>
-				<nav class='collapse navbar-collapse navHeaderCollapse'> 
-					<ul class='nav navbar-nav navbar-right'>
-						<li class="first selected"><a href="#">Home</a></li>
-						<li class="has-submenu dropdown visible-xs-block">
-							<a href="#" class='dropdown-toggle' data-toggle='dropdown' data-target=''>Mijn account</a>
-							<ul class="submenu dropdown-menu">
-								<li><a href="#">Mijn gegevens</a></li>
-								<li><a href="#">Leerling gegevens</a></li>
-								<li class="last"><a href="#">Bijlespaketten</a></li>
-							</ul>
-						</li>
-						<li class="has-submenu dropdown">
-							<a href="#" class='dropdown-toggle' data-toggle='dropdown' data-target=''>Pre-examentraining</a>
-							<ul class="submenu dropdown-menu">
-								<li><a href="#">Examentrainingen</a></li>
-								<li><a href="#">Oude examens</a></li>
-								<li class="last"><a href="#">Aanmelden</a></li>
-							</ul>
-						</li>
-						<li class='hidden-xs'><a href="#">Mijn account</a></li>
-						
-						<li><a href="#">Upgrade</a></li>
-						<li class='visible-xs-block'><a href="#">Contact</a></li>
-					</ul>	
-				</nav>
-				
-				<div class="clear"></div>
+    <!-- Styles -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="assets/css/animate.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body data-spy="scroll" data-target=".navbar" id="top">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="#">
+                    <img src="assets/img/logo.png" alt="logo" /></a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li class="option active"><a href="index.html">Home</a></li>
+                        <li class="option"><a href="#about">About</a></li>
+                        <li class="option"><a href="#reviews">Reviews</a></li>
+                        <li class="option"><a href="#features">Features</a></li>
+                        <li class="option"><a href="#newsletter">Newsletter</a></li>
+                        <li class="option"><a href="#" class="btn btn-small btn-warning">Download</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Navbar-->
+
+    <div class="hero-unit landing">
+        <div class="container">
+            <div class="row">
+                <div class="span6 promotext">
+                    <h1>Check out the best landing page for your product</h1>
+
+                    <p>
+                        Look at that, it's exactly three seconds before i honk your nose and pull your underwear over your head. hey, maybe i will give you a call<br />
+                        sometime. your number still 911? good morning, oh.
+			
+                    </p>
+
+                    <p>
+                        <a href="#" class="appstore btn-store"></a>
+                        <a href="#" class="googleplay btn-store"></a>
+                    </p>
+
+                </div>
+                <div class="span6 iphone-hand">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Unit-->
+    <div class="hero-pattern">
+        <div class="container">
+            <span class="orange"></span>
+            <span class="green"></span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row landing-tips">
+            <div class="span4">
+                <img src="assets/img/flat-phone.png" alt="icon" />
+                <h3>Responsive Layout</h3>
+
+                <p>
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.
+		
+                </p>
+
+            </div>
+            <div class="span4">
+                <img src="assets/img/flat-user.png" alt="icon" />
+                <h3>User Conversion</h3>
+
+                <p>
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.
+		
+                </p>
+
+            </div>
+            <div class="span4">
+                <img src="assets/img/flat-help.png" alt="icon" />
+                <h3>24/7 Support</h3>
+
+                <p>
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam.
+		
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div class="landing-wide">
+        <div class="container">
+            <div class="row">
+                <div id="about" class="span5 about-us">
+                    <h2>About us</h2>
+
+                    <p>
+                        <strong>Daphlex - Landing Page</strong>
+                    </p>
+
+                    <br>
+
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                        <br>
+                        <br>
+                        Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate
+                        velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore
+                        te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+			
+                    </p>
+
+                    <br>
+                    <a href="#" class="btn btn-small btn-success">Learn More</a>
+                </div>
+                <div id="reviews" class="span7 reviews-prod">
+                    <h2>Product Reviews</h2>
+                    <ul>
+                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
+                            <img src="assets/img/testimonial-1.png" alt="testimonial img" />
+                            John Doe - Twitter</span>
+                        </li>
+                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
+                            <img src="assets/img/testimonial-2.png" alt="testimonial img" />
+                            Catherine Plim - Apple</span>
+                        </li>
+                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
+                            <img src="assets/img/testimonial-3.png" alt="testimonial img" />
+                            Vanessa Mia - Mashable</span>
+                        </li>
+                        <li>Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis <span>
+                            <img src="assets/img/testimonial-2.png" alt="testimonial img" />
+                            Peter Earts - Smashing Magazine</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="features" class="row land-feat">
+            <div class="span6 phone">
+                <img src="assets/img/iphone.png" alt="iphone" />
+            </div>
+            <div class="span6 list">
+                <h2>Application Features</h2>
+                <ul>
+                    <li>
+                        <h4>Great Design</h4>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit quas omnis officiis veniam non laborum reprehenderit quae ratione blanditiis delectus facilis facere.
+			
+                        </p>
+
+                    </li>
+                    <li>
+                        <h4>Responsive Layout</h4>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit quas omnis officiis veniam non laborum reprehenderit quae ratione blanditiis delectus facilis facere.
+			
+                        </p>
+
+                    </li>
+                    <li>
+                        <h4>SEO Ready</h4>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit quas omnis officiis veniam non laborum reprehenderit quae ratione blanditiis delectus facilis facere.
+			
+                        </p>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="landing-wide nop">
+        <div class="container">
+            <div id="newsletter" class="wide-newsletter gray opacity-none">
+                <h3>Subscribe to our newsletter</h3>
+
+                <p>
+                    Get our weekly newsletter in your email with the best resources around the web.
+		
+                </p>
+
+                <form class="row special">
+                <input type="email" name="" value="" required placeholder="E-mail" class="span5" />
+                <button class="btn btn-success btn-large">Submit</button>
+                </form>
+            </div>
+            <!-- End Wide-newsletter -->
+        </div>
+    </div>
+    <footer>
+<div class="footer-lower">
+	<div class="container">
+		<div class="row">
+			<p class="span6 copy">
+				Daphlex 2013 &copy; Designed and Developed by <a href="http://themeforest.net/user/UnzaThemes?ref=unzathemes" target="_blank">Unzathemes</a>
+			</p>
+			<div class="span6">
+				<ul class="mini-social pull-right">
+					<li>
+					<a href="#" title="Twitter" class="a-icon twitter"></a>
+					</li>
+					<li>
+					<a href="#" title="Facebook" class="a-icon facebook"></a>
+					</li>
+					<li>
+					<a href="#" title="Dribbble" class="a-icon dribbble"></a>
+					</li>
+					<li>
+					<a href="#" title="Instagram" class="a-icon instagram"></a>
+					</li>
+					<li>
+					<a href="#" title="Google Plus" class="a-icon googleplus"></a>
+					</li>
+					<li>
+					<a href="" title="YouTube" class="a-icon youtube"></a>
+					</li>
+					<li>
+					<a href="#" title="Email Us" class="a-icon email"></a>
+					</li>
+					<li>
+					<a href="" title="Subscribe via RSS" class="a-icon rss"></a>
+					</li>
+				</ul>
 			</div>
-		</header>
-		<main>
-			<div class="container">
-				<div id="content">
-					
-				</div>
-				<aside>
-					
-				</aside>
-				<div class="clear"></div>
-			</div>
-		</main>
-		<footer>
-			<div class="container">
-				
-			</div>
-		</footer>
-	</body>
+		</p>
+	</div>
+</div>
+</div>
+</footer>
+
+    <!-- JS -->
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/bootstrap-transition.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-modal.js"></script>
+    <script src="assets/js/bootstrap-dropdown.js"></script>
+    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-tab.js"></script>
+    <script src="assets/js/bootstrap-tooltip.js"></script>
+    <script src="assets/js/bootstrap-popover.js"></script>
+    <script src="assets/js/bootstrap-button.js"></script>
+    <script src="assets/js/bootstrap-collapse.js"></script>
+    <script src="assets/js/bootstrap-carousel.js"></script>
+    <script src="assets/js/bootstrap-typeahead.js"></script> 
+    <script src="assets/js/global.js"></script>
+    <script src="assets/js/waypoints.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.actooltip').tooltip();
+            singlePage();
+            LandingAnimations();
+        });
+	</script>
+</body>
 </html>
