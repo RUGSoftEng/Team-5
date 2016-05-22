@@ -103,7 +103,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	      var language = getFormVal(form, "select", "language");
 	      var subject = getFormVal(form, "select", "subject");
 	      var user_id = user.getCookie('user_id');
-	      var currentdate = new Date();
+	      var currentdate = date.dateToDatetime(new Date());
 
 				var dataset_items = [];
 				for (i = 0; i<formItemId; i++) {
@@ -114,14 +114,13 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 					dataset_items.push({"id": i, "text": question, "answer": answer, "hint": hint});
 				}
 				dataset_items = JSON.stringify(dataset_items);
-				console.log(date.dateToDATETIME(currentdate));
 	      if (db.online()) {
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], false, true);
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
 	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], form);
+						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], form);
 	        });
 	      } else {
-	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], form);
+	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form);
 	      }
 			});
 		});

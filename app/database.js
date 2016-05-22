@@ -186,12 +186,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], func
 		var recent = localTime - onlineTime;
 		if (recent > 0) {
 			local = $.map(local, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
-			alert("Synchronizing to online for "+remote[0].dataset_id);
 			database.executeQuery('deleteDatasetbyId',[remote[0].dataset_id], false, true);
 			database.executeQuery('addDatasetAll', local, false, true);
 		} else if (recent < 0) {
-			remote = $.map(remote, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
-			alert("Synchronizing to local for "+remote[0].dataset_id);
+			remote = $.map(remote[0], function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.format(val, "yyyy-mm-dd HH:mm:ss") : val; });
 			database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
 			database.executeQuery('addDatasetAll', remote, true, false);
 		}

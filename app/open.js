@@ -75,19 +75,19 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	      var language = getFormVal(form, "select", "language");
 	      var subject = getFormVal(form, "select", "subject");
 	      var user_id = user.getCookie('user_id');
-	      var currentdate = new Date();
+	      var currentdate = date.dateToDatetime(new Date());
 
 				var dataset_items = createDatasetItems(saveData);
 
 				if (db.online()) {
-					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], false, true);
+					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
 					db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], true, false);
+						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], true, false);
 						db.close();
 						window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 					});
 				} else {
-					db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate), dataset_items], true, false);
+					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], true, false);
 					db.close();
 					window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 				}

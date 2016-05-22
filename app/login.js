@@ -33,6 +33,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		electronsudo.exec("chmod 700 database/", options, function (error) {});
 	}
 
+
 	// Function for obtaining the GET data from the url
   function $_GET(q,s) {
     s = (s) ? s : window.location.search;
@@ -61,7 +62,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 						console.log(document.cookie);
 						db.synchronize(user.getCookie('user_id'), function() {
 							db.close();
-							// window.location = "index.html?message=login";
+							window.location = "index.html?message=login";
 						});
 					} else {
 						field.removeError('error');
