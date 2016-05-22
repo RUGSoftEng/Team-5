@@ -11,17 +11,15 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config, $, lang) {
+define(['sqlite', 'app/config', 'jquery', 'app/lang', 'app/date', 'async'], function (sqlite, config, $, lang, date, async) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
 		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addDatasetAll: "INSERT INTO tbldatasets VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addUser:  "INSERT INTO tblusers  (user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addUserOffline:  "INSERT INTO tblusers  (user_id,user_email, user_name, user_gender, user_bday, user_password, user_firstname, user_lastname,user_createdate,user_lastedited) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		updateDatasetItem : "UPDATE  tbldatasets SET item_dataset = ?, item_question = ?, item_answer = ? , item_hint = ? , WHERE id=?",
-		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ?  , WHERE id=? ",
+		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
 		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
 		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
@@ -35,10 +33,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
 		getUserModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
+		replaceUser: "REPLACE INTO tblusers VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) WHERE user_id=?",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id= ?",
 		deleteDatasetItemsbyId: "DELETE FROM tblitems WHERE item_dataset_id=?",
 		lastInsertedId: "SELECT ? FROM ? ORDER BY ? DESC LIMIT 1"
 	};
+
+	var synchronizing = false;
+	var lastId = 0;
 
 	// Check if SQL.js has been loaded through AMD
 	var sql,db,db_online;
@@ -97,56 +99,99 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
     return true;
   }
 
-	function synchronizeDatasets(userId){
+	function synchronizeUser(userId, callback) {
+		var local_user = database.getQuery('getUser',[userId]);
+		database.getOnlineQuery("getUser", [userId], function(online_user) {
+			online_user = online_user[0];
+			if (local_user.length === 0) {
+				online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? val.toLocaleString() : val; });
+				database.executeQuery('addUser', online_user, true, false);
+			} else {
+				local_user = local_user[0];
+				var localTime = Date.parse(local_user.user_lastedited);
+				var onlineTime = Date.parse(online_user.user_lastedited);
+				var recent = localTime - onlineTime;
+				if (recent > 0) {
+					database.executeQuery('replaceUser',[local_user, online_user.user_id], false, true, function() {
+						callback();
+					});
+				} else if (recent < 0) {
+					database.executeQuery('replaceUser',[online_user, local_user.user_id], true, false);
+				}
+			}
+			callback();
+		});
+	}
+
+	function synchronizeDatasets(userId, callback) {
+			synchronizing = true;
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
+			var remotetolocaldatasets = [];
 			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
 				console.log(localdatasets);
 				console.log(remotedatasets);
 
+				for (var i=0; i<localdatasets.length;i++) {
+					if (!localdatasets[i].dataset_online) {
+						lastId = localdatasets[i].dataset_id;
+					}
+				}
+
 				// Compare local with online
 				for (var i=0; i< localdatasets.length; i++) {
 					if (!localdatasets[i].dataset_online) {
-						pushDatasetOnline(localdatasets[i]);
+						pushDatasetOnline(localdatasets[i], callback);
 					} else {
-						var remote = $.grep(remotedatasets, function(e){ return e.dataset_id === localdatasets[i].dataset_id; });
-						console.log(localdatasets[i].dataset_id);
-						if (synchronizeDataset(localdatasets[i],remote)) {
-							remotedatasets.splice(remote, 1);
+						var remote = $.grep(remotedatasets, function(e) { return e.dataset_id === localdatasets[i].dataset_id; });
+						if (remote.length !== 0) {
+							synchronizeDataset(localdatasets[i], remote);
 						}
 					}
 				}
 				// Compare online with local
-				for (var j=0 ;j<remotedatasets; j++){
-					if(localdatasets[i].dataset_id === remotedatasets[j].dataset_id) {
-						synchronizeDataset(localdatasets[i],remotedatasets[i]);
-						break;
-					}
-					if(j === remotedataset.length){
-						console.log(remote.dataset_id);
+				for (var j=0 ;j<remotedatasets.length; j++){
+					var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
+					if (remote.length === 0) {
+						pushDatasetLocal(remotedatasets[j]);
 					}
 				}
+				database.close();
+
 			});
 	}
 
-	function pushDatasetOnline(dataset) {
-		database.executeQuery('addDatasetAll', dataset, false, true);
+	function pushDatasetOnline(dataset, callback) {
+		var local_id = dataset.dataset_id;
+		dataset.dataset_online = 1;
+		var dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
+		database.executeQuery('addDataset', dataset, false, true);
+		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+			database.executeQuery('updateDatasetId', [id, local_id], true, false);
+			if (local_id==lastId) {
+				database.close();
+				callback();
+			}
+		});
+	}
+
+	function pushDatasetLocal(dataset) {
+		var dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? val.toLocaleString() : val; });
+		database.executeQuery('addDatasetAll', dataset, true, false);
 	}
 
 	function synchronizeDataset(local,remote){
 		var localTime = Date.parse(local.dataset_lastedited);
-		var onlineTime = Date.parse(remote.dataset_lastedited);
-		alert(localTime+" "+onlineTime);
-		// if (recent) {
-		// 	database.executeQuery('deleteDatasetbyId',[remote.dataset_id], false, true);
-		// 	database.executeQuery('addDatasetAll', local, false, true);
-		//
-		// 	database.executeQuery('deleteDatasetItemsbyId', [remote.dataset_id], false, true);
-		// } else {
-		// 	database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
-		// 	database.executeQuery('addDatasetAll', remote, true, false);
-		//
-		// 	database.executeQuery('deleteDatasetItemsbyId', [remote.dataset_id], false, true);
-		// }
+		var onlineTime = Date.parse(remote[0].dataset_lastedited);
+		var recent = localTime - onlineTime;
+		if (recent > 0) {
+			alert("Synchronizing to online for "+remote[0].dataset_id);
+			database.executeQuery('deleteDatasetbyId',[remote[0].dataset_id], false, true);
+			database.executeQuery('addDatasetAll', local, false, true);
+		} else if (recent < 0) {
+			alert("Synchronizing to local for "+remote[0].dataset_id);
+			database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
+			database.executeQuery('addDatasetAll', remote[0], true, false);
+		}
 	}
 
 	var database = {
@@ -189,9 +234,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		},
-		executeQuery : function (queryname, args, local = true, remote = true) {
+		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
 			var query = queries[queryname] ;
-			if (local){
+			if (local) {
 				db.run(query, args, function(err) {
 					onError(err);
 				});
@@ -199,7 +244,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			if (remote && database.online()) {
 				db_online.query(query, args, function(err, result) {
 					onError(err);
-					var insertId = result.insertId;
+					if (callback) {
+						callback();
+					}
 				});
 			}
 		},
@@ -256,8 +303,13 @@ define(['sqlite', 'app/config', 'jquery', 'app/lang'], function (sqlite, config,
 			var query = queries[queryname];
 			db.each(query,args, func);
 		},
-		synchronize : function(userId){
-			synchronizeDatasets(userId);
+		synchronize : function(userId, callback){
+			synchronizeDatasets(userId, function() {
+				synchronizeUser(userId, callback);
+			});
+		},
+		isSynchronizing: function() {
+			return synchronizing;
 		}
 	};
 	database.init();
