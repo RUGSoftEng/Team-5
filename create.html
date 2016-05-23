@@ -26,10 +26,10 @@
          <button type="button" class="btn btn-default" onclick="window.location='open.html'">
            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; <span class="text_navigation_open"></span>
          </button>
-         <button type="button" class="btn btn-default">
+         <button type="button" class="btn btn-default" disabled>
            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> <span class="text_navigation_download"></span>
          </button>
-         <button type="button" class="btn btn-default">
+         <button type="button" class="btn btn-default" disabled>
            <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> <span class="text_navigation_upload"></span>
          </button>
        </div>
@@ -38,17 +38,9 @@
 					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalProfile">
 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span data-replace="user_firstname"></span> <span data-replace="user_lastname"></span>
 					</button>
-					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalSettings">
-						<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-					</button>
-         <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-           <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
-         </button>
-         <ul class="dropdown-menu dropdown-menu-right">
-           <li><a href="#"><span class="text_general_quit"></span></a></li>
-           <li role="separator" class="divider"></li>
-           <li><a href="#"><span class="text_general_help"></span></a></li>
-         </ul>
+          <a href="index.html" class="btn btn-warning" title="Back to main screen">
+						<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
+					</a>
        </div>
      </div>
     </nav>
@@ -72,7 +64,7 @@
               <select id="datasetsubject" class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5">
                 <!-- Items are loaded in selectSubject.js  -->
               </select>
-							
+
 							<div id="newsubject" hidden="true">
 								<span class="text_label_customsubject"></span>:
 								<input id="customsubject" type="text" class="form-control" name="customsubject" data-parsley-subject-name="1" />

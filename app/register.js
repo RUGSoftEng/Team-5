@@ -5,7 +5,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     if(db.online()) {
       handleRegister();
     } else {
-      alert("you cannot register offline.\n please check your internet connection");
+      alert(lang("error_nointernet_register"));
     }
   });
 
@@ -66,9 +66,14 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
   function inputFieldExists(result) {
     return (result.length===0);
   }
-  
+
   $(document).ready(function(){
   	localisePage();
+
+    if (!db.online()) {
+      messages.show("#errors", lang("error_nointernet_register"))
+    }
+
     window.Parsley.addValidator('userName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyUsername", [value]);
@@ -78,7 +83,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
         en: lang("error_usernamenotunique")
       }
     });
-    
+
     window.Parsley.addValidator('emailName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyEmail", [value]);

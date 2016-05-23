@@ -27,8 +27,9 @@ define(['jquery', 'app/user', 'app/lang', 'app/string'], function ($, user, lang
         case "nointernet":
           message = lang("error_nointernetconnection");
           break;
-        default:
-          message = lang("message_default");
+        case "change_language":
+          message = lang("success_change_language");
+          break;
       }
       return message;
     },

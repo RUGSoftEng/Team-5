@@ -39,6 +39,7 @@ nav { }
 	#messages, #errors { display: none; }
   .stats { margin: 0 0 50px 0; }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
+	#learnForm .input-group { width: 100%; }
 
   form { }
    /* form input[type="submit"], form button {}
@@ -65,6 +66,10 @@ nav { }
       text-align:center;
       font:20pt bold;color:#fff
     }
+
+		.toggled #sidebar-logos {
+		  display: none;
+		}
 
 		.modal-content { background: #4b5261; }
 

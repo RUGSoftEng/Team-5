@@ -24,14 +24,10 @@
          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalProfile">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span data-replace="user_firstname"></span> <span data-replace="user_lastname"></span>
           </button>
-          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalSettings">
-            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-          </button>
          <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
            <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
          </button>
          <ul class="dropdown-menu dropdown-menu-right">
-           <li><a href="index.html"><span class="text_learning_pause"></span></a></li>
            <li><a href="index.html"><span class="text_learning_stop"></span></a></li>
            <li role="separator" class="divider"></li>
            <li><a href="#"><span class="text_general_help"></span></a></li>
@@ -44,7 +40,7 @@
         <div class="stats">
           <div class="row">
             <div class="col-md-2"></div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
               <h4><div class="glyphicon glyphicon-signal"></div> <span class="text_general_progress"></span>:</h4>
               <p>5/25 <span class="text_general_words"></span></p>
               <div class="progress">
@@ -52,8 +48,8 @@
                   20%
                 </div>
               </div>
-            </div>
-            <div class="col-md-4">
+            </div> -->
+            <div class="col-md-8">
               <h4><div class="glyphicon glyphicon-ok"></div> <span class="text_general_correct"></span>:</h4>
               <div id="progress-number"></div>
               <div class="progress">
@@ -63,7 +59,7 @@
           </div>
         </div>
         <div class="jumbotron">
-          <form action="#" method="post" onsubmit="return false;">
+          <form action="#" method="post" id="learnForm" onsubmit="return false;">
             <div id="question"></div>
             <div class="input-group input-group-lg">
               <input type="text" id="answer" class="form-control" aria-label="..." autofocus>

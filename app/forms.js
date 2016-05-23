@@ -25,7 +25,8 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
       }).on('form:submit', function() {
         return false;
       }).on('form:success', onSuccess);
-    }, saveDataset: function(formName, formItemId, callback) {
+    },
+    saveDataset: function(formName, formItemId, callback) {
       var name = getFormVal(formName, "input", "name");
       var language = getFormVal(formName, "select", "language");
       var subject = getFormVal(formName, "select", "subject");

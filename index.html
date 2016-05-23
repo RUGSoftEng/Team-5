@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
   	<link rel="stylesheet" href="./resources/css/custom.css">
   	<link rel="stylesheet" href="./resources/css/index.css">
-    <!-- Javascript libraries are added before the </body> tag  -->
+    <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -27,10 +27,10 @@
          <button type="button" class="btn btn-default" onclick="window.location='open.html'">
            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; <span class="text_navigation_open"></span>
          </button>
-         <button type="button" class="btn btn-default">
+         <button type="button" class="btn btn-default" disabled title="This option will be available on the next update.">
            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> <span class="text_navigation_download"></span>
          </button>
-         <button type="button" class="btn btn-default">
+         <button type="button" class="btn btn-default" disabled title="This option will be available on the next update.">
            <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> <span class="text_navigation_upload"></span>
          </button>
        </div>
@@ -47,7 +47,6 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
            <li><a href="#" id="logout"><span class="text_general_logout"></span></a></li>
-					 <li><a href="#"><span class="text_general_quit"></span></a></li>
            <li role="separator" class="divider"></li>
            <li><a href="#"><span class="text_general_help"></span></a></li>
          </ul>
@@ -68,7 +67,7 @@
       <div id="sidebar-logos">
           <img src="resources/images/university_groningen.png" />
           <br>
-          <img src="testlogo.png" />
+          <img src="resources/images/ruggedslimstampen.png" />
       </div>
 
       <!-- /#sidebar-wrapper -->
@@ -85,7 +84,7 @@
               </div>
               <!-- Clone layout -->
               <div class="dataset_item col-md-3 col-md-6" id="layout">
-                <div class="btn mybutton" data-id="{dataset_id}">               
+                <div class="btn mybutton" data-id="{dataset_id}">
                   <h3>{dataset_name}</h3>
                   <br>
                   <h4><span class="text_label_strength"></span>:</h4>
@@ -93,9 +92,9 @@
                     <div class="progress" style="width: 80%;">
                       <div class="progress-bar progress-bar-success progress-bar-stiped" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" style="width:100%;"></div>
                     </div>
-                  </center>                  
+                  </center>
                 </div>
-                <span class="glyphicon glyphicon-remove-sign gi-2x removebutton" id="removebutton"></span>                 
+                <span class="glyphicon glyphicon-remove-sign gi-2x removebutton" id="removebutton"></span>
               </div>
             </div>
           </div>
@@ -144,7 +143,7 @@
                 <div class="row">
                   <div class="col-sm-6">
 										<select id="language" class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
-											<!-- Items are loaded in selectLanguage.js  -->
+											<!-- Items are loaded in select.js  -->
 										</select>
 										<div class="clear"></div>
                   </div>
@@ -192,7 +191,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
 							<!--button type="button" class="btn btn-success" data-dismiss="modal"><span class="text_settings_buttonsave"></span></button-->
-							<input id="buttonsave" type="submit" name="save" class="btn btn-success submit saveSettings"/>
+							<input id="button_savesettings" type="submit" name="save" class="btn btn-success submit saveSettings"/>
 						</div>
 					</form>
         </div>

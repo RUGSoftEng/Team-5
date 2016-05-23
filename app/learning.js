@@ -84,12 +84,15 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   return factList;
 	}
 
-	function addTemporaryHintButton() { 
-	  $("#hintButton").click(function() {
-	    if (questions.hint()!==null)
-	      messages.showHint(questions.hint());
-	  });
-	}	
+	function addTemporaryHintButton() {
+    if (questions.hint()==="" || questions.hint()===undefined) {
+      $("#hintButton").hide();
+    } else {
+      $("#hintButton").click(function() {
+          messages.showHint(questions.hint());
+  	  });
+    }
+	}
 
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
@@ -100,9 +103,10 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     questions.initialize(factList);
   	questions.show();
 
+    addTemporaryHintButton();
+
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
-  addTemporaryHintButton();
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {

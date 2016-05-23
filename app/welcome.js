@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms) {
+define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date) {
 	//check if the user is logged in
   // if (!user.check()) {
   //   logout("logout_unknown_cookie");
@@ -23,7 +23,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
   }
 
 	function createSidebarElements(currentSubject, currentLanguage) {
-		var rows = db.getUnique('getModules', 'subject_name', 'language_name', []);
+		var rows = db.getUnique('getModules', 'subject_name', 'language_name', [user.getCookie('user_id')]);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#sidebar_ul').cloneLayout();
       newElement.replaceClone(["subject_id", "language_id", "subject_name", "language_name"],
@@ -71,6 +71,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		$("#username").prop("placeholder", lang("label_username"));
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+    $("#button_savesettings").prop("value", lang("button_savesettings"));
 	}
 
 	function getUserDataFromDatabase() {
@@ -87,13 +88,15 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 	// Script when the settings form is successful
 	forms.initializeForm('#settingsForm', function() {
 		var newLanguage = $("#language").val();
-		var userid = user.getCookie("user_id")
-		db.executeQuery("updateGUILanguage", [newLanguage, userid]);
-		user.setCookie(db.getQuery("getUser", [userid]));
-		db.close();
-		window.location = window.location; // refresh
+		var userid = user.getCookie("user_id");
+    var currentdate = date.formatDatetime(new Date(), true);
+		db.executeQuery("updateGUILanguage", [newLanguage, currentdate, userid], true, true, function() {
+      user.setCookie(db.getQuery("getUser", [userid]));
+  		db.close();
+  		window.location = "index.html?message=change_language"; // refresh
+    });
 	});
-
+  console.log(document.cookie);
 	localisePage();
 	$("#removebutton").click(function() {
 		console.log("close");

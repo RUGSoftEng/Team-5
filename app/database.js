@@ -21,7 +21,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ? WHERE id=? ",
-		updateGUILanguage : "UPDATE tblusers SET user_language = ? WHERE user_id = ?",
+		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
 		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
 		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
@@ -35,7 +35,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
-		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id",
+		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
 		replaceUser: "REPLACE INTO tblusers VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id= ?",
 		deleteDatasetItemsbyId: "DELETE FROM tblitems WHERE item_dataset_id=?",
@@ -185,7 +185,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		}
 	}
 
-	function initOlineDB(){
+	function initOnlineDB(){
 		if (database.online()) {
 			db_online = mysql.createConnection({
 				host     : config.constant("ONLINE_HOST"),
@@ -239,7 +239,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			}
 			if (remote && database.online()) {
 				if(db_online===undefined){
-					initOlineDB();
+					initOnlineDB();
 				}
 				db_online.query(query, args, function(err, result) {
 					onError(err);
@@ -247,6 +247,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 						callback();
 					}
 				});
+			} else {
+				if (callback) {
+					callback();
+				}
 			}
 		},
 		getQuery: function(queryname, args) {
@@ -260,7 +264,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		},
 		getOnlineQuery: function(queryname, args, callback) {
 			if(db_online===undefined){
-				initOlineDB();
+				initOnlineDB();
 			}
 			var query = queries[queryname];
 			db_online.query(query, args, function(err, rows, fields) {
@@ -288,7 +292,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		},
 		lastInsertIdOnline: function(table_name, row_id, callback) {
 			if(db_online===undefined){
-				initOlineDB();
+				initOnlineDB();
 			}
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
 			db_online.query(query, function(err, rows, fields) {
@@ -302,7 +306,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		},
 		synchronize : function(userId, callback){
 			if(db_online===undefined){
-				initOlineDB();
+				initOnlineDB();
 			}
 			synchronizeDatasets(userId, function() {
 				synchronizeUser(userId, callback);
