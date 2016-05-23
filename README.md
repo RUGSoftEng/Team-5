@@ -1,7 +1,7 @@
 # Learning team (Team-5)
 The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
 
-# How to run guide
+# Download program
 
 To run the program, simply head over to [http://rugsofteng.github.io/Team-5/](http://rugsofteng.github.io/Team-5/) and click the download button or select your desired program version. Once downloaded you have to unzip the package and you are ready to go!
 
