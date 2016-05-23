@@ -8,9 +8,9 @@
  */
 define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date) {
 	//check if the user is logged in
-  // if (!user.check()) {
-  //   logout("logout_unknown_cookie");
-  // }
+  if (!user.check()) {
+    logout("logout_unknown_cookie");
+  }
 
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
@@ -101,11 +101,8 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
   		window.location = "index.html?message=change_language"; // refresh
     });
 	});
-  console.log(document.cookie);
 	localisePage();
-	$("#removebutton").click(function() {
-		console.log("close");
-	});
+  
   var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
   var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 

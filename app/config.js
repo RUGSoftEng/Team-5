@@ -18,9 +18,10 @@ define(function (require) {
 		FEEDBACK_DELAY_CORRECT: 1,
 		FEEDBACK_DELAY_INCORRECT: 10,
 		/* Path to user database */
-		DATABASE_USER: __dirname + "/database/user.sqlite",
+		DATABASE_USER: "/database/user.sqlite",
 		/* Standard database when no user database is present */
-		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
+		DATABASE_SLIMSTAMPEN: "/database/slimstampen.sqlite",
+		ASAR: true,
 		ALGORITHM: "flashcard", // flashcard; slimstampen;
 		LANGUAGE: "en",
 		ONLINE_HOST: "db4free.net",
@@ -30,7 +31,15 @@ define(function (require) {
 		MESSAGES: "#messages",
 		ERRORS: "#errors"
 	};
-	
+
+	if (constants['ASAR']) {
+		constants['DATABASE_USER'] = "resources/app.asar.unpacked" + constants['DATABASE_USER'];
+		constants['DATABASE_SLIMSTAMPEN'] = "resources/app.asar.unpacked" + constants['DATABASE_SLIMSTAMPEN'];
+	} else {
+		constants['DATABASE_USER'] = __dirname + constants['DATABASE_USER'];
+		constants['DATABASE_SLIMSTAMPEN'] = __dirname + constants['DATABASE_SLIMSTAMPEN'];
+	}
+
 	return {
 		constant: function(name) {
 			return constants[name];

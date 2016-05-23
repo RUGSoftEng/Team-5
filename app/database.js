@@ -22,18 +22,18 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id=?",
 		deleteDatasets: "DELETE FROM tbldatasets WHERE 1",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
-		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength= ? WHERE id=? ",
+		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
 		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
 		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
 		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getDatasetItems : "SELECT dataset_items FROM tbldatasets WHERE dataset_id=?" ,
-		getGUILanguages : "SELECT * FROM tbllanguages WHERE language_gui = 1",
+		getGUILanguages : "SELECT * FROM tbllanguages WHERE language_gui=1",
 		getUserSubjects : "SELECT * FROM tblsubjects",
-    getUser : "SELECT * FROM tblusers where user_id= ? ",
-    getUserbyEmail : "SELECT * FROM tblusers where user_email= ?",
-    getUserbyUsername : "SELECT * FROM tblusers where user_name= ?",
+    getUser : "SELECT * FROM tblusers WHERE user_id=? ",
+    getUserbyEmail : "SELECT * FROM tblusers WHERE user_email=?",
+    getUserbyUsername : "SELECT * FROM tblusers WHERE user_name=?",
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
@@ -59,6 +59,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			fs.accessSync(path, fs.F_OK);
 			return true;
 		} catch (e) {
+			console.log(e);
 			return false;
 		}
 	}
@@ -80,14 +81,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	    }
 	    return true;
 	}
-  function isUniqueOld(unique_name, queryResult, row) {
-    for (i = 0; i<queryResult.length;i++) {
-      if (queryResult[i][unique_name]==row[unique_name]) {
-        return false;
-      }
-    }
-    return true;
-  }
+	
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
@@ -155,7 +149,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		dataset.dataset_online = 1;
 		var dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
 		database.executeQuery('addDataset', dataset, false, true);
-		alert("online");
 		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
 			database.executeQuery('updateDatasetId', [id, local_id], true, false);
 			if (local_id==lastId) {
@@ -215,8 +208,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 				read_database = fs.readFileSync(config.constant("DATABASE_SLIMSTAMPEN"));
 			}
 			db = new sql.Database(read_database);
-
-
 		},
 		save : function () {
 			var data = db.export();
