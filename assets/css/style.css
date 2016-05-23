@@ -438,6 +438,7 @@ footer {
 .landing-tips > div {
     padding: 0 10px;
     border-right: 1px solid #ddd;
+	margin-left: 0;
 }
 
     .landing-tips > div:last-child {
