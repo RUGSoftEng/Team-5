@@ -30,6 +30,9 @@ define(['jquery', 'app/user', 'app/lang', 'app/string'], function ($, user, lang
         case "change_language":
           message = lang("success_change_language");
           break;
+        case "success_delete_dataset":
+          message = lang("success_delete_dataset");
+          break;
       }
       return message;
     },

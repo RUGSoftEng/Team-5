@@ -36,7 +36,12 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 
 	function deleteDataset(newElement) {
 		newElement.on("click", ".removebutton", function() {
-			console.log("delete dataset");
+      var id = $(this).data("id");
+      $(this).parent().html("");
+			db.executeQuery("deleteDatasetbyId", [id], true, true, function() {
+        db.close();
+        messages.show("#messages", "success_delete_dataset");
+      })
 		});
 	}
 
