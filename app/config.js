@@ -21,7 +21,6 @@ define(function (require) {
 		DATABASE_USER: "/database/user.sqlite",
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: "/database/slimstampen.sqlite",
-		ASAR: true,
 		ALGORITHM: "flashcard", // flashcard; slimstampen;
 		LANGUAGE: "en",
 		ONLINE_HOST: "db4free.net",
@@ -32,12 +31,14 @@ define(function (require) {
 		ERRORS: "#errors"
 	};
 
-	if (constants['ASAR']) {
-		constants['DATABASE_USER'] = "resources/app.asar.unpacked" + constants['DATABASE_USER'];
-		constants['DATABASE_SLIMSTAMPEN'] = "resources/app.asar.unpacked" + constants['DATABASE_SLIMSTAMPEN'];
+	// Fix for compiled program of database
+	var dir = __dirname;
+	if (dir.indexOf("app.asar")!==-1) {
+		constants['DATABASE_USER'] = dir.replace("app.asar", "app.asar.unpacked") + constants['DATABASE_USER'];
+		constants['DATABASE_SLIMSTAMPEN'] = dir.replace("app.asar", "app.asar.unpacked") + constants['DATABASE_SLIMSTAMPEN'];
 	} else {
-		constants['DATABASE_USER'] = __dirname + constants['DATABASE_USER'];
-		constants['DATABASE_SLIMSTAMPEN'] = __dirname + constants['DATABASE_SLIMSTAMPEN'];
+		constants['DATABASE_USER'] = dir + constants['DATABASE_USER'];
+		constants['DATABASE_SLIMSTAMPEN'] = dir + constants['DATABASE_SLIMSTAMPEN'];
 	}
 
 	return {
