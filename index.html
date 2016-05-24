@@ -248,20 +248,20 @@
 				e.preventDefault();  //stop the browser from following
 				window.location.href = './executables/SlimStampen-linux-x64.zip';
 			}); 
-		  }else{
+		  } else {
 			  $('#downloadbox').text('Get SlimStampen for Linux 32-bit');
 			 	$('#downloadbox').click(function(e) {
 				e.preventDefault();  //stop the browser from following
 				window.location.href = './executables/SlimStampen-linux-ia32.zip';
 			}); 
-		  } else if (navigator.appVersion.indexOf("X11")!==-1) {
+		  }
+		} else if (navigator.appVersion.indexOf("X11")!==-1) {
 			// UNIX
-			$('#downloadbox').text('Get SlimStampen for Linux 32-bit');
+			$('#downloadbox').text('Get SlimStampen for Linux 64-bit');
 			 $('#downloadbox').click(function(e) {
 				e.preventDefault();  //stop the browser from following
-				window.location.href = './executables/SlimStampen-linux-ia32.zip';
+				window.location.href = './executables/SlimStampen-linux-x64.zip';
 			});
-		  }
 		} else {
 			$('#downloadbox').text('No OS detected');
 			$('#downloadbox').click(function(e) {
@@ -269,6 +269,7 @@
 				alert("Please download your desired app by click on \"Download SlimStampen for another platform\".");
 			});
 		}
+		
 	 }
   </script>
   <style>
