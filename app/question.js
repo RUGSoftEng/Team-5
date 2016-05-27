@@ -1,17 +1,24 @@
-define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang', 'app/keys'], function ($, messages, config, string, slimstampen,time,math, lang, keys) {
+define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang', 'app/keys','app/ready','app/database'], function ($, messages, config, string, slimstampen,time,math, lang, keys,ready,db) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
+  var backspaceUsed=0;
+  var backspacedFirstLetter=0;
+  var keyPressesCounter = 0;
 
   var itemsAnsweredCorrectly = 0;
   var answerWasCorrect;
+  var timeCreated = 0;
+
+  var correctAnswers = 0;
+  var totalAnswers = 0;
 
   var tutorialLength;
   var inTutorial = config.constant("TUTORIAL_MODE");
 
   var startTime = new Date();
   var firstKeyPress = 0;
-	var presentationDuration = 0;  
+	var presentationDuration = 0;
   var responseList = [];
 
   // Calculate the time difference in milliseconds
@@ -59,8 +66,8 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " " + lang("general_words") + "</p>" );
-    var percentageVal = math.percentage(itemsAnsweredCorrectly, totalLength);
+    $( "#progress-number" ).html( "<p>" + correctAnswers + "/" + totalAnswers + " " + lang("general_words") + "</p>" );
+    var percentageVal = math.percentage(correctAnswers, totalAnswers);
     $( "#progress-bar" ).html(percentageVal + "%")
       .attr("aria-valuenow", percentageVal)
       .css("width", percentageVal+"%");
@@ -82,8 +89,6 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
         break;
     }
     timeCreated = time.measure(startTime);
-    console.log("time created");
-    firstKeyPress = 0;
   }
 
   function showTutorialInstruction() {
@@ -143,16 +148,21 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 			correct: answerWasCorrect,
 			givenResponse: items[currentItemIndex].answer,
 			numberOfOptions: 0,
-			backspaceUsed: 0,
-			backspacedFirstLetter: 0,
-		}; 
+			backspaceUsed: backspaceUsed,
+			backspacedFirstLetter: backspacedFirstLetter,
+		};
 		console.log("time created, firstkeypress, presentationDuration");
 		console.log(timeCreated, firstKeyPress, presentationDuration);
-		newResponse = slimstampen.createResponse(items, responseList, responseInput)    
+		newResponse = slimstampen.createResponse(items, responseList, responseInput)
 		responseList.push(newResponse);
+    resetTimers();
 		// Use slimstampen method to determine next question
 		var newQuestion = slimstampen.getNextFact(timeCreated, items, responseList);
+    console.log(newQuestion);
 		currentItemIndex = items.indexOf(newQuestion);
+    console.log(items);
+    console.log(currentItemIndex);
+
   }
 
   function  isAlphanumeric(key){
@@ -160,18 +170,33 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
 	$('#answer').on('keyup', function(e) {
-		console.log(firstKeyPress);
-		if (!firstKeyPress) {
+    keyPressesCounter++;
+    backspaceUsed = (e.keyCode === keys.BACKSPACE);
+    backspacedFirstLetter = (e.keyCode=== keys.BACKSPACE && keyPressesCounter===2);
+    console.log(backspaceUsed+" "+ backspacedFirstLetter);
+		if (firstKeyPress===0 && e.keyCode !== keys.ENTER) {
 			start = startTime.getTime() + timeCreated;
 			firstKeyPress = time.measureWithoutDate(start);
-		}	
-		if (firstKeyPress && e.keyCode == keys.ENTER) {
-			console.log("pres dur");
-			console.log(firstKeyPress);
-			start = startTime.getTime() + timeCreated;
-			presentationDuration = time.measureWithoutDate(start);
-		}						
-	});	  
+      keyPressesCounter = 1;
+		}
+	});
+
+  function resetTimers() {
+    firstKeyPress = 0;
+    presentationDuration = 0;
+    backspaceUsed = 0;
+    backspacedFirstLetter = 0;
+  }
+
+  function updateResponseList(){
+    db.getQuery();
+  }
+
+  ready.on(function(){
+    $("#quit_session").click(function() {
+        console.log('testing');
+    });
+  });
 
   return {
     initialize: function(factList) {
@@ -203,11 +228,15 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       * is smaller that the allowed margin of error, then the user gets the feedback
       * that it was almost correct.
       */
+
       var input = document.getElementById("answer").value;
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
       answerWasCorrect = (difference === 0);
+      totalAnswers++;
+
       if (answerWasCorrect) {
+        correctAnswers++;
         handleScoreIncrease();
         messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
@@ -224,13 +253,15 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     hint: function() {
         return items[currentItemIndex].hint;
     },
-		resetTimers: function() {
-			firstKeyPress = 0;
-			presentationDuration = 0;
-		},		
-
 		printTimers: function() {
 			console.log(firstKeyPress);
-		}    
+		},
+    calculatePresentationDuration(){
+      start = startTime.getTime() + timeCreated;
+      presentationDuration = time.measureWithoutDate(start);
+    },
+    getResponseList: function(){
+      return responseList;
+    }
   };
 });

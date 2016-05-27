@@ -21,6 +21,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id=?",
 		deleteDatasets: "DELETE FROM tbldatasets WHERE 1",
+		updateDatasetResponseList: "UPDATE tbldatasets SET dataset_responselist=? WHERE dataset_id=?",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
 		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
@@ -81,7 +82,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	    }
 	    return true;
 	}
-	
+
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
