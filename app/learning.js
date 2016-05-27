@@ -59,7 +59,14 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     };
     return newList;
   }
-
+	
+	// Function for obtaining the GET data from the url
+  function $_GET(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp(q+'=([^&]*)','i');
+    return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
+  }
+	
 	// Write localisable text to the page
 	string.fillinTextClasses();
 	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
@@ -97,7 +104,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
-    var datasetId = url.substring(url.indexOf('?')+1);
+    var datasetId = $_GET('id');
     var dataset_items = db.getQuery("getDatasetItems",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
     questions.initialize(factList);
@@ -105,7 +112,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
     addTemporaryHintButton();
 
-    timer.startTimer(".timer", config.constant("TIME_LIMIT"));
+    timer.startTimer(".timer", $_GET('timelimit'));
   });
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
