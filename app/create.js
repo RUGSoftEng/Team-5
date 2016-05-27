@@ -84,12 +84,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			$("#datasetsubject").data("subject", id);
 			
 			if (id == 0) {
-				console.log("show");
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
 				$("#customsubject").attr("data-parsley-subject-name", "1");
 			} else {
-				console.log("hide");
 				$("#newsubject").attr("hidden", true);
 				$("#customsubject").removeAttr("required");
 				$("#customsubject").removeAttr("data-parsley-subject-name");
