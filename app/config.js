@@ -23,6 +23,7 @@ define(function (require) {
 		DATABASE_SLIMSTAMPEN: "/database/slimstampen.sqlite",
 		ALGORITHM: "flashcard", // flashcard; slimstampen;
 		LANGUAGE: "en",
+		ENGLISH: 1, // id of the english language
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
 		ONLINE_DATABASE: "enricdz148_slim",

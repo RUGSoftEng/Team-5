@@ -47,6 +47,13 @@ define(['jquery', 'app/user', 'app/lang', 'app/string'], function ($, user, lang
       if (element.length) {
         element.hide();
       }
+    },
+    remove: function(name) {
+      var element = $(name);
+      if (element.length) {
+        element.html("");
+        element.hide();
+      }
     }
   };
   return messages;

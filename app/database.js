@@ -37,6 +37,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
     getLanguages: "SELECT * FROM tbllanguages",
+		getLanguageByName: "SELECT * FROM tbllanguages WHERE language_short=?",
 		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
 		replaceUser: "REPLACE INTO tblusers VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		lastInsertedId: "SELECT ? FROM ? ORDER BY ? DESC LIMIT 1",
@@ -81,7 +82,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	    }
 	    return true;
 	}
-	
+
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
@@ -187,6 +188,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			});
 
 			db_online.connect(function(err) {
+				console.log("Online database connected.");
 				if (err) {
 					console.error('Error connecting: ' + err.stack);
 					return;

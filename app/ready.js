@@ -10,5 +10,15 @@ define(['jquery'], function($) {
         $("#loadFrame").fadeOut(300);
       }, 1);
     }
+    ,showLoading: function(message=false, callback) {
+      if (message)
+        $("#loadFrame").children("h1").html(message);
+  		$("#loadFrame").fadeIn(300, callback);
+    }, changeLoadMessage(message) {
+      $("#loadFrame").children("h1").html(message);
+    },
+    hideLoading: function() {
+      $("#loadFrame").hide();
+    }
   };
 });
