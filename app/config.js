@@ -21,7 +21,7 @@ define(function (require) {
 		DATABASE_USER: "/database/user.sqlite",
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: "/database/slimstampen.sqlite",
-		ALGORITHM: "flashcard", // flashcard; slimstampen;
+		ALGORITHM: "slimstampen", // flashcard; slimstampen;
 		LANGUAGE: "en",
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",

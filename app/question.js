@@ -1,4 +1,4 @@
-define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang'], function ($, messages, config, string, slimstampen,time,math, lang) {
+define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang', 'app/keys'], function ($, messages, config, string, slimstampen,time,math, lang, keys) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
@@ -11,6 +11,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
   var startTime = new Date();
   var firstKeyPress = 0;
+	var presentationDuration = 0;  
   var responseList = [];
 
   // Calculate the time difference in milliseconds
@@ -159,8 +160,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
 	$('#answer').on('keyup', function(e) {
-		//console.log(learning.returnWaitingForEnter);
-		//learning.waitingForEnter();
+		console.log(firstKeyPress);
 		if (!firstKeyPress) {
 			start = startTime.getTime() + timeCreated;
 			firstKeyPress = time.measureWithoutDate(start);
