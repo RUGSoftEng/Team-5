@@ -67,6 +67,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
 			var id = forms.getFormVal("#uploadForm", "select", "subject");
+			$("#datasetsubject").data("subject", id);
 			
 			if (id == 0) {
 				console.log("show");
@@ -101,11 +102,18 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				// Save dataset
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
-	      var subject = forms.getFormVal(form, "select", "subject");
+	      var subject = $("#datasetsubject").data("subject");
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = date.formatDatetime(new Date(), true);
 
 				var dataset_items = createDatasetItems(saveData);
+				
+				// Create custom subject if appropriate
+				if (subject == 0) {
+					subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
+					var newsubjectname = $("#customsubject").val();
+					db.executeQuery('addSubject' , [subject, newsubjectname]);
+				}
 
 				if (db.online()) {
 					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
