@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready) {
+define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready', 'app/time'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready, time) {
 	//check if the user is logged in
   if (!user.check()) {
     logout("logout_unknown_cookie");
@@ -50,7 +50,13 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
   function navigateToLearn(newElement) {
     newElement.on("click", ".mybutton", function() {
       var id = $(this).data("id");
-      window.location = "learn.html?"+id;
+			var datasetName = db.getQuery("getRecentDataset", [id, 1, 0])[0].dataset_name;
+			
+			$("#modalDatasetName").html(datasetName);
+			$("#startLearning").click(function() {
+				var timelimit = time.minutesToSeconds($("#learningTimeSlider").val());
+				window.location = "learn.html?id="+id+"&timelimit="+timelimit;
+			});
    	});
   }
 
@@ -98,6 +104,35 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     var result = db.getQuery("getLanguageByName", language);
     return (result.length!==0) ? result.language_id : config.constant("ENGLISH");
   }
+	
+	function initialiseLearningTimeInput() {
+		var initialTime = time.secondsToMinutes(config.constant("TIME_LIMIT"));
+		var slider = $("#learningTimeSlider");
+		var input = $("#learningTimeInput");
+		
+		slider.val(initialTime);
+		input.val(initialTime);
+		
+		// Connect the slider to the input field
+		slider.on('input', function() {
+			input.val(slider.val());
+		});
+		// Connect the input field to the slider
+		input.on('input', function() {
+			// User cannot give input that is out of bounds
+			if (parseInt(input.val()) > parseInt(input.prop('max'))) {
+				input.val(input.prop('max'));
+			}
+			slider.val(input.val());
+		});
+		// When input field is left blank, reset
+		input.on('change', function() {
+			if (input.val() == "") {
+				input.val(initialTime);
+				slider.val(input.val());
+			}
+		});
+	}
 
   ready.on(function() {
     // Initiate select boxes
@@ -115,6 +150,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
       });
   	});
   	localisePage();
+		initialiseLearningTimeInput();
 
     var currentSubject = ($_GET('subject')) ? $_GET('subject') : getFirstUserSubject();
     var currentLanguage = ($_GET('language')) ? $_GET('language') : languageId(config.constant("LANGUAGE"));

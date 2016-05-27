@@ -84,7 +84,7 @@
               </div>
               <!-- Clone layout -->
               <div class="dataset_item col-md-3 col-md-6" id="layout">
-                <div class="btn mybutton" data-id="{dataset_id}">
+                <div class="btn mybutton" data-id="{dataset_id}" data-toggle="modal" data-target="#modalLearning">
                   <h3>{dataset_name}</h3>
                   <br>
                   <h4><span class="text_label_strength"></span>:</h4>
@@ -101,6 +101,44 @@
         </div>
       </div>
   	</div>
+		<!-- Dataset learning popup -->
+    <div id="modalLearning" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 id="modalDatasetName" class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+            <form id="learningForm" role="form" data-parsley-validate="">
+              <div class="form-group">
+								<p>Please select the time of your learning session:</p> 
+								<div class="row">
+                  <div class="col-sm-1">
+										<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+									</div>
+									<div class="col-sm-7">
+										<input type="range" id="learningTimeSlider" min="1" max="60">
+									</div>
+									<div class="col-sm-2">
+										<input type="number" id="learningTimeInput" min="1" max="60" style="color:black;width:100%">
+									</div>
+									<div class="col-sm-2">
+										minutes
+									</div>
+								</div>
+              </div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
+							<input id="startLearning" type="submit" name="startLearning" class="btn btn-success submit startLearning" value="Start learning"/>
+						</div>
+					</form>
+        </div>
+
+      </div>
+    </div>
     <!-- Profile -->
     <div id="modalProfile" class="modal fade" role="dialog">
       <div class="modal-dialog">
