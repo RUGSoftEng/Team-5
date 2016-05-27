@@ -7,7 +7,7 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select'], function (lan
         .text(row.language_name));
     });
   }
-	
+
 	// Load GUI languages from database
   function loadGUILanguages(item){
     db.each("getGUILanguages", "", function (row,err) {
@@ -16,10 +16,15 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select'], function (lan
         .text(row.language_name));
     });
   }
-	
+
     // Load subjects from database
   function loadSubjects(item){
     var rows = db.getQuery('getUserSubjects',[]);
+    // Add an option for adding custom subject
+		$(item).append($("<option></option>")
+        .attr("value", 0)
+        .text(lang("placeholder_customsubject")));
+      $(item).append($('<option data-divider="true"></option>'));
     // Add an option for each subject to the dropdown
     for (var i = 0 ; i < rows.length; i++) {
       var row = rows[i];
@@ -27,11 +32,6 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select'], function (lan
         .attr("value",row.subject_id)
         .text(row.subject_name));
     }
-		// Add an option for adding custom subject
-		$(item).append($('<option data-divider="true"></option>'));
-		$(item).append($("<option></option>")
-        .attr("value", 0)
-        .text(lang("placeholder_customsubject")));
   }
 
   return {

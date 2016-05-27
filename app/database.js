@@ -18,25 +18,28 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
 		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addSubject : "INSERT OR IGNORE INTO tblsubjects (subject_id, subject_name) VALUES (?, ?)",
+		addSubject : "INSERT INTO tblsubjects (subject_id, subject_name, subject_user, subject_online) VALUES (?, ?, ?, ?)",
+		addSubjectOnline : "INSERT INTO tblsubjects (subject_name, subject_user, subject_online) VALUES (?, ?, ?)",
 		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id=?",
 		deleteDatasets: "DELETE FROM tbldatasets WHERE 1",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
+		updateDatasetSubjectId : "UPDATE tbldatasets SET dataset_subject=? WHERE dataset_subject=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
 		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
-		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
-		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
+		updateSubjectId : "UPDATE tblsubjects SET subject_id=?, subject_online=1 WHERE subject_id=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
 		getDatasetItems : "SELECT dataset_items FROM tbldatasets WHERE dataset_id=?" ,
 		getGUILanguages : "SELECT * FROM tbllanguages WHERE language_gui=1",
-		getUserSubjects : "SELECT * FROM tblsubjects",
     getUser : "SELECT * FROM tblusers WHERE user_id=? ",
+		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
+		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
     getUserbyEmail : "SELECT * FROM tblusers WHERE user_email=?",
     getUserbyUsername : "SELECT * FROM tblusers WHERE user_name=?",
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
+		getUserSubjects : "SELECT * FROM tblsubjects WHERE subject_user=0 OR subject_user=?",
     getLanguages: "SELECT * FROM tbllanguages",
 		getLanguageByName: "SELECT * FROM tbllanguages WHERE language_short=?",
 		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
@@ -110,6 +113,36 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		});
 	}
 
+	function synchronizeSubjects(userId, callback) {
+		var localsubjects = database.getQuery('getUserSubjects',[userId]);
+		database.getOnlineQuery('getUserSubjects', [userId], function(remotesubjects) {
+			console.log(remotesubjects);
+			for (var i=0; i<localsubjects.length;i++) {
+				if (!localsubjects[i].subject_online) {
+					lastId = localsubjects[i].subject_id;
+				}
+			}
+			if (lastId==0) {
+				callback();
+			}
+
+			// Compare local with online
+			for (var i=0; i< localsubjects.length; i++) {
+				if (!localsubjects[i].subject_online) {
+					pushSubjectOnline(localsubjects[i], callback);
+				}
+			}
+			// Compare online with local
+			for (var j=0 ;j<remotesubjects.length; j++){
+				var remote = $.grep(localsubjects, function(e) { return e.subject_id === remotesubjects[j].subject_id; });
+				if (remote.length === 0) {
+					pushSubjectLocal(remotesubjects[j]);
+				}
+			}
+			database.close();
+		});
+	}
+
 	function synchronizeDatasets(userId, callback) {
 			synchronizing = true;
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
@@ -139,11 +172,25 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 				for (var j=0 ;j<remotedatasets.length; j++){
 					var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
 					if (remote.length === 0) {
-						pushDatasetLocal(remotedatasets[j]);
+						pushDatasetLocal(remote);
 					}
 				}
 				database.close();
 			});
+	}
+
+	function pushSubjectOnline(subject, callback) {
+		var local_id = subject.subject_id;
+		subject.subject_online = 1;
+		var subject = $.map(subject, function(val, key) { if (key!="subject_id") { return val; } });
+		database.executeQuery('addSubjectOnline', subject, false, true);
+		database.lastInsertIdOnline('tblsubjects', 'subject_id', function (id) {
+			database.executeQuery('updateSubjectId', [id, local_id], true, false);
+			database.executeQuery('updateDatasetSubjectId', [id, local_id], true, false);
+			if (local_id==lastId) {
+				callback();
+			}
+		});
 	}
 
 	function pushDatasetOnline(dataset, callback) {
@@ -162,6 +209,11 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	function pushDatasetLocal(dataset) {
 		var dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
 		database.executeQuery('addDatasetAll', dataset, true, false);
+	}
+
+	function pushSubjectLocal(subject) {
+		subject = $.map(subject, function(val) { return val; });
+		database.executeQuery('addSubject', subject, true, false);
 	}
 
 	function synchronizeDataset(local,remote){
@@ -301,8 +353,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			if(db_online===undefined){
 				initOnlineDB();
 			}
-			synchronizeDatasets(userId, function() {
-				synchronizeUser(userId, callback);
+			synchronizeSubjects(userId, function() {
+				synchronizeDatasets(userId, function() {
+					synchronizeUser(userId, callback);
+				});
 			});
 		}
 	};

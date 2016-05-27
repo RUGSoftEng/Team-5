@@ -98,7 +98,7 @@ define({
 		answer_almost: "Bijna! Verwachte antwoord: <b>%s</b> (%s letter(s) verschil)",
 		answer_correct: "Goed gedaan!",
 		answer_wrong: "Incorrect! Verwachte antwoord: <b>%s</b>",
-		create_additem: "Plaats voor vraag toevoegen",
+		create_additem: "Extra vraag invoegen",
 		create_busycreating: "Dataset wordt gecreëerd...",
 		create_buttoncreate: "Dataset aanmaken",
 		create_header: "Creëer een nieuwe dataset",

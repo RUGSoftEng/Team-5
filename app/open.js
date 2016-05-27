@@ -24,7 +24,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
@@ -63,12 +63,12 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				en: lang("error_subjectnamenotunique")
 			}
 		});
-		
+
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
 			var id = forms.getFormVal("#uploadForm", "select", "subject");
 			$("#datasetsubject").data("subject", id);
-			
+
 			if (id == 0) {
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
@@ -78,6 +78,16 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				$("#customsubject").removeAttr("required");
 				$("#customsubject").removeAttr("data-parsley-subject-name");
 			}
+		});
+	}
+
+	function saveDatasetOnline(data, language, subject) {
+		db.executeQuery("addDataset", data, false, true);
+		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+			data.unshift(id);
+			db.executeQuery("addDatasetAll", data, true, false);
+			db.close();
+			window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 		});
 	}
 
@@ -105,22 +115,24 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 	      var currentdate = date.formatDatetime(new Date(), true);
 
 				var dataset_items = createDatasetItems(saveData);
-				
-				// Create custom subject if appropriate
-				if (subject == 0) {
-					subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
-					var newsubjectname = $("#customsubject").val();
-					db.executeQuery('addSubject' , [subject, newsubjectname]);
-				}
 
 				if (db.online()) {
-					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
-					db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], true, false);
-						db.close();
-						window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
-					});
+					if (subject == 0) {
+						var newsubjectname = $("#customsubject").val();
+						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
+						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
+							db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
+							saveDatasetOnline([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], language, subject);
+						});
+					} else {
+						saveDatasetOnline([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], language, subject);
+					}
 				} else {
+					if (subject == 0) {
+						subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
+						var newsubjectname = $("#customsubject").val();
+						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);
+					}
 					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], true, false);
 					db.close();
 					window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;

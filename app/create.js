@@ -41,12 +41,19 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
-	function saveDatasetsLocal(data, form) {
+	function saveDatasetOnline(data, form, subject) {
+		db.executeQuery("addDataset", data, false, true);
+		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+			data.unshift(id);
+			saveDatasetsLocal(data, form, subject);
+		});
+	}
+
+	function saveDatasetsLocal(data, form, subject) {
 		db.executeQuery("addDatasetAll", data, true, false);
 		db.close();
 
 		var language = forms.getFormVal(form, "select", "language");
-		var subject = $("#datasetsubject").data("subject");
 		window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
 	}
 
@@ -66,7 +73,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		var text = user.get(user_info);
 		$(this).html(text);
 	});
-	
+
 	function handleCustomSubject() {
 		window.Parsley.addValidator('subjectName', {
 			validateString: function(value, requirement) {
@@ -77,12 +84,12 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				en: lang("error_subjectnamenotunique")
 			}
 		});
-		
+
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
 			var id = forms.getFormVal("#createForm", "select", "subject");
 			$("#datasetsubject").data("subject", id);
-			
+
 			if (id == 0) {
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
@@ -122,8 +129,6 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	      var subject = $("#datasetsubject").data("subject");
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = date.formatDatetime(new Date(), true);
-				
-				
 
 				var dataset_items = [];
 				for (i = 0; i<formItemId; i++) {
@@ -135,26 +140,23 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				}
 				dataset_items = JSON.stringify(dataset_items);
 	      if (db.online()) {
-					// Create custom subject if appropriate
 					if (subject == 0) {
-						subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
 						var newsubjectname = $("#customsubject").val();
-						db.executeQuery('addSubject' , [subject, newsubjectname]);
+						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
+						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
+							db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
+							saveDatasetOnline([user_id, name, language, subject_id, 0, 0, 1, currentdate, currentdate, dataset_items], form, subject_id);
+						});
+					} else {
+						saveDatasetOnline([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], form, subject);
 					}
-					
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
-	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], form);
-	        });
 	      } else {
-					// Create custom subject if appropriate
 					if (subject == 0) {
 						subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
 						var newsubjectname = $("#customsubject").val();
-						db.executeQuery('addSubject' , [subject, newsubjectname]);
+						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);
 					}
-					
-	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form);
+	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form, subject);
 	      }
 			});
 		});
