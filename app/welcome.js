@@ -78,7 +78,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		$("#username").prop("placeholder", lang("label_username"));
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
-    $("#button_savesettings").prop("value", lang("button_savesettings"));
+    $("#button_savesettings").prop("value", lang("settings_buttonsave"));
 	}
 
 	function getUserDataFromDatabase() {
