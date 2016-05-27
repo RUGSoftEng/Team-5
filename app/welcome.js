@@ -50,9 +50,11 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
   function navigateToLearn(newElement) {
     newElement.on("click", ".mybutton", function() {
       var id = $(this).data("id");
-			var datasetName = db.getQuery("getRecentDataset", [id, 1, 0])[0].dataset_name;
+			var dataset = db.getQuery("getRecentDataset", [id, 1, 0])[0];
 			
-			$("#modalDatasetName").html(datasetName);
+			$("#datasetName").html(dataset.dataset_name);
+			$("#datasetVersionDate").html(dataset.dataset_lastedited);
+			
 			$("#startLearning").click(function() {
 				var timelimit = time.minutesToSeconds($("#learningTimeSlider").val());
 				window.location = "learn.html?id="+id+"&timelimit="+timelimit;
@@ -85,6 +87,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
     $("#button_savesettings").prop("value", lang("settings_buttonsave"));
+		$("#startLearning").prop("value", lang("dataset_startlearning"));
 	}
 
 	function getUserDataFromDatabase() {
