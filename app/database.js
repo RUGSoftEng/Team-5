@@ -116,7 +116,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	function synchronizeSubjects(userId, callback) {
 		var localsubjects = database.getQuery('getUserSubjects',[userId]);
 		database.getOnlineQuery('getUserSubjects', [userId], function(remotesubjects) {
-			console.log(remotesubjects);
 			for (var i=0; i<localsubjects.length;i++) {
 				if (!localsubjects[i].subject_online) {
 					lastId = localsubjects[i].subject_id;
@@ -172,7 +171,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 				for (var j=0 ;j<remotedatasets.length; j++){
 					var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
 					if (remote.length === 0) {
-						pushDatasetLocal(remote);
+						pushDatasetLocal(remotedatasets[j]);
 					}
 				}
 				database.close();
