@@ -81,6 +81,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
         break;
     }
     timeCreated = time.measure(startTime);
+    console.log("time created");
     firstKeyPress = 0;
   }
 
@@ -133,21 +134,44 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
   // Update the response list in order to determine next question
   function nextQuestionSlimStampen(){
-    newResponse = {
-      factId: items[currentItemIndex].id,
-      timeCreated: timeCreated,
-      number: 0,
-      data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
-    };
-    responseList.push(newResponse);
-    // Use slimstampen method to determine next question
-    var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
-    currentItemIndex = items.indexOf(newQuestion);
+		responseInput = {
+			presentationStartTime: timeCreated,
+			reactionTime: firstKeyPress,
+			presentationDuration: presentationDuration,
+			factId: items[currentItemIndex].id,
+			correct: answerWasCorrect,
+			givenResponse: items[currentItemIndex].answer,
+			numberOfOptions: 0,
+			backspaceUsed: 0,
+			backspacedFirstLetter: 0,
+		}; 
+		console.log("time created, firstkeypress, presentationDuration");
+		console.log(timeCreated, firstKeyPress, presentationDuration);
+		newResponse = slimstampen.createResponse(items, responseList, responseInput)    
+		responseList.push(newResponse);
+		// Use slimstampen method to determine next question
+		var newQuestion = slimstampen.getNextFact(timeCreated, items, responseList);
+		currentItemIndex = items.indexOf(newQuestion);
   }
 
   function  isAlphanumeric(key){
     return key >= config.constant("0") && key <= config.constant("z");
   }
+
+	$('#answer').on('keyup', function(e) {
+		//console.log(learning.returnWaitingForEnter);
+		//learning.waitingForEnter();
+		if (!firstKeyPress) {
+			start = startTime.getTime() + timeCreated;
+			firstKeyPress = time.measureWithoutDate(start);
+		}	
+		if (firstKeyPress && e.keyCode == keys.ENTER) {
+			console.log("pres dur");
+			console.log(firstKeyPress);
+			start = startTime.getTime() + timeCreated;
+			presentationDuration = time.measureWithoutDate(start);
+		}						
+	});	  
 
   return {
     initialize: function(factList) {
@@ -199,6 +223,14 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
     hint: function() {
         return items[currentItemIndex].hint;
-    }
+    },
+		resetTimers: function() {
+			firstKeyPress = 0;
+			presentationDuration = 0;
+		},		
+
+		printTimers: function() {
+			console.log(firstKeyPress);
+		}    
   };
 });

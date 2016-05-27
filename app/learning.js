@@ -33,6 +33,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     prepareAnswerField();
     questions.show();
     waitingForEnter = false;
+		questions.resetTimers();    
   }
 
   function handleEnter() {
