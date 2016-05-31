@@ -5,9 +5,8 @@
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<script type="text/javascript">var electronsudo = require("electron-sudo");</script>
-<script type="text/javascript">var sha256 = require("sha256");</script>
-    <script type="text/javascript">var fs = require("fs");</script>
+    <script type="text/javascript">var electronsudo = require("electron-sudo");</script>
+    <script type="text/javascript">var fs = require("fs"); var bcrypt = require('bcryptjs');</script>
     <script data-main="app/loginpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
@@ -21,17 +20,7 @@
 				</ul>
 
 				<div class="btn-group right-menu" role="group">
-					<button type="button" class="btn btn-default">
-						<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-					</button>
-					<button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="index.html"><span class="text_general_quit"></span></a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="#"><span class="text_general_help"></span></a></li>
-					</ul>
+
 				</div>
 			</div>
 		</nav>
@@ -50,6 +39,9 @@
 							<div class="panel-body text-info">
 								<form role="form" id="loginForm" data-parsley-validate="">
                   <div id="messages" class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  </div>
+                  <div id="errors" class="alert alert-danger" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   </div>
 									<div class="form-group">
@@ -73,7 +65,7 @@
 										<a href="register.html"><span class="text_login_register"></span></a>
 									</div>
 									<div class="col-sm-4 text-center">
-										<img src="testlogo.png" />
+										<img src="resources/images/ruggedslimstampen.png" />
 									</div>
 								</div>
 							</div>

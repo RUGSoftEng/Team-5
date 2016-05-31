@@ -1,8 +1,12 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string'], function ($, config, db, parsley, lang, string) {
-  
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages'], function ($, config, db, parsley, lang, string,hash,date, async, messages) {
+
   $("form").submit(function(e){
     e.preventDefault();
-    handleRegister();
+    if(db.online()) {
+      handleRegister();
+    } else {
+      alert(lang("error_nointernet_register"));
+    }
   });
 
   function handleRegister(inputs){
@@ -13,16 +17,61 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var confirm_password = $("#confirm_password").val();
     var email = $("#email").val();
     var gender = $("#gender").val();
-    var dateofbirth = $("#dateofbirth").val();
     var gen = (gender === "male") ? 1:0;
-    var date = dateofbirth.split("-");
-    dateofbirth = date[2]+"-"+date[1]+"-"+date[0];
+    var dateofbirth = $("#dateofbirth").val();
+    var hashed_password = hash.generate(password);
+    var datetime = date.formatDatetime(new Date(), true);
+    var field;
 
-    db.executeQuery("addUser",[email,username,gen,dateofbirth,sha256(password), firstname, lastname]);
-    db.close();
-    window.location="login.html?message=register";
-
+    db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
+      if (checkUsername(rows)) {
+        db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
+          if (checkEmail(rows)) {
+            addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
+          }
+        });
+      }
+    });
   }
+
+  function addUserLocalAndOnline(username, data) {
+    db.executeQuery("addUser", data, false, true);
+    db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
+      if (db.online()) {
+        data[0] = rows[0].user_id;
+        db.executeQuery("addUser", data, true, false);
+        db.close();
+        window.location="login.html?message=success_register";
+      } else {
+        alert(lang("error_nointernet"));
+      }
+    });
+  }
+
+  function checkUsername(result) {
+    field = $("#username").parsley();
+    if (result.length === 0) {
+      field.removeError('error');
+      return true;
+    } else {
+      field.removeError('error');
+      field.addError('error', {message: lang("error_usernamenotunique")});
+      return false;
+    }
+  }
+
+  function checkEmail(result) {
+    field = $("#email").parsley();
+    if (result.length === 0) {
+      field.removeError('error');
+      return true;
+    } else {
+      field.removeError('error');
+      field.addError('error', {message: lang("error_emailnotunique")});
+      return false;
+    }
+  }
+
   function localisePage() {
 		string.fillinTextClasses();
 		$("#username").prop("placeholder", lang("label_username"));
@@ -36,9 +85,14 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
   function inputFieldExists(result) {
     return (result.length===0);
   }
-  
+
   $(document).ready(function(){
   	localisePage();
+
+    if (!db.online()) {
+      messages.show("#errors", lang("error_nointernet_register"));
+    }
+
     window.Parsley.addValidator('userName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyUsername", [value]);
@@ -48,7 +102,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
         en: lang("error_usernamenotunique")
       }
     });
-    
+
     window.Parsley.addValidator('emailName', {
       validateString: function(value, requirement) {
         var result = db.getQuery("getUserIdbyEmail", [value]);

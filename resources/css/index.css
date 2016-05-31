@@ -40,6 +40,26 @@
 	background-color: #000;
   }
 
+  .gi-2x{font-size: 2em;}
+	.gi-3x{font-size: 3em;}
+	.gi-4x{font-size: 4em;}
+	.gi-5x{font-size: 5em;}
+
+	.removebutton {
+		position: absolute;
+		top:5px;
+		right:20px;			
+		opacity: 0;
+		transition: opacity 0.5s ease;
+	}
+
+	.dataset_item:hover .removebutton {
+		opacity: 1;
+	}
+	.removebutton:hover {
+		cursor: pointer;
+	}
+
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
@@ -142,6 +162,10 @@
     height: 65px;
     font-size: 18px;
     line-height: 60px;
+}
+
+.nav-left{
+  direction:ltr !important;
 }
 
 .sidebar-nav > .sidebar-brand a {

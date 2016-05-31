@@ -1,10 +1,12 @@
 # Learning team (Team-5)
 The problem of learning facts is that this process is boring, and that the learned information is forgotten if facts are not rehearsed at the right moment. This affects not only students, who could have trouble learning and often forget the material over time, but also teachers, who have difficulty presenting the material to be learned in an interesting fashion, and rely on their students remembering the material taught to them. The bottom line of the problem is that the method students use for learning, if any, is inefficient. 
 
-# How to run guide
+# Download program
+
+To run the program, simply head over to [http://rugsofteng.github.io/Team-5/](http://rugsofteng.github.io/Team-5/) and click the download button or select your desired program version. Once downloaded you have to unzip the package and you are ready to go!
 
 # Download source files
-To run the program you have to download all files from GitHub and run the program in Electron by following these steps:
+To run the program yourself you have to download all files from GitHub and run the program in Electron by following these steps:
 ## Clone the repository or download the source code
 Clone this repository using the following command in a Git bash and run it in Electron.
 
@@ -20,26 +22,7 @@ In order to compile the code, you need NodeJS (https://nodejs.org/en/) to be ins
 npm install
 npm start
 ```
-# Downloading executables
-When we make the executables available as downloads, you can download the zipfile with the executable for your platform of choice from the Github website and install the app this way. 
 
-### Windows
-Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-win32-ia32/_ and run the file SlimStampen.exe.
-
-### Apple Mac OSX
-Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-darwin-x64/_ and run the file SlimStampen.app.
-
-### Linux
-Download all files as ZIP from GitHub, unzip the files on your computer, open the folder _/executables/SlimStampen-linux-ia32/_ and right-click on the file SlimStampen and open Properties.
-In the Permissions tab, check the box to allow the file to run as a program.
-Close the Properties window and execute the file SlimStampen.
-
-In case you use the Terminal, use the following commands after changing directories:
-
-```
-chmod u+x ./SlimStampen
-./SlimStampen
-```
 # Contributers
 Hichem Bouakaz, Sander de Jong, Sibren van Vliet & Enrico Werkema
 

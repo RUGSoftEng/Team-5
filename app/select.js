@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley, bootstrapSelect) {
+define(['app/lang', 'app/database', 'jquery', 'bootstrap-select'], function (lang, db, $, parsley, bootstrapSelect) {
     // Load languages from database
   function loadLanguages(item){
     db.each("getLanguages", "", function (row,err) {
@@ -7,6 +7,16 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
         .text(row.language_name));
     });
   }
+	
+	// Load GUI languages from database
+  function loadGUILanguages(item){
+    db.each("getGUILanguages", "", function (row,err) {
+      $(item).append($("<option></option>")
+        .attr("value",row.language_short)
+        .text(row.language_name));
+    });
+  }
+	
     // Load subjects from database
   function loadSubjects(item){
     var rows = db.getQuery('getUserSubjects',[]);
@@ -17,6 +27,11 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
         .attr("value",row.subject_id)
         .text(row.subject_name));
     }
+		// Add an option for adding custom subject
+		$(item).append($('<option data-divider="true"></option>'));
+		$(item).append($("<option></option>")
+        .attr("value", 0)
+        .text(lang("placeholder_customsubject")));
   }
 
   return {
@@ -25,6 +40,9 @@ define(['app/database', 'jquery', 'bootstrap-select'], function (db, $, parsley,
         case 'languages':
           loadLanguages(item);
           break;
+				case 'gui_languages':
+					loadGUILanguages(item);
+					break;
         case 'subjects':
           loadSubjects(item);
           break;

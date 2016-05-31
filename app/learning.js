@@ -8,7 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/messages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -48,15 +48,15 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   function formatFactList(items) {
     var newList = [];
-    items.forEach(function(item) {
+    for (var i in items) {
       newItem = {
-        id: item.item_id,
-        text: item.item_question,
-        answer: item.item_answer,
-        hint: item.item_hint
+        id: items[i].id,
+        text: items[i].text,
+        answer: items[i].answer,
+        hint: items[i].hint
       };
       newList.push(newItem);
-    });
+    }
     return newList;
   }
 
@@ -84,25 +84,29 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   return factList;
 	}
 
-	function addTemporaryHintButton() { 
-	  $("#hintButton").click(function() {
-	    if (questions.hint()!=="")
-	      messages.showHint(questions.hint());
-	  });
-	}	
+	function addTemporaryHintButton() {
+    if (questions.hint()) {
+      $("#hintButton").click(function() {
+          messages.showHint(questions.hint());
+  	  });
+    } else {
+      $("#hintButton").hide();
+    }
+	}
 
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
-    var datasetId = getDatasetIdFromURL(url);
-    var factList = retrieveDataSet(datasetId);
-
+    var datasetId = url.substring(url.indexOf('?')+1);
+    var dataset_items = db.getQuery("getDatasetItems",[datasetId]);
+    var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
     questions.initialize(factList);
   	questions.show();
 
+    addTemporaryHintButton();
+
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
   });
-  addTemporaryHintButton();
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {

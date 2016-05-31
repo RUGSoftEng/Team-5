@@ -28,6 +28,8 @@ requirejs.config({
       "electron-cookies": "electron-cookies/src/index",
       i18n: "../lib/i18n",
       nls: "../nls/lang",
-      printf: "sprintf-js/dist/sprintf.min"
+      printf: "sprintf-js/dist/sprintf.min",
+      mysql: "mysql/index",
+      dateformat: "dateformat/lib/dateformat"
     }
 });

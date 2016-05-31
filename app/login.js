@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user', 'app/lang', 'app/string', 'app/ready'], function ($, config, db, parsley, forms, user, lang, string, ready) {
+define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready'], function ($, config, db, user, lang, string, messages, parsley, forms, hash, ready) {
 
 	function getPermissionsForDatabase() {
 		if (navigator.appVersion.indexOf("Mac")!=-1){
@@ -19,15 +19,6 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 						env : {
 							'VAR' : 'VALUE'
 						}
-
-						// ... and all other subprocess options described here
-						// https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
-					},
-					on : function (ps) {
-						ps.stdout.on('data', function (data) {});
-						setTimeout(function () {
-							ps.kill();
-						}.bind(ps), 50000);
 					}
 				}
 			};
@@ -35,46 +26,12 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 		}
 	}
 
-	// Function for displaying messages on main screen
-	function showMessage(message) {
-		var element = $("#messages");
-		switch(message) {
-		case "create_dataset":
-			message = lang("success_createdataset");
-			break;
-		case "open_dataset":
-			message = lang("success_opendataset");
-			break;
-		case "login":
-			message = lang("success_login");
-			break;
-		case "logout":
-			message = lang("success_logout");
-			break;
-		case "logout_unknown_cookie":
-			message = lang("error_logout");
-			break;
-		case "register":
-			message = lang("success_register");
-			break;
-		default:
-			message = lang("message_default");
-		}
-		element.append("<p>"+message+"</p>").show();
-	}
-
 	// Function for obtaining the GET data from the url
-	function $_GET(q,s) {
-		s = (s) ? s : window.location.search;
-		var re = new RegExp(q+'=([^&]*)','i');
-		return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
-	}
-
-	function hideMessage() {
-		var element = $("#messages");
-		element.hide();
-	}
-
+  function $_GET(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp(q+'=([^&]*)','i');
+    return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
+  }
 	function getUser() {
 		var user = $("#username").val().toLowerCase();
 		var query = user.indexOf("@") != -1 ? "getUserbyEmail" : "getUserbyUsername";
@@ -83,42 +40,74 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/forms','app/user
 	}
 
 	function handleLogin() {
-		var result = getUser();
-		user.setCookie(result);
-		window.location = "index.html?message=login";
+		var username = $("#username").val().toLowerCase();
+		var password = $("#password").val();
+		var field;
+		if (db.online()) {
+			db.getOnlineQuery("getUserbyUsername", [username], function(result) {
+				if (checkUsername(result)) {
+					if (checkPassword(password, result)) {
+						user.setCookie(result);
+						synchronizeAndLogin();
+					}
+				}
+			});
+		} else {
+			var result = db.getQuery("getUserbyUsername", [username]);
+			if (checkUsername(result)) {
+				if (checkPassword(password, result)) {
+					user.setCookie(result);
+					login();
+				}
+			}
+		}
 	}
 
-	forms.initializeForm('#loginForm', handleLogin);
+	function checkUsername(result) {
+		field = $("#username").parsley();
+		if (result.length !== 0) {
+			return true;
+		} else {
+			field.removeError('error');
+			field.addError('error', {message: lang("error_usernameincorrect")});
+			return false;
+		}
+	}
+
+	function checkPassword(password, result) {
+		field.removeError('error');
+		field = $("#password").parsley();
+		if (hash.verify(password,result[0].user_password) ) {
+			return true;
+		} else {
+			field.removeError('error');
+			field.addError('error', {message: lang("error_passwordincorrect")});
+			return false;
+		}
+	}
+
+	function synchronizeAndLogin() {
+		db.synchronize(user.getCookie('user_id'), function() {
+			db.close();
+			login();
+		});
+	}
+
+	function login() {
+		window.location = "index.html?message=success_login";
+	}
+
+	var form = '#loginForm';
+	forms.initialize(form);
+	forms.onSuccess(form, handleLogin);
 
 	if ($_GET('message')) {
-		showMessage($_GET('message'));
+		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
 	}
 
-	window.Parsley.addValidator('userName', {
-		validateString : function (value) {
-			var result = getUser();
-			return (result.length!==0);
-		},
-		messages : {
-			en : lang("error_usernameincorrect")
-		}
-	});
-
-	window.Parsley.addValidator('password', {
-		validateString : function (value) {
-			var password = $("#password").val();
-
-			var result = getUser();
-			return (result.length!==0 && sha256(password) === result[0].user_password);
-		},
-		messages : {
-			en : lang("error_passwordincorrect")
-		}
-	});
-
-	if (user.check()) {
-		window.location = "index.html?message=login_automatic";
-	}
+	// if (user.check()) {
+	// 	window.location = "index.html?message=login_automatic";
+	// }
 
 	// Write localisable text to the page
 	string.fillinTextClasses();

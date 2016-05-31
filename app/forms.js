@@ -1,55 +1,69 @@
 // General functions for forms
 
-define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley'], function ($, db, date, select, parsley) {
-	function getFormVal(parentName, formType, formName) {
-	return $(parentName).find(formType + '[name="' + formName + '"]').val();
-	}
+define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user'], function ($, db, date, select, parsley, user) {
+  var parsleyInitiated = false;
 
-	var parsleyInitiated = false;
+  function saveDatasetItems(formItems, id) {
+    for (i = 0; i<formItems; i++) {
+      var question = getItemVal("question", i);
+      var answer = getItemVal("answer", i);
+      var hint = getItemVal("hint", i);
+      hint = (hint==="undefined") ? "" : hint;
+      db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+    }
+  }
 
-	var forms =  {
-		getItemVal: function(formName, formIndex) {
-			return $("#items input[name='" + formName + formIndex + "']").val();
-			},
-			getFormVal: function(parentName, formType, formName) {
-			return $(parentName).find(formType + '[name="' + formName + '"]').val();
-			}, 
-			getItemsFromCreateForm: function(id, formItemId) {
-	    	for (i = 0; i<formItemId; i++) {
-	      		var question = forms.getItemVal("question", i);
-	      		var answer = forms.getItemVal("answer", i);
-			    var hint = forms.getItemVal("hint", i);
-			    hint = (hint==="undefined") ? "" : hint;
+  function saveDatasetOnlineAndLocal(formItems, data) {
+    db.executeQuery("addDataset", data, false, true);
+    db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+      data.unshift(id);
+      db.executeQuery("addDatasetLocal", data, true, false);
+      saveDatasetItems(formItems, id);
+      db.close();
+      callback();
+    });
+  }
 
-	      	console.log(i);
+  var forms = {
+    getItemVal: function(formName, formIndex) {
+      return $("#items input[name='" + formName + formIndex + "']").val();
+    },
+    getFormVal: function(parentName, formType, formName) {
+      return $(parentName).find(formType + '[name="' + formName + '"]').val();
+    },
+    initialize: function(formName, onSuccess) {
+      var parsley = $(formName).parsley();
+      parsley.on('field:validated', function() {
+        // Initiate form error and success handling
+        var ok = $('.parsley-error').length === 0;
+        $('.bs-callout-info').toggleClass('hidden', !ok);
+        $('.bs-callout-warning').toggleClass('hidden', ok);
 
-	      	db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-	    	}
-		db.close();  
-		},
-	    initializeForm: function(formName, onSuccess) {
-	      var parsley = $(formName).parsley();
-	      window.Parsley.on('field:validated', function() {
-	        // Initiate form error and success handling
-	        var ok = $('.parsley-error').length === 0;
-	        $('.bs-callout-info').toggleClass('hidden', !ok);
-	        $('.bs-callout-warning').toggleClass('hidden', ok);
+        if (!parsleyInitiated) {
+          select.parsleyErrors();
+          parsleyInitiated = true;
+        }
+      }).on('form:submit', function() {
+        return false;
+      });
+    },
+    onSuccess: function (formName, callback) {
+      var parsley = $(formName).parsley();
+      parsley.on('form:success', callback);
+    },
+    saveDataset: function(formName, formItemId, callback) {
+      var name = getFormVal(formName, "input", "name");
+      var language = getFormVal(formName, "select", "language");
+      var subject = getFormVal(formName, "select", "subject");
+      var user_id = user.getCookie('user_id');
+      var currentdate = new Date();
 
-	        if (!parsleyInitiated) {
-	          select.parsleyErrors();
-	          parsleyInitiated = true;
-	        }
-	      }).on('form:submit', function() {
-	        return false;
-	      }).on('form:success', onSuccess);
-	    }, saveDataset: function(formName) {
-	      var name = getFormVal(formName, "input", "name");
-	      var language = getFormVal(formName, "select", "language");
-	      var subject = getFormVal(formName, "select", "subject");
-	      var currentdate = new Date();
-
-	      db.executeQuery("addDataset", [0, name, language, subject, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
-		}
-	};
-	return forms;
+      if (db.online()) {
+        saveDatasetOnlineAndLocal(formItemId, [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
+      } else {
+        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 0, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
+      }
+    }
+  };
+  return forms;
 });

@@ -1,30 +1,35 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async, lang, string, user) {
+define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user', 'app/date'], function (db, $, bootstrap, parsley, select, forms, ready, async, lang, string, user, date) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
 
 	// Function for saving all items in the dataset
-	function saveDatasetItemsIntoDatabase(data,id) {
+	function createDatasetItems(data) {
+		data = JSON.parse(data);
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
+		var dataset_items = [];
 
 		$.each(output[sheetName], function (i, item) {
 			var question = output[sheetName][i].question;
 			var answer = output[sheetName][i].answer;
 			var hint = (output[sheetName][i].hint === null) ? "" : output[sheetName][i].hint;
-			db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+			dataset_items.push({"id": i, "text": question, "answer": answer, "hint": hint});
 		});
+
+		return JSON.stringify(dataset_items);
 	}
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#customsubject").prop("placeholder", lang("label_customsubject"));
 		$("#buttonsave").prop("value", lang("open_buttonsave"));
 	}
 	function getUserDataFromDatabase() {
@@ -48,6 +53,35 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		});
 	}
 
+	function handleCustomSubject() {
+		window.Parsley.addValidator('subjectName', {
+			validateString: function(value, requirement) {
+				var result = db.getQuery("getSubjectByName", [value]);
+				return result.length === 0;
+			},
+			messages: {
+				en: lang("error_subjectnamenotunique")
+			}
+		});
+
+		// Display the input for custom subject only if appropriate
+		$("#datasetsubject").change(function() {
+			var id = forms.getFormVal("#uploadForm", "select", "subject");
+
+			if (id === 0) {
+				console.log("show");
+				$("#newsubject").attr("hidden", false);
+				$("#customsubject").attr("required", "");
+				$("#customsubject").attr("data-parsley-subject-name", "1");
+			} else {
+				console.log("hide");
+				$("#newsubject").attr("hidden", true);
+				$("#customsubject").removeAttr("required");
+				$("#customsubject").removeAttr("data-parsley-subject-name");
+			}
+		});
+	}
+
 	function checkCorrectnessFile() {
 		window.Parsley.addValidator('fileXlsx', {
 			validateString: function(_value, maxSize, parsleyInstance) {
@@ -58,27 +92,41 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				en: lang("error_unsupportedfiletype")
 			}
 		});
-	}	
+	}
 
-	function getFormVal(parentName, formType, formName) {
-    	return $(parentName).find(formType + '[name="' + formName + '"]').val();
-  	}
-
+	function saveDatasetOnlineAndLocal(language, subject, data) {
+		db.executeQuery("addDataset", data, false, true);
+		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+			data.unshift(id);
+			db.executeQuery("addDatasetAll", data, true, false);
+			db.close();
+			window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+		});
+	}
 
 	function evaluateInputOfForm() {
-		forms.initializeForm('#uploadForm', function() {
+		var form = '#uploadForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
 			showLoading(function () {
 				var form = '#uploadForm';
-				forms.saveDataset(form);
-				// Save all items of the dataset
-				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-				saveDatasetItemsIntoDatabase(JSON.parse(saveData), id);
-				db.close();
-				var language = getFormVal(form, "select", "language");
-				var subject = getFormVal(form, "select", "subject");
-				window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
+				var name = forms.getFormVal(form, "input", "name");
+	      var language = forms.getFormVal(form, "select", "language");
+	      var subject = forms.getFormVal(form, "select", "subject");
+	      var user_id = user.getCookie('user_id');
+	      var currentdate = date.formatDatetime(new Date(), true);
+
+				var dataset_items = createDatasetItems(saveData);
+
+				if (db.online()) {
+					saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items]);
+				} else {
+					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], true, false);
+					db.close();
+					window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+				}
 			});
-		});		
+		});
 	}
 
 	function highlightUploadOnDrag() {
@@ -87,7 +135,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		}).on("drop", function() {
 			$("#xlf").removeClass("dragging");
 		});
-	}	
+	}
 
 	function preventOpenOnDrag() {
 		document.addEventListener('dragover',function(event) {
@@ -96,19 +144,20 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		    return false;
 			}
 	  	},false);
-	}	
+	}
 
 	function initiateUploadBox() {
 		var xlf = document.getElementById('xlf');
 		if (xlf.addEventListener) {
 			xlf.addEventListener('change', handleFile, false);
 		}
-	}	
+	}
 
 	ready.on(function() {
 		localisePage();
 		getUserDataFromDatabase();
 		checkIfDatasetExists();
+		handleCustomSubject();
 		checkCorrectnessFile();
 		evaluateInputOfForm();
 

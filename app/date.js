@@ -1,7 +1,10 @@
-define([], function () {
+define(["dateformat"], function (dateFormat) {
     return {
-        dateToDATETIME: function(date) {
-            return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+        formatDatetime: function(date, localise=false) {
+            return dateFormat(date, "yyyy-mm-dd HH:mm:ss", localise);
+        },
+        format: function(val, options) {
+          return dateFormat(val, options, true);
         }
     };
 });

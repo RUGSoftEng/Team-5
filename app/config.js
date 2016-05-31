@@ -7,6 +7,23 @@
  * Initialization of variables and constants.
  */
 define(function (require) {
+
+	function addDirectory() {
+		if (__dirname.indexOf("app.asar")!==-1) {
+			return directoryCompiledProgram();
+		} else {
+			return directoryLocalProgram();
+		}
+	}
+
+	function directoryLocalProgram() {
+		return __dirname;
+	}
+
+	function directoryCompiledProgram() {
+		return __dirname.replace("app.asar", "app.asar.unpacked");
+	}
+
 	var constants = {
 		NUMBER_TUTORIAL_QUESTIONS: 3,
 		/* Margin of error accepted by the Levenstein function */
@@ -15,21 +32,22 @@ define(function (require) {
 		/* Time limit for learning sessions in seconds */
 		TIME_LIMIT: 600,
 		/* Time before the next item is presented while learning */
-		FEEDBACK_DELAY_CORRECT: 0.5,
+		FEEDBACK_DELAY_CORRECT: 1,
 		FEEDBACK_DELAY_INCORRECT: 10,
 		/* Path to user database */
-		DATABASE_USER: __dirname + "/database/user.sqlite",
+		DATABASE_USER: addDirectory() + "/database/user.sqlite",
 		/* Standard database when no user database is present */
-		DATABASE_SLIMSTAMPEN: __dirname + "/database/slimstampen.sqlite",
+		DATABASE_SLIMSTAMPEN: addDirectory() + "/database/slimstampen.sqlite",
 		ALGORITHM: "flashcard", // flashcard; slimstampen;
-		LANGUAGE: "nl",
+		LANGUAGE: "en",
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
 		ONLINE_DATABASE: "enricdz148_slim",
-		ONLINE_PASSWORD: "exVhqZJas"
+		ONLINE_PASSWORD: "exVhqZJas",
+		MESSAGES: "#messages",
+		ERRORS: "#errors",
+		CONTACT: "d.h.van.rijn@rug.nl"
 	};
-
-
 
 	return {
 		constant: function(name) {

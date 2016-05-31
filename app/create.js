@@ -6,7 +6,7 @@
  * Description:
  */
 
-define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/keys'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user,keys) {
+define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'bootstrap', 'app/select', 'app/forms', 'app/ready', 'app/clone', 'electron-cookies', 'app/user', 'app/keys', 'app/date'], function (lang, string, config, db, $, bootstrap, select, forms, ready, clone, cookies, user,keys,date) {
 	var numberOfFormItems = 0;
 	var formItemId = 0;
 
@@ -35,18 +35,26 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		formItemId++;
 	}
 
-
-
 	// Function for showing the user the system is loading
 	function showLoading(onSuccess) {
 		$("#loadFrame").children("h1").html(lang("create_busycreating"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
 
-  	function localisePage() {
+	function saveDatasetsLocal(data, form) {
+		db.executeQuery("addDatasetAll", data, true, false);
+		db.close();
+
+		var language = forms.getFormVal(form, "select", "language");
+		var subject = forms.getFormVal(form, "select", "subject");
+		window.location = "index.html?message=success_createdataset&language="+language+"&subject="+subject;
+	}
+
+	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
 		$("#datasetsubject").prop("title", lang("placeholder_subject"));
+		$("#customsubject").prop("placeholder", lang("label_customsubject"));
 		$("#buttoncreate").prop("value", lang("create_buttoncreate"));
 		$("#inputquestion").prop("placeholder", lang("label_question"));
 		$("#inputanswer").prop("placeholder", lang("label_answer"));
@@ -58,7 +66,6 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		var text = user.get(user_info);
 		$(this).html(text);
 	});
-	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
 	ready.on(function() {
 		localisePage();
@@ -76,17 +83,35 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
     function buildDatasetSubjectString(form, select, language)  {
       var subject = forms.getFormVal(form, select, subject);
       return subject;
-    }    
-		// Script when the form is successful
-		forms.initializeForm('#createForm', function() {
+    }
+
+		var form = "#createForm";
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
 			showLoading(function() {
-				var form = "#createForm";
-				forms.saveDataset(form);
-				var id = db.lastInsertRowId("tbldatasets", "dataset_id");
-        forms.getItemsFromCreateForm(id, formItemId);
-				var language = buildDatasetLanguageString(form, "select", "language");
-	      var subject = buildDatasetSubjectString;
-				window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+				var name = forms.getFormVal(form, "input", "name");
+	      var language = forms.getFormVal(form, "select", "language");
+	      var subject = forms.getFormVal(form, "select", "subject");
+	      var user_id = user.getCookie('user_id');
+	      var currentdate = date.formatDatetime(new Date(), true);
+
+				var dataset_items = [];
+				for (i = 0; i<formItemId; i++) {
+					var question = forms.getItemVal("question", i);
+					var answer = forms.getItemVal("answer", i);
+					var hint = forms.getItemVal("hint", i);
+					hint = (hint==="undefined") ? "" : hint;
+					dataset_items.push({"id": i, "text": question, "answer": answer, "hint": hint});
+				}
+				dataset_items = JSON.stringify(dataset_items);
+	      if (db.online()) {
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
+	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], form);
+	        });
+	      } else {
+	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form);
+	      }
 			});
 		});
 
