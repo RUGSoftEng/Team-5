@@ -151,7 +151,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			} else {
 				var remote = $.grep(remotedatasets, function(e) { return e.dataset_id === localdatasets[i].dataset_id; });
 				if (remote.length !== 0) {
-					synchronizeDataset(localdatasets[i], remote);
+					synchronizeDataset(localdatasets[i], remote[0]);
 				}
 			}
 		}
@@ -184,19 +184,27 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		database.executeQuery('addDatasetAll', dataset, true, false);
 	}
 
-	function synchronizeDataset(local,remote){
+	function synchronizeDataset(local, remote){
 		var localTime = Date.parse(local.dataset_lastedited);
-		var onlineTime = Date.parse(remote[0].dataset_lastedited);
+		var onlineTime = Date.parse(remote.dataset_lastedited);
 		var recent = localTime - onlineTime;
 		if (recent > 0) {
-			local = $.map(local, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
-			database.executeQuery('deleteDatasetbyId',[remote[0].dataset_id], false, true);
-			database.executeQuery('addDatasetAll', local, false, true);
+			replaceDatasetOnline(local, remote);
 		} else if (recent < 0) {
-			remote = $.map(remote[0], function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
-			database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
-			database.executeQuery('addDatasetAll', remote, true, false);
+			replaceDatasetLocal(local, remote);
 		}
+	}
+
+	function replaceDatasetOnline(local, remote) {
+		local = $.map(local, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
+		database.executeQuery('deleteDatasetbyId',[remote.dataset_id], false, true);
+		database.executeQuery('addDatasetAll', local, false, true);
+	}
+
+	function replaceDatasetLocal(local, remote) {
+		remote = $.map(remote, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
+		database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
+		database.executeQuery('addDatasetAll', remote, true, false);
 	}
 
 	function initOnlineDBIfRequired() {
