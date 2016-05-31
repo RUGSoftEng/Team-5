@@ -71,6 +71,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error);
 		}
 	}
+	
 	function isUnique(unique_name1, unique_name2, queryResult, row) {
 	    for (i = 0; i<queryResult.length;i++) {
 	      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
@@ -83,25 +84,39 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
-			online_user = online_user[0];
 			if (local_user.length === 0) {
-				online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
-				database.executeQuery('addUser', online_user, true, false);
+				saveUserOnline(online_user[0]);
 			} else {
-				local_user = local_user[0];
-				var localTime = Date.parse(local_user.user_lastedited);
-				var onlineTime = Date.parse(online_user.user_lastedited);
-				var recent = localTime - onlineTime;
-				if (recent > 0) {
-					local_user = $.map(local_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
-					database.executeQuery('replaceUser', local_user, false, true, function() {
-						callback();
-					});
-				} else if (recent < 0) {
-					online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
-					database.executeQuery('replaceUser', online_user, true, false);
-				}
+				compareUsers(local_user[0], online_user[0], callback);
 			}
+			callback();
+		});
+	}
+
+	function compareUsers(local_user, online_user, callback) {
+		var localTime = Date.parse(local_user.user_lastedited);
+		var onlineTime = Date.parse(online_user.user_lastedited);
+		var recent = localTime - onlineTime;
+		if (recent > 0) {
+			replaceUserLocal(local_user, callback);
+		} else if (recent < 0) {
+			replaceUserOnline(online_user);
+		}
+	}
+
+	function saveUserOnline(online_user) {
+		online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
+		database.executeQuery('addUser', online_user, true, false);
+	}
+
+	function replaceUserOnline(online_user) {
+		online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
+		database.executeQuery('replaceUser', online_user, true, false);
+	}
+
+	function replaceUserLocal(local_user, callback) {
+		local_user = $.map(local_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
+		database.executeQuery('replaceUser', local_user, false, true, function() {
 			callback();
 		});
 	}
