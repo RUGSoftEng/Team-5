@@ -90,7 +90,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
   	localisePage();
 
     if (!db.online()) {
-      messages.show("#errors", lang("error_nointernet_register"))
+      messages.show("#errors", lang("error_nointernet_register"));
     }
 
     window.Parsley.addValidator('userName', {

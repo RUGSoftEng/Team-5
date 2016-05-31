@@ -41,7 +41,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 			db.executeQuery("deleteDatasetbyId", [id], true, true, function() {
         db.close();
         messages.show("#messages", lang("success_delete_dataset"));
-      })
+      });
 		});
 	}
 

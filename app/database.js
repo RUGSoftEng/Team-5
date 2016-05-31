@@ -125,7 +125,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
 			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
 				lastId = getLatestNonSynchronizedDatasetId(localdatasets);
-				if (lastId==0) {
+				if (lastId === 0) {
 					callback();
 				}
 				synchronizeLocalDatasets(localdatasets, remotedatasets, callback);
@@ -145,11 +145,13 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	}
 
 	function synchronizeLocalDatasets(localdatasets, remotedatasets, callback) {
-		for (var i=0; i< localdatasets.length; i++) {
+		var i;
+		var getLocalFromRemote = function(e) { return e.dataset_id === localdatasets[i].dataset_id; };
+		for (i = 0; i< localdatasets.length; i++) {
 			if (!localdatasets[i].dataset_online) {
 				pushDatasetOnline(localdatasets[i], callback);
 			} else {
-				var remote = $.grep(remotedatasets, function(e) { return e.dataset_id === localdatasets[i].dataset_id; });
+				var remote = $.grep(remotedatasets, getLocalFromRemote);
 				if (remote.length !== 0) {
 					synchronizeDataset(localdatasets[i], remote[0]);
 				}
@@ -158,8 +160,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	}
 
 	function synchronizeOnlineDatasets(localdatasets, remotedatasets) {
-		for (var j=0 ;j<remotedatasets.length; j++){
-			var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
+		var j;
+		var getRemoteFromLocal = function(e) { return e.dataset_id === remotedatasets[j].dataset_id; };
+		for (j = 0; j<remotedatasets.length; j++){
+			var remote = $.grep(localdatasets, getRemoteFromLocal);
 			if (remote.length === 0) {
 				pushDatasetLocal(remotedatasets[j]);
 			}
@@ -169,7 +173,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	function pushDatasetOnline(dataset, callback) {
 		var local_id = dataset.dataset_id;
 		dataset.dataset_online = 1;
-		var dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
+		dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
 		database.executeQuery('addDataset', dataset, false, true);
 		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
 			database.executeQuery('updateDatasetId', [id, local_id], true, false);
@@ -180,7 +184,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	}
 
 	function pushDatasetLocal(dataset) {
-		var dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
+		dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
 		database.executeQuery('addDatasetAll', dataset, true, false);
 	}
 

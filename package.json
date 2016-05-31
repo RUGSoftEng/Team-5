@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "An application for learning all kinds of subjects",
   "main": "main.js",
+  "jshintConfig": {
+    "esversion": 6
+  },
   "scripts": {
     "start": "electron main.js",
     "pretest": "jshint ./tests && jshint ./app",

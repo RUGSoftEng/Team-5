@@ -5,7 +5,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 
 	// Function for saving all items in the dataset
 	function createDatasetItems(data) {
-		var data = JSON.parse(data);
+		data = JSON.parse(data);
 		var output = to_json(data);
 		var sheetName = Object.keys(output)[0];
 		var dataset_items = [];
@@ -68,7 +68,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		$("#datasetsubject").change(function() {
 			var id = forms.getFormVal("#uploadForm", "select", "subject");
 
-			if (id == 0) {
+			if (id === 0) {
 				console.log("show");
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");

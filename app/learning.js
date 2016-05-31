@@ -56,7 +56,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
         hint: items[i].hint
       };
       newList.push(newItem);
-    };
+    }
     return newList;
   }
 
