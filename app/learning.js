@@ -85,12 +85,12 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 	}
 
 	function addTemporaryHintButton() {
-    if (questions.hint()==="" || questions.hint()===undefined) {
-      $("#hintButton").hide();
-    } else {
+    if (questions.hint()) {
       $("#hintButton").click(function() {
           messages.showHint(questions.hint());
   	  });
+    } else {
+      $("#hintButton").hide();
     }
 	}
 
