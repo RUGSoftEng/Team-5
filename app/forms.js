@@ -3,6 +3,16 @@
 define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user'], function ($, db, date, select, parsley, user) {
   var parsleyInitiated = false;
 
+  function saveDatasetItems(formItems, id) {
+    for (i = 0; i<formItems; i++) {
+      var question = getItemVal("question", i);
+      var answer = getItemVal("answer", i);
+      var hint = getItemVal("hint", i);
+      hint = (hint==="undefined") ? "" : hint;
+      db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
+    }
+  }
+
   var forms = {
     getItemVal: function(formName, formIndex) {
       return $("#items input[name='" + formName + formIndex + "']").val();
@@ -41,14 +51,7 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
         db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], false, true);
         db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
           db.executeQuery("addDatasetLocal", [id, user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)], true, false);
-
-          for (i = 0; i<formItemId; i++) {
-            var question = getItemVal("question", i);
-            var answer = getItemVal("answer", i);
-            var hint = getItemVal("hint", i);
-            hint = (hint==="undefined") ? "" : hint;
-            db.executeQuery('addDatasetItem' , [id, question, answer, hint]);
-          }
+          saveDatasetItems(formItemId, id);
           db.close();
           callback();
         });
