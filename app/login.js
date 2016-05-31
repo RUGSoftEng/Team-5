@@ -53,7 +53,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 						user.setCookie(result);
 						db.synchronize(user.getCookie('user_id'), function() {
 							db.close();
-							window.location = "index.html?message=login";
+							window.location = "index.html?message=success_login";
 						});
 					} else {
 						field.removeError('error');
@@ -72,7 +72,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 				field = $("#password").parsley();
 				if (hash.verify(password,result[0].user_password) ) {
 					user.setCookie(result);
-					window.location = "index.html?message=login";
+					window.location = "index.html?message=success_login";
 				} else {
 					field.removeError('error');
 					field.addError('error', {message: lang("error_passwordincorrect")});
@@ -89,7 +89,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	forms.onSuccess(form, handleLogin);
 
 	if ($_GET('message')) {
-		messages.show(config.constant("MESSAGES"), $_GET('message'));
+		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
 	}
 
 	// if (user.check()) {

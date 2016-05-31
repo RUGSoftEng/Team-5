@@ -9,7 +9,7 @@
 define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date) {
 	//check if the user is logged in
   if (!user.check()) {
-    logout("logout_unknown_cookie");
+    logout("error_logout");
   }
 
   $("#menu-toggle").click(function (e) {
@@ -40,7 +40,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
       $(this).parent().html("");
 			db.executeQuery("deleteDatasetbyId", [id], true, true, function() {
         db.close();
-        messages.show("#messages", "success_delete_dataset");
+        messages.show("#messages", lang("success_delete_dataset"));
       })
 		});
 	}
@@ -99,7 +99,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		db.executeQuery("updateGUILanguage", [newLanguage, currentdate, userid], true, true, function() {
       user.setCookie(db.getQuery("getUser", [userid]));
   		db.close();
-  		window.location = "index.html?message=change_language"; // refresh
+  		window.location = "index.html?message=success_change_language"; // refresh
     });
 	});
 	localisePage();
@@ -109,12 +109,12 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 
   // Show message if there is any
   if ($_GET('message')) {
-    messages.show(config.constant("MESSAGES"), $_GET('message'));
+    messages.show(config.constant("MESSAGES"), lang($_GET('message')));
   }
 
   // Logout button
   $("#logout").click(function() {
-    logout("logout");
+    logout("success_logout");
   });
 
   getUserDataFromDatabase();

@@ -36,7 +36,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
               if (rows) {
                 db.executeQuery("addUser",[rows[0].user_id, email,username,gen,dateofbirth,hashed_password,datetime, firstname, lastname,datetime, null],true,false);
                 db.close();
-                window.location="login.html?message=register";
+                window.location="login.html?message=success_register";
               } else {
                 alert(lang("error_nointernet"));
                 window.location="register.html";

@@ -45,7 +45,8 @@ define(function (require) {
 		ONLINE_DATABASE: "enricdz148_slim",
 		ONLINE_PASSWORD: "exVhqZJas",
 		MESSAGES: "#messages",
-		ERRORS: "#errors"
+		ERRORS: "#errors",
+		CONTACT: "d.h.van.rijn@rug.nl"
 	};
 
 	return {

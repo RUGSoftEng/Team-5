@@ -11,7 +11,7 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config, $, date) {
+define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function (sqlite, config, $, date, messages) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -65,12 +65,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	}
 
 	function onError(error) {
-		if (error) {
-			if (error.message !== undefined) {
-				console.log(error.message);
-			} else {
-				console.log(error);
-			}
+		if (error.message !== undefined) {
+			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error.message);
+		} else {
+			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error);
 		}
 	}
 	function isUnique(unique_name1, unique_name2, queryResult, row) {
@@ -188,7 +186,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 
 			db_online.connect(function(err) {
 				if (err) {
-					console.error('Error connecting: ' + err.stack);
+					messages.show("Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+ err.stack);
 					return;
 				}
 			});
@@ -223,16 +221,18 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
 			var query = queries[queryname] ;
 			if (local) {
-				db.run(query, args, function(err) {
-					onError(err);
-				});
+				try {
+					db.run(query, args);
+				} catch(e) {
+					onError(e);
+				}
 			}
 			if (remote && database.online()) {
 				if(db_online===undefined){
 					initOnlineDB();
 				}
 				db_online.query(query, args, function(err, result) {
-					onError(err);
+					if (err) throw onError(err);
 					if (callback) {
 						callback();
 					}
@@ -246,10 +246,13 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		getQuery: function(queryname, args) {
 			var query = queries[queryname];
 			var queryResult = [];
-			db.each(query,args, function(row, err) {
-				onError(err);
-				queryResult.push(row);
-			});
+			try {
+				db.each(query, args, function(row, err) {
+					queryResult.push(row);
+				});
+			} catch (e) {
+				onError(e);
+			}
 			return queryResult;
 		},
 		getOnlineQuery: function(queryname, args, callback) {
@@ -258,26 +261,33 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			}
 			var query = queries[queryname];
 			db_online.query(query, args, function(err, rows, fields) {
-				onError(err);
+				if (err) throw onError(err);
 				callback(rows);
 			});
 		},
 		getUnique: function(queryname, unique_name1, unique_name2, args) {
 			var queryResult = [];
-			var query = queries[queryname] ;
-			db.each(query, args, function(row, err) {
-				onError(err);
-				if (isUnique(unique_name1, unique_name2, queryResult, row))
-					queryResult.push(row);
-			});
+			var query = queries[queryname];
+			try {
+				db.each(query, args, function(row) {
+					if (isUnique(unique_name1, unique_name2, queryResult, row))
+						queryResult.push(row);
+				});
+			} catch(e) {
+				onError(e);
+			}
 			return queryResult;
 		},
 		lastInsertRowId: function(table_name, row_id) {
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id +" DESC LIMIT 1";
 			var queryResult;
-			db.each(query, function(row, err) {
-				queryResult = row[row_id];
-			});
+			try {
+				db.each(query, function(row) {
+					queryResult = row[row_id];
+				});
+			} catch(e) {
+				onError(e);
+			}
 			return queryResult;
 		},
 		lastInsertIdOnline: function(table_name, row_id, callback) {
@@ -286,13 +296,17 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			}
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
 			db_online.query(query, function(err, rows, fields) {
-				onError(err);
+				if (err) throw onError(err);
 				callback(rows[0][row_id]);
 			});
 		},
 		each : function(queryname, args, func) {
 			var query = queries[queryname];
-			db.each(query,args, func);
+			try {
+				db.each(query,args, func);
+			} catch(e) {
+				onError(e);
+			}
 		},
 		synchronize : function(userId, callback){
 			if(db_online===undefined){
