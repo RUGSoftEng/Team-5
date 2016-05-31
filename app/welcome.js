@@ -50,9 +50,11 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
   function navigateToLearn(newElement) {
     newElement.on("click", ".mybutton", function() {
       var id = $(this).data("id");
-			var datasetName = db.getQuery("getRecentDataset", [id, 1, 0])[0].dataset_name;
-
-			$("#modalDatasetName").html(datasetName);
+			var dataset = db.getQuery("getRecentDataset", [id, 1, 0])[0];
+			
+			$("#datasetName").html(dataset.dataset_name);
+			$("#datasetVersionDate").html(dataset.dataset_lastedited);
+			
 			$("#startLearning").click(function() {
 				var timelimit = time.minutesToSeconds($("#learningTimeSlider").val());
 				window.location = "learn.html?id="+id+"&timelimit="+timelimit;
@@ -85,6 +87,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
     $("#button_savesettings").prop("value", lang("settings_buttonsave"));
+		$("#startLearning").prop("value", lang("dataset_startlearning"));
 	}
 
 	function getUserDataFromDatabase() {
@@ -95,24 +98,24 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     });
 	}
 
-	function getFirstUserSubject() {
+  function getFirstUserSubject() {
     var rows = db.getUnique('getModules', 'subject_name', 'language_name', [user.getCookie('user_id')]);
     return (rows.length!==0) ? rows[0].subject_id : 0;
   }
 
-	function languageId(language) {
+  function languageId(language) {
     var result = db.getQuery("getLanguageByName", language);
     return (result.length!==0) ? result.language_id : config.constant("ENGLISH");
   }
-
+	
 	function initialiseLearningTimeInput() {
 		var initialTime = time.secondsToMinutes(config.constant("TIME_LIMIT"));
 		var slider = $("#learningTimeSlider");
 		var input = $("#learningTimeInput");
-
+		
 		slider.val(initialTime);
 		input.val(initialTime);
-
+		
 		// Connect the slider to the input field
 		slider.on('input', function() {
 			input.val(slider.val());
