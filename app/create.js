@@ -84,10 +84,11 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
       var subject = forms.getFormVal(form, select, subject);
       return subject;
     }
-		// Script when the form is successful
-		forms.initializeForm('#createForm', function() {
+
+		var form = "#createForm";
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
 			showLoading(function() {
-				var form = "#createForm";
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
 	      var subject = forms.getFormVal(form, "select", "subject");

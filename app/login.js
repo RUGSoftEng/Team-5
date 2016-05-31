@@ -84,7 +84,9 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		}
 	}
 
-	forms.initializeForm('#loginForm', handleLogin);
+	var form = '#loginForm';
+	forms.initialize(form);
+	forms.onSuccess(form, handleLogin);
 
 	if ($_GET('message')) {
 		messages.show(config.constant("MESSAGES"), $_GET('message'));

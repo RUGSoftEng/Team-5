@@ -10,9 +10,9 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
     getFormVal: function(parentName, formType, formName) {
       return $(parentName).find(formType + '[name="' + formName + '"]').val();
     },
-    initializeForm: function(formName, onSuccess) {
+    initialize: function(formName, onSuccess) {
       var parsley = $(formName).parsley();
-      window.Parsley.on('field:validated', function() {
+      parsley.on('field:validated', function() {
         // Initiate form error and success handling
         var ok = $('.parsley-error').length === 0;
         $('.bs-callout-info').toggleClass('hidden', !ok);
@@ -24,7 +24,11 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
         }
       }).on('form:submit', function() {
         return false;
-      }).on('form:success', onSuccess);
+      });
+    },
+    onSuccess: function (formName, callback) {
+      var parsley = $(formName).parsley();
+      parsley.on('form:success', callback);
     },
     saveDataset: function(formName, formItemId, callback) {
       var name = getFormVal(formName, "input", "name");

@@ -1,4 +1,4 @@
-define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user', 'app/date'], function (db, $, bootstrap, XLSX, parsley, select, forms, ready, async, lang, string, user, date) {
+define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/forms', 'app/ready', 'async', 'app/lang', 'app/string', 'app/user', 'app/date'], function (db, $, bootstrap, parsley, select, forms, ready, async, lang, string, user, date) {
 	var X = XLSX;
 	var saveData;
 	var correctUpload = false;
@@ -24,7 +24,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 		$("#loadFrame").children("h1").html(lang("open_busysaving"));
 		$("#loadFrame").fadeIn(300, onSuccess);
 	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
@@ -52,7 +52,7 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 			}
 		});
 	}
-	
+
 	function handleCustomSubject() {
 		window.Parsley.addValidator('subjectName', {
 			validateString: function(value, requirement) {
@@ -63,11 +63,11 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				en: lang("error_subjectnamenotunique")
 			}
 		});
-		
+
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
 			var id = forms.getFormVal("#uploadForm", "select", "subject");
-			
+
 			if (id == 0) {
 				console.log("show");
 				$("#newsubject").attr("hidden", false);
@@ -95,7 +95,9 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 	}
 
 	function evaluateInputOfForm() {
-		forms.initializeForm('#uploadForm', function() {
+		var form = '#uploadForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
 			showLoading(function () {
 				var form = '#uploadForm';
 				// Save dataset

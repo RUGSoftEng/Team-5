@@ -90,8 +90,9 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 	// Initiate select boxes
 	select.initiate("gui_languages", ".selectLanguage");
 
-	// Script when the settings form is successful
-	forms.initializeForm('#settingsForm', function() {
+	var form = '#settingsForm';
+  forms.initialize(form);
+	forms.onSuccess(form, function() {
 		var newLanguage = $("#language").val();
 		var userid = user.getCookie("user_id");
     var currentdate = date.formatDatetime(new Date(), true);
@@ -102,7 +103,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     });
 	});
 	localisePage();
-  
+
   var currentSubject = ($_GET('subject')) ? $_GET('subject') : 1;
   var currentLanguage = ($_GET('language')) ? $_GET('language') : 1;
 
