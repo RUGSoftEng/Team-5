@@ -45,43 +45,56 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		var field;
 		if (db.online()) {
 			db.getOnlineQuery("getUserbyUsername", [username], function(result) {
-				field = $("#username").parsley();
-				if (result.length !== 0) {
-					field.removeError('error');
-					field = $("#password").parsley();
-					if (hash.verify(password,result[0].user_password) ) {
+				if (checkUsername(result)) {
+					if (checkPassword(password, result)) {
 						user.setCookie(result);
-						db.synchronize(user.getCookie('user_id'), function() {
-							db.close();
-							window.location = "index.html?message=success_login";
-						});
-					} else {
-						field.removeError('error');
-						field.addError('error', {message: lang("error_passwordincorrect")});
+						synchronizeAndLogin();
 					}
-				} else {
-					field.removeError('error');
-					field.addError('error', {message: lang("error_usernameincorrect")});
 				}
 			});
 		} else {
 			var result = db.getQuery("getUserbyUsername", [username]);
-			field = $("#username").parsley();
-			if (result.length !== 0) {
-				field.removeError('error');
-				field = $("#password").parsley();
-				if (hash.verify(password,result[0].user_password) ) {
+			if (checkUsername(result)) {
+				if (checkPassword(password, result)) {
 					user.setCookie(result);
-					window.location = "index.html?message=success_login";
-				} else {
-					field.removeError('error');
-					field.addError('error', {message: lang("error_passwordincorrect")});
+					login();
 				}
-			} else {
-				field.removeError('error');
-				field.addError('error', {message: lang("error_usernameincorrect")});
 			}
 		}
+	}
+
+	function checkUsername(result) {
+		field = $("#username").parsley();
+		if (result.length !== 0) {
+			return true;
+		} else {
+			field.removeError('error');
+			field.addError('error', {message: lang("error_usernameincorrect")});
+			return false;
+		}
+	}
+
+	function checkPassword(password, result) {
+		field.removeError('error');
+		field = $("#password").parsley();
+		if (hash.verify(password,result[0].user_password) ) {
+			return true;
+		} else {
+			field.removeError('error');
+			field.addError('error', {message: lang("error_passwordincorrect")});
+			return false;
+		}
+	}
+
+	function synchronizeAndLogin() {
+		db.synchronize(user.getCookie('user_id'), function() {
+			db.close();
+			login();
+		});
+	}
+
+	function login() {
+		window.location = "index.html?message=success_login";
 	}
 
 	var form = '#loginForm';
