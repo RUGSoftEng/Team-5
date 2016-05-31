@@ -71,7 +71,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error);
 		}
 	}
-	
+
 	function isUnique(unique_name1, unique_name2, queryResult, row) {
 	    for (i = 0; i<queryResult.length;i++) {
 	      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
@@ -98,9 +98,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		var onlineTime = Date.parse(online_user.user_lastedited);
 		var recent = localTime - onlineTime;
 		if (recent > 0) {
-			replaceUserLocal(local_user, callback);
+			replaceUserOnline(local_user, callback);
 		} else if (recent < 0) {
-			replaceUserOnline(online_user);
+			replaceUserLocal(online_user);
 		}
 	}
 
@@ -109,12 +109,12 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		database.executeQuery('addUser', online_user, true, false);
 	}
 
-	function replaceUserOnline(online_user) {
+	function replaceUserLocal(online_user) {
 		online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
 		database.executeQuery('replaceUser', online_user, true, false);
 	}
 
-	function replaceUserLocal(local_user, callback) {
+	function replaceUserOnline(local_user, callback) {
 		local_user = $.map(local_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
 		database.executeQuery('replaceUser', local_user, false, true, function() {
 			callback();
@@ -122,39 +122,48 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	}
 
 	function synchronizeDatasets(userId, callback) {
-			synchronizing = true;
 			var localdatasets = database.getQuery('getUserDatasets',[userId]);
-			var remotetolocaldatasets = [];
 			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
-				for (var i=0; i<localdatasets.length;i++) {
-					if (!localdatasets[i].dataset_online) {
-						lastId = localdatasets[i].dataset_id;
-					}
-				}
+				lastId = getLatestNonSynchronizedDatasetId(localdatasets);
 				if (lastId==0) {
 					callback();
 				}
-
-				// Compare local with online
-				for (var i=0; i< localdatasets.length; i++) {
-					if (!localdatasets[i].dataset_online) {
-						pushDatasetOnline(localdatasets[i], callback);
-					} else {
-						var remote = $.grep(remotedatasets, function(e) { return e.dataset_id === localdatasets[i].dataset_id; });
-						if (remote.length !== 0) {
-							synchronizeDataset(localdatasets[i], remote);
-						}
-					}
-				}
-				// Compare online with local
-				for (var j=0 ;j<remotedatasets.length; j++){
-					var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
-					if (remote.length === 0) {
-						pushDatasetLocal(remotedatasets[j]);
-					}
-				}
+				synchronizeLocalDatasets(localdatasets, remotedatasets, callback);
+				synchronizeOnlineDatasets(localdatasets, remotedatasets);
 				database.close();
 			});
+	}
+
+	function getLatestNonSynchronizedDatasetId(localdatasets) {
+		var last = 0;
+		for (var i=0; i<localdatasets.length;i++) {
+			if (!localdatasets[i].dataset_online) {
+				last = localdatasets[i].dataset_id;
+			}
+		}
+		return last;
+	}
+
+	function synchronizeLocalDatasets(localdatasets, remotedatasets, callback) {
+		for (var i=0; i< localdatasets.length; i++) {
+			if (!localdatasets[i].dataset_online) {
+				pushDatasetOnline(localdatasets[i], callback);
+			} else {
+				var remote = $.grep(remotedatasets, function(e) { return e.dataset_id === localdatasets[i].dataset_id; });
+				if (remote.length !== 0) {
+					synchronizeDataset(localdatasets[i], remote);
+				}
+			}
+		}
+	}
+
+	function synchronizeOnlineDatasets(localdatasets, remotedatasets) {
+		for (var j=0 ;j<remotedatasets.length; j++){
+			var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
+			if (remote.length === 0) {
+				pushDatasetLocal(remotedatasets[j]);
+			}
+		}
 	}
 
 	function pushDatasetOnline(dataset, callback) {
