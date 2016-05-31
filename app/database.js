@@ -81,7 +81,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	    }
 	    return true;
 	}
-	
+
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
