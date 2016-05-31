@@ -243,29 +243,36 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			console.log("Closed connection");
 		},
 		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
-			var query = queries[queryname] ;
 			if (local) {
-				try {
-					db.run(query, args);
-				} catch(e) {
-					onError(e);
-				}
+				executeQueryLocal(queryname, args);
 			}
 			if (remote && database.online()) {
-				if(db_online===undefined){
-					initOnlineDB();
-				}
-				db_online.query(query, args, function(err, result) {
-					if (err) throw onError(err);
-					if (callback) {
-						callback();
-					}
-				});
+				executeQueryOnline(queryname, args, callback);
 			} else {
 				if (callback) {
 					callback();
 				}
 			}
+		},
+		executeQueryLocal(queryname, args) {
+			var query = queries[queryname];
+			try {
+				db.run(query, args);
+			} catch(e) {
+				onError(e);
+			}
+		},
+		executeQueryOnline(queryname, args, callback) {
+			var query = queries[queryname];
+			if(db_online===undefined){
+				initOnlineDB();
+			}
+			db_online.query(query, args, function(err, result) {
+				if (err) throw onError(err);
+				if (callback) {
+					callback();
+				}
+			});
 		},
 		getQuery: function(queryname, args) {
 			var query = queries[queryname];
