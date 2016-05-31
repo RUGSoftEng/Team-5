@@ -44,14 +44,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	};
 
 	var lastId = 0;
-
-	// Check if SQL.js has been loaded through AMD
 	var sql,db,db_online;
-	if (typeof sqlite !== 'object') {
-		document.body.style.backgroundColor = 'red';
-		alert("Failed to require sqlite through AMD.");
-	} else {
-		sql = sqlite;
+
+	function checkSqlite() {
+		if (typeof sqlite !== 'object') {
+			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />Failed to require sqlite through AMD.");
+		} else {
+			sql = sqlite;
+		}
 	}
 
 	function database_exists(path) {
@@ -229,6 +229,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		},
 		init: function() {
 			var read_database;
+			checkSqlite();
 			if (database_exists(config.constant("DATABASE_USER"))) {
 				read_database = fs.readFileSync(config.constant("DATABASE_USER"));
 			} else {
@@ -249,10 +250,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		},
 		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
 			if (local) {
-				executeQueryLocal(queryname, args);
+				database.executeQueryLocal(queryname, args);
 			}
 			if (remote && database.online()) {
-				executeQueryOnline(queryname, args, callback);
+				database.executeQueryOnline(queryname, args, callback);
 			} else {
 				if (callback) {
 					callback();
