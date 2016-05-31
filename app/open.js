@@ -94,13 +94,22 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		});
 	}
 
+	function saveDatasetOnlineAndLocal(data) {
+		db.executeQuery("addDataset", data, false, true);
+		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+			data.unshift(id);
+			db.executeQuery("addDatasetAll", data, true, false);
+			db.close();
+			window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+		});
+	}
+
 	function evaluateInputOfForm() {
 		var form = '#uploadForm';
 		forms.initialize(form);
 		forms.onSuccess(form, function() {
 			showLoading(function () {
 				var form = '#uploadForm';
-				// Save dataset
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
 	      var subject = forms.getFormVal(form, "select", "subject");
@@ -110,12 +119,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				var dataset_items = createDatasetItems(saveData);
 
 				if (db.online()) {
-					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], false, true);
-					db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], true, false);
-						db.close();
-						window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
-					});
+					saveDatasetOnlineAndLocal([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items]);
 				} else {
 					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], true, false);
 					db.close();
