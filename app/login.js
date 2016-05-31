@@ -43,58 +43,71 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		var username = $("#username").val().toLowerCase();
 		var password = $("#password").val();
 		var field;
-		if (db.online()) {
-			ready.showLoading(lang("login_checking"), function() {
+		ready.showLoading(lang("login_checking"), function() {
+			if (db.online()) {
 				db.getOnlineQuery("getUserbyUsername", [username], function(result) {
-					field = $("#username").parsley();
-					if (result.length !== 0) {
-						field.removeError('error');
-						field = $("#password").parsley();
-						if (hash.verify(password,result[0].user_password) ) {
-							user.setCookie(result);
+					if (checkUsername(result)) {
+						if (checkPassword(password, result)) {
 							ready.changeLoadMessage(lang("login_synchronizing"));
-							db.synchronize(user.getCookie('user_id'), function() {
-								db.close();
-								window.location = "index.html?message=login";
-							});
-						} else {
-							ready.hideLoading();
-							field.removeError('error');
-							field.addError('error', {message: lang("error_passwordincorrect")});
+							user.setCookie(result);
+							synchronizeAndLogin();
 						}
-					} else {
-						ready.hideLoading();
-						field.removeError('error');
-						field.addError('error', {message: lang("error_usernameincorrect")});
 					}
 				});
-			});
-		} else {
-			ready.showLoading(lang("login_loggingin"), function() {
+			} else {
 				var result = db.getQuery("getUserbyUsername", [username]);
-				field = $("#username").parsley();
-				if (result.length !== 0) {
-					field.removeError('error');
-					field = $("#password").parsley();
-					if (hash.verify(password,result[0].user_password) ) {
+				if (checkUsername(result)) {
+					if (checkPassword(password, result)) {
 						user.setCookie(result);
-						window.location = "index.html?message=login";
-					} else {
-						field.removeError('error');
-						field.addError('error', {message: lang("error_passwordincorrect")});
+						login();
 					}
-				} else {
-					field.removeError('error');
-					field.addError('error', {message: lang("error_usernameincorrect")});
 				}
-			});
+			}
+		});
+	}
+
+	function checkUsername(result) {
+		field = $("#username").parsley();
+		if (result.length !== 0) {
+			return true;
+		} else {
+			ready.hideLoading();
+			field.removeError('error');
+			field.addError('error', {message: lang("error_usernameincorrect")});
+			return false;
 		}
 	}
 
-	forms.initializeForm('#loginForm', handleLogin);
+	function checkPassword(password, result) {
+		field.removeError('error');
+		field = $("#password").parsley();
+		if (hash.verify(password,result[0].user_password) ) {
+			return true;
+		} else {
+			ready.hideLoading();
+			field.removeError('error');
+			field.addError('error', {message: lang("error_passwordincorrect")});
+			return false;
+		}
+	}
+
+	function synchronizeAndLogin() {
+		db.synchronize(user.getCookie('user_id'), function() {
+			db.close();
+			login();
+		});
+	}
+
+	function login() {
+		window.location = "index.html?message=success_login";
+	}
+
+	var form = '#loginForm';
+	forms.initialize(form);
+	forms.onSuccess(form, handleLogin);
 
 	if ($_GET('message')) {
-		messages.show(config.constant("MESSAGES"), $_GET('message'));
+		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
 	}
 
 	// if (user.check()) {

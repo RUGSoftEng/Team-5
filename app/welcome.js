@@ -9,7 +9,7 @@
 define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready', 'app/time'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready, time) {
 	//check if the user is logged in
   if (!user.check()) {
-    logout("logout_unknown_cookie");
+    logout("error_logout");
   }
 
   $("#menu-toggle").click(function (e) {
@@ -42,8 +42,8 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
       });
 			db.executeQuery("deleteDatasetbyId", [id], true, true, function() {
         db.close();
-        messages.show("#messages", "success_delete_dataset");
-      })
+        messages.show("#messages", lang("success_delete_dataset"));
+      });
 		});
 	}
 
@@ -51,7 +51,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     newElement.on("click", ".mybutton", function() {
       var id = $(this).data("id");
 			var datasetName = db.getQuery("getRecentDataset", [id, 1, 0])[0].dataset_name;
-			
+
 			$("#modalDatasetName").html(datasetName);
 			$("#startLearning").click(function() {
 				var timelimit = time.minutesToSeconds($("#learningTimeSlider").val());
@@ -95,24 +95,24 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     });
 	}
 
-  function getFirstUserSubject() {
+	function getFirstUserSubject() {
     var rows = db.getUnique('getModules', 'subject_name', 'language_name', [user.getCookie('user_id')]);
     return (rows.length!==0) ? rows[0].subject_id : 0;
   }
 
-  function languageId(language) {
+	function languageId(language) {
     var result = db.getQuery("getLanguageByName", language);
     return (result.length!==0) ? result.language_id : config.constant("ENGLISH");
   }
-	
+
 	function initialiseLearningTimeInput() {
 		var initialTime = time.secondsToMinutes(config.constant("TIME_LIMIT"));
 		var slider = $("#learningTimeSlider");
 		var input = $("#learningTimeInput");
-		
+
 		slider.val(initialTime);
 		input.val(initialTime);
-		
+
 		// Connect the slider to the input field
 		slider.on('input', function() {
 			input.val(slider.val());
@@ -135,18 +135,18 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 	}
 
   ready.on(function() {
-    // Initiate select boxes
   	select.initiate("gui_languages", ".selectLanguage");
 
-  	// Script when the settings form is successful
-  	forms.initializeForm('#settingsForm', function() {
+  	var form = '#settingsForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
   		var newLanguage = $("#language").val();
   		var userid = user.getCookie("user_id");
       var currentdate = date.formatDatetime(new Date(), true);
   		db.executeQuery("updateGUILanguage", [newLanguage, currentdate, userid], true, true, function() {
         user.setCookie(db.getQuery("getUser", [userid]));
     		db.close();
-    		window.location = "index.html?message=change_language"; // refresh
+    		window.location = "index.html?message=success_change_language"; // refresh
       });
   	});
   	localisePage();
@@ -157,24 +157,24 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 
     // Show message if there is any
     if ($_GET('message')) {
-      messages.show(config.constant("MESSAGES"), $_GET('message'));
+      messages.show(config.constant("MESSAGES"), lang($_GET('message')));
     }
 
     // Logout button
     $("#logout").click(function() {
-      logout("logout");
+      logout("success_logout");
     });
 
     getUserDataFromDatabase();
-  	createSidebarElements(currentSubject, currentLanguage);
-    createDatasetsGrid(currentSubject,currentLanguage);
-  	$(".sidebar_li a").click(function () {
-      var subject = $(this).data("subject-id");
-      var language = $(this).data("language-id");
-      messages.remove(config.constant("MESSAGES"));
-  		createDatasetsGrid(subject, language);
-  		$(this).parents('.sidebar-nav').find('.active').removeClass('active');
-      $(this).addClass('active');
-  	});
+		createSidebarElements(currentSubject, currentLanguage);
+		createDatasetsGrid(currentSubject,currentLanguage);
+		$(".sidebar_li a").click(function () {
+		  var subject = $(this).data("subject-id");
+		  var language = $(this).data("language-id");
+		  messages.hide(config.constant("MESSAGES"));
+			createDatasetsGrid(subject, language);
+			$(this).parents('.sidebar-nav').find('.active').removeClass('active');
+		  $(this).addClass('active');
+		});
   });
 });

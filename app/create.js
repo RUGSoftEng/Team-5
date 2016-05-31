@@ -54,7 +54,8 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		db.close();
 
 		var language = forms.getFormVal(form, "select", "language");
-		window.location = "index.html?message=create_dataset&language="+language+"&subject="+subject;
+		var subject = forms.getFormVal(form, "select", "subject");
+		window.location = "index.html?message=success_createdataset&language="+language+"&subject="+subject;
 	}
 
 	function localisePage() {
@@ -120,8 +121,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
       var subject = forms.getFormVal(form, select, subject);
       return subject;
     }
-		// Script when the form is successful
-		forms.initializeForm('#createForm', function() {
+
+		var form = "#createForm";
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
 			showLoading(function() {
 				var form = "#createForm";
 				var name = forms.getFormVal(form, "input", "name");

@@ -11,7 +11,7 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config, $, date) {
+define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function (sqlite, config, $, date, messages) {
 	var queries = {
 		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
@@ -49,14 +49,14 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	};
 
 	var lastId = 0;
-
-	// Check if SQL.js has been loaded through AMD
 	var sql,db,db_online;
-	if (typeof sqlite !== 'object') {
-		document.body.style.backgroundColor = 'red';
-		alert("Failed to require sqlite through AMD.");
-	} else {
-		sql = sqlite;
+
+	function checkSqlite() {
+		if (typeof sqlite !== 'object') {
+			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />Failed to require sqlite through AMD.");
+		} else {
+			sql = sqlite;
+		}
 	}
 
 	function database_exists(path) {
@@ -70,14 +70,13 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	}
 
 	function onError(error) {
-		if (error) {
-			if (error.message !== undefined) {
-				console.log(error.message);
-			} else {
-				console.log(error);
-			}
+		if (error.message !== undefined) {
+			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error.message);
+		} else {
+			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error);
 		}
 	}
+
 	function isUnique(unique_name1, unique_name2, queryResult, row) {
 	    for (i = 0; i<queryResult.length;i++) {
 	      if (queryResult[i][unique_name1]==row[unique_name1] && queryResult[i][unique_name2]==row[unique_name2]) {
@@ -85,32 +84,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	      }
 	    }
 	    return true;
-	}
-
-	function synchronizeUser(userId, callback) {
-		var local_user = database.getQuery('getUser',[userId]);
-		database.getOnlineQuery("getUser", [userId], function(online_user) {
-			online_user = online_user[0];
-			if (local_user.length === 0) {
-				online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
-				database.executeQuery('addUser', online_user, true, false);
-			} else {
-				local_user = local_user[0];
-				var localTime = Date.parse(local_user.user_lastedited);
-				var onlineTime = Date.parse(online_user.user_lastedited);
-				var recent = localTime - onlineTime;
-				if (recent > 0) {
-					local_user = $.map(local_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
-					database.executeQuery('replaceUser', local_user, false, true, function() {
-						callback();
-					});
-				} else if (recent < 0) {
-					online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
-					database.executeQuery('replaceUser', online_user, true, false);
-				}
-			}
-			callback();
-		});
 	}
 
 	function synchronizeSubjects(userId, callback) {
@@ -142,42 +115,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		});
 	}
 
-	function synchronizeDatasets(userId, callback) {
-			synchronizing = true;
-			var localdatasets = database.getQuery('getUserDatasets',[userId]);
-			var remotetolocaldatasets = [];
-			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
-				for (var i=0; i<localdatasets.length;i++) {
-					if (!localdatasets[i].dataset_online) {
-						lastId = localdatasets[i].dataset_id;
-					}
-				}
-				if (lastId==0) {
-					callback();
-				}
-
-				// Compare local with online
-				for (var i=0; i< localdatasets.length; i++) {
-					if (!localdatasets[i].dataset_online) {
-						pushDatasetOnline(localdatasets[i], callback);
-					} else {
-						var remote = $.grep(remotedatasets, function(e) { return e.dataset_id === localdatasets[i].dataset_id; });
-						if (remote.length !== 0) {
-							synchronizeDataset(localdatasets[i], remote);
-						}
-					}
-				}
-				// Compare online with local
-				for (var j=0 ;j<remotedatasets.length; j++){
-					var remote = $.grep(localdatasets, function(e) { return e.dataset_id === remotedatasets[j].dataset_id; });
-					if (remote.length === 0) {
-						pushDatasetLocal(remotedatasets[j]);
-					}
-				}
-				database.close();
-			});
-	}
-
 	function pushSubjectOnline(subject, callback) {
 		var local_id = subject.subject_id;
 		subject.subject_online = 1;
@@ -192,10 +129,105 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		});
 	}
 
+	function pushSubjectLocal(subject) {
+		subject = $.map(subject, function(val) { return val; });
+		database.executeQuery('addSubject', subject, true, false);
+	}
+	
+	function synchronizeUser(userId, callback) {
+		var local_user = database.getQuery('getUser',[userId]);
+		database.getOnlineQuery("getUser", [userId], function(online_user) {
+
+			if (local_user.length === 0) {
+				saveUserOnline(online_user[0]);
+			} else {
+				compareUsers(local_user[0], online_user[0], callback);
+			}
+			callback();
+		});
+	}
+
+	function compareUsers(local_user, online_user, callback) {
+		var localTime = Date.parse(local_user.user_lastedited);
+		var onlineTime = Date.parse(online_user.user_lastedited);
+		var recent = localTime - onlineTime;
+		if (recent > 0) {
+			replaceUserOnline(local_user, callback);
+		} else if (recent < 0) {
+			replaceUserLocal(online_user);
+		}
+	}
+
+	function saveUserOnline(online_user) {
+		online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
+		database.executeQuery('addUser', online_user, true, false);
+	}
+
+	function replaceUserLocal(online_user) {
+		online_user = $.map(online_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
+		database.executeQuery('replaceUser', online_user, true, false);
+	}
+
+	function replaceUserOnline(local_user, callback) {
+		local_user = $.map(local_user, function(val, key) { return (key=="user_createdate" || key=="user_lastedited" || key=="user_bday") ? date.formatDatetime(val) : val; });
+		database.executeQuery('replaceUser', local_user, false, true, function() {
+			callback();
+		});
+	}
+
+	function synchronizeDatasets(userId, callback) {
+			var localdatasets = database.getQuery('getUserDatasets',[userId]);
+			database.getOnlineQuery('getUserDatasets',[userId], function(remotedatasets) {
+				lastId = getLatestNonSynchronizedDatasetId(localdatasets);
+				if (lastId === 0) {
+					callback();
+				}
+				synchronizeLocalDatasets(localdatasets, remotedatasets, callback);
+				synchronizeOnlineDatasets(localdatasets, remotedatasets);
+				database.close();
+			});
+	}
+
+	function getLatestNonSynchronizedDatasetId(localdatasets) {
+		var last = 0;
+		for (var i=0; i<localdatasets.length;i++) {
+			if (!localdatasets[i].dataset_online) {
+				last = localdatasets[i].dataset_id;
+			}
+		}
+		return last;
+	}
+
+	function synchronizeLocalDatasets(localdatasets, remotedatasets, callback) {
+		var i;
+		var getLocalFromRemote = function(e) { return e.dataset_id === localdatasets[i].dataset_id; };
+		for (i = 0; i< localdatasets.length; i++) {
+			if (!localdatasets[i].dataset_online) {
+				pushDatasetOnline(localdatasets[i], callback);
+			} else {
+				var remote = $.grep(remotedatasets, getLocalFromRemote);
+				if (remote.length !== 0) {
+					synchronizeDataset(localdatasets[i], remote[0]);
+				}
+			}
+		}
+	}
+
+	function synchronizeOnlineDatasets(localdatasets, remotedatasets) {
+		var j;
+		var getRemoteFromLocal = function(e) { return e.dataset_id === remotedatasets[j].dataset_id; };
+		for (j = 0; j<remotedatasets.length; j++){
+			var remote = $.grep(localdatasets, getRemoteFromLocal);
+			if (remote.length === 0) {
+				pushDatasetLocal(remotedatasets[j]);
+			}
+		}
+	}
+
 	function pushDatasetOnline(dataset, callback) {
 		var local_id = dataset.dataset_id;
 		dataset.dataset_online = 1;
-		var dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
+		dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
 		database.executeQuery('addDataset', dataset, false, true);
 		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
 			database.executeQuery('updateDatasetId', [id, local_id], true, false);
@@ -206,27 +238,36 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 	}
 
 	function pushDatasetLocal(dataset) {
-		var dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
+		dataset = $.map(dataset, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
 		database.executeQuery('addDatasetAll', dataset, true, false);
 	}
 
-	function pushSubjectLocal(subject) {
-		subject = $.map(subject, function(val) { return val; });
-		database.executeQuery('addSubject', subject, true, false);
-	}
-
-	function synchronizeDataset(local,remote){
+	function synchronizeDataset(local, remote){
 		var localTime = Date.parse(local.dataset_lastedited);
-		var onlineTime = Date.parse(remote[0].dataset_lastedited);
+		var onlineTime = Date.parse(remote.dataset_lastedited);
 		var recent = localTime - onlineTime;
 		if (recent > 0) {
-			local = $.map(local, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
-			database.executeQuery('deleteDatasetbyId',[remote[0].dataset_id], false, true);
-			database.executeQuery('addDatasetAll', local, false, true);
+			replaceDatasetOnline(local, remote);
 		} else if (recent < 0) {
-			remote = $.map(remote[0], function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
-			database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
-			database.executeQuery('addDatasetAll', remote, true, false);
+			replaceDatasetLocal(local, remote);
+		}
+	}
+
+	function replaceDatasetOnline(local, remote) {
+		local = $.map(local, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
+		database.executeQuery('deleteDatasetbyId',[remote.dataset_id], false, true);
+		database.executeQuery('addDatasetAll', local, false, true);
+	}
+
+	function replaceDatasetLocal(local, remote) {
+		remote = $.map(remote, function(val, key) { return (key=="dataset_date" || key=="dataset_lastedited") ? date.formatDatetime(val) : val; });
+		database.executeQuery('deleteDatasetbyId',[local.dataset_id], true, false);
+		database.executeQuery('addDatasetAll', remote, true, false);
+	}
+
+	function initOnlineDBIfRequired() {
+		if(db_online===undefined){
+			initOnlineDB();
 		}
 	}
 
@@ -240,14 +281,12 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			});
 
 			db_online.connect(function(err) {
-				console.log("Online database connected.");
 				if (err) {
-					console.error('Error connecting: ' + err.stack);
+					messages.show("Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+ err.stack);
 					return;
 				}
 			});
 		}
-
 	}
 
 	var database = {
@@ -256,6 +295,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 		},
 		init: function() {
 			var read_database;
+			checkSqlite();
 			if (database_exists(config.constant("DATABASE_USER"))) {
 				read_database = fs.readFileSync(config.constant("DATABASE_USER"));
 			} else {
@@ -275,83 +315,98 @@ define(['sqlite', 'app/config', 'jquery', 'app/date'], function (sqlite, config,
 			console.log("Closed connection");
 		},
 		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
-			var query = queries[queryname] ;
 			if (local) {
-				db.run(query, args, function(err) {
-					onError(err);
-				});
+				database.executeQueryLocal(queryname, args);
 			}
 			if (remote && database.online()) {
-				if(db_online===undefined){
-					initOnlineDB();
-				}
-				db_online.query(query, args, function(err, result) {
-					onError(err);
-					if (callback) {
-						callback();
-					}
-				});
+				database.executeQueryOnline(queryname, args, callback);
 			} else {
 				if (callback) {
 					callback();
 				}
 			}
 		},
+		executeQueryLocal(queryname, args) {
+			var query = queries[queryname];
+			try {
+				db.run(query, args);
+			} catch(e) {
+				onError(e);
+			}
+		},
+		executeQueryOnline(queryname, args, callback) {
+			var query = queries[queryname];
+			initOnlineDBIfRequired();
+			db_online.query(query, args, function(err, result) {
+				if (err) throw onError(err);
+				if (callback) {
+					callback();
+				}
+			});
+		},
 		getQuery: function(queryname, args) {
 			var query = queries[queryname];
 			var queryResult = [];
-			db.each(query,args, function(row, err) {
-				onError(err);
-				queryResult.push(row);
-			});
+			try {
+				db.each(query, args, function(row, err) {
+					queryResult.push(row);
+				});
+			} catch (e) {
+				onError(e);
+			}
 			return queryResult;
 		},
 		getOnlineQuery: function(queryname, args, callback) {
-			if(db_online===undefined){
-				initOnlineDB();
-			}
+			initOnlineDBIfRequired();
 			var query = queries[queryname];
 			db_online.query(query, args, function(err, rows, fields) {
-				onError(err);
+				if (err) throw onError(err);
 				callback(rows);
 			});
 		},
 		getUnique: function(queryname, unique_name1, unique_name2, args) {
 			var queryResult = [];
-			var query = queries[queryname] ;
-			db.each(query, args, function(row, err) {
-				onError(err);
-				if (isUnique(unique_name1, unique_name2, queryResult, row))
-					queryResult.push(row);
-			});
+			var query = queries[queryname];
+			try {
+				db.each(query, args, function(row) {
+					if (isUnique(unique_name1, unique_name2, queryResult, row))
+						queryResult.push(row);
+				});
+			} catch(e) {
+				onError(e);
+			}
 			return queryResult;
 		},
 		lastInsertRowId: function(table_name, row_id) {
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id +" DESC LIMIT 1";
 			var queryResult;
-			db.each(query, function(row, err) {
-				queryResult = row[row_id];
-			});
+			try {
+				db.each(query, function(row) {
+					queryResult = row[row_id];
+				});
+			} catch(e) {
+				onError(e);
+			}
 			return queryResult;
 		},
 		lastInsertIdOnline: function(table_name, row_id, callback) {
-			if(db_online===undefined){
-				initOnlineDB();
-			}
+			initOnlineDBIfRequired();
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
 			db_online.query(query, function(err, rows, fields) {
-				onError(err);
+				if (err) throw onError(err);
 				callback(rows[0][row_id]);
 			});
 		},
 		each : function(queryname, args, func) {
 			var query = queries[queryname];
-			db.each(query,args, func);
+			try {
+				db.each(query,args, func);
+			} catch(e) {
+				onError(e);
+			}
 		},
 		synchronize : function(userId, callback){
-			if(db_online===undefined){
-				initOnlineDB();
-			}
+			initOnlineDBIfRequired();
 			synchronizeSubjects(userId, function() {
 				synchronizeDatasets(userId, function() {
 					synchronizeUser(userId, callback);
