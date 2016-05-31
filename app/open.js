@@ -94,7 +94,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		});
 	}
 
-	function saveDatasetOnlineAndLocal(data) {
+	function saveDatasetOnlineAndLocal(language, subject, data) {
 		db.executeQuery("addDataset", data, false, true);
 		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
 			data.unshift(id);
@@ -119,7 +119,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				var dataset_items = createDatasetItems(saveData);
 
 				if (db.online()) {
-					saveDatasetOnlineAndLocal([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items]);
+					saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items]);
 				} else {
 					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], true, false);
 					db.close();

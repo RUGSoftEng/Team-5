@@ -24,35 +24,54 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var field;
 
     db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
-      field = $("#username").parsley();
-      if (rows.length === 0) {
-        field.removeError('usernamenotunique');
+      if (checkUsername(rows)) {
         db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
-          field = $("#email").parsley();
-          if (rows.length === 0) {
-            field.removeError('emailnotunique');
-            db.executeQuery("addUser",[null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null],false,true);
-            db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
-              if (rows) {
-                db.executeQuery("addUser",[rows[0].user_id, email,username,gen,dateofbirth,hashed_password,datetime, firstname, lastname,datetime, null],true,false);
-                db.close();
-                window.location="login.html?message=success_register";
-              } else {
-                alert(lang("error_nointernet"));
-                window.location="register.html";
-              }
-            });
-          } else {
-            field.removeError('emailnotunique');
-            field.addError('emailnotunique', {message: lang("error_emailnotunique")});
+          if (checkEmail(rows)) {
+            addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
           }
         });
-      } else {
-        field.removeError('usernamenotunique');
-        field.addError('usernamenotunique', {message: lang("error_usernamenotunique")});
       }
     });
   }
+
+  function addUserLocalAndOnline(username, data) {
+    db.executeQuery("addUser", data, false, true);
+    db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
+      if (db.online()) {
+        data[0] = rows[0].user_id;
+        db.executeQuery("addUser", data, true, false);
+        db.close();
+        window.location="login.html?message=success_register";
+      } else {
+        alert(lang("error_nointernet"));
+      }
+    });
+  }
+
+  function checkUsername(result) {
+    field = $("#username").parsley();
+    if (result.length === 0) {
+      field.removeError('error');
+      return true;
+    } else {
+      field.removeError('error');
+      field.addError('error', {message: lang("error_usernamenotunique")});
+      return false;
+    }
+  }
+
+  function checkEmail(result) {
+    field = $("#email").parsley();
+    if (result.length === 0) {
+      field.removeError('error');
+      return true;
+    } else {
+      field.removeError('error');
+      field.addError('error', {message: lang("error_emailnotunique")});
+      return false;
+    }
+  }
+
   function localisePage() {
 		string.fillinTextClasses();
 		$("#username").prop("placeholder", lang("label_username"));
