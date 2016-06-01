@@ -183,8 +183,11 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
   return {
     initialize: function(factList, responselist) {
-        responseList = responselist;
-        console.log(responseList);
+
+        if(config.ALGORITHM === 'slimpstampen'){
+          responseList = responselist;
+        }
+
         items = factList;
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));

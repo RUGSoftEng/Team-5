@@ -7,7 +7,6 @@ define(['jquery','app/time', 'app/lang'], function($,time, lang) {
     $(".timer .current").html(time.toString(currentTime));
     if (currentTime>=max_seconds) {
       clearInterval(timer);
-      console.log('time is up');
       callback();
     }
   }
