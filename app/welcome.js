@@ -51,13 +51,14 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     newElement.on("click", ".mybutton", function() {
       var id = $(this).data("id");
 			var dataset = db.getQuery("getRecentDataset", [id, 1, 0])[0];
-			
+
 			$("#datasetName").html(dataset.dataset_name);
 			$("#datasetVersionDate").html(dataset.dataset_lastedited);
-			
+
 			$("#startLearning").click(function() {
 				var timelimit = time.minutesToSeconds($("#learningTimeSlider").val());
 				window.location = "learn.html?id="+id+"&timelimit="+timelimit;
+        return false;
 			});
    	});
   }
@@ -107,15 +108,15 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
     var result = db.getQuery("getLanguageByName", language);
     return (result.length!==0) ? result.language_id : config.constant("ENGLISH");
   }
-	
+
 	function initialiseLearningTimeInput() {
 		var initialTime = time.secondsToMinutes(config.constant("TIME_LIMIT"));
 		var slider = $("#learningTimeSlider");
 		var input = $("#learningTimeInput");
-		
+
 		slider.val(initialTime);
 		input.val(initialTime);
-		
+
 		// Connect the slider to the input field
 		slider.on('input', function() {
 			input.val(slider.val());
