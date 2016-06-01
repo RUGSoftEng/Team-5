@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready'], function ($, config, db, user, lang, string, messages, parsley, forms, hash, ready) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready', 'app/select'], function ($, bootstrap, config, db, user, lang, string, messages, parsley, forms, hash, ready, select) {
 
 	function showPermissionsMessage() {
 		if (navigator.appVersion.indexOf("Mac")!=-1) {
@@ -111,10 +111,31 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	function login() {
 		window.location = "index.html?message=success_login";
 	}
-
-	var form = '#loginForm';
-	forms.initialize(form);
-	forms.onSuccess(form, handleLogin);
+	
+	function initialiseLanguageSettings() {
+		select.initiate("gui_languages", ".selectLanguage");
+		
+		var form = '#settingsForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
+  		var newLanguage = $("#language").val();
+			document.cookie = 'user_language='+newLanguage;
+    	window.location = "login.html"; // refresh
+  	});
+	}
+	
+	function initialiseLoginForm() {
+		var form = '#loginForm';
+		forms.initialize(form);
+		forms.onSuccess(form, handleLogin);
+	}
+	
+	function localisePage() {
+		string.fillinTextClasses();
+		$("#username").prop("placeholder", lang("label_username"));
+		$("#password").prop("placeholder", lang("label_password"));
+		$("#button_savesettings").prop("value", lang("settings_buttonsave"));
+	}
 
 	if ($_GET('message')) {
 		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
@@ -124,14 +145,12 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	// 	window.location = "index.html?message=login_automatic";
 	// }
 
-	// Write localisable text to the page
-	string.fillinTextClasses();
-	$("#username").prop("placeholder", lang("label_username"));
-	$("#password").prop("placeholder", lang("label_password"));
-
 	ready.on(function() {
+		localisePage();
 		showPermissionsMessage();
 		getPermissionsForDatabase();
+		initialiseLoginForm();
+		initialiseLanguageSettings();
 	});
 
 });
