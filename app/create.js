@@ -111,8 +111,8 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		localisePage();
 		handleCustomSubject();
 		
-		$('#popoverSubject').popover({trigger: "hover"});
-		$('#popoverLanguage').popover({trigger: "hover"});
+		$('#popoverSubject').popover();
+		$('#popoverLanguage').popover();
 		// Add the first element
 		addElementToForm();
 		$(".add").click(function() {

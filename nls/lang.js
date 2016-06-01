@@ -76,6 +76,7 @@ define({
 		open_dropfile: "Drop a XLSX / XLSM / XLSB / ODS / XLS / XML file below:",
 		open_headerenterinformation: "Dataset information",
 		open_headerselectfile: "Select a dataset file",
+		open_whatfile: "What files can I open?",
 		placeholder_customsubject: "Add to a new subject",
 		placeholder_datasetname: "Name of the dataset",
 		placeholder_gender: "Select your gender",
@@ -100,7 +101,8 @@ define({
 		success_register: "You have succesfully registered a new account. You can sign in here below.",
 		tutorial_datasetlanguage: "For language learning: Please select the language to which the learner must translate the question.<br><br>For non-language learning: Please select the language in which the question is asked, and in which the answer should be given.",
 		tutorial_datasetsubject: "For language learning: Please select the language in which the question is asked.<br><br>For non-language learning: Please select the subject, such as 'Biology' or 'Geography'.",
-		tutorial_typeanswer: "<b>Type the answer:</b> %s"
+		tutorial_typeanswer: "<b>Type the answer:</b> %s",
+		tutorial_whatfile: "You should select a spreadsheet file containing text in only the first three columns. The first columns contains the questions, the second the answers, and the third the hints. Notice that hints are optional. The first row should always contain the words 'question', 'answer' and 'hint'. The top of the file should look like this in your spreadsheet editor of preference:",
 	},
 	"nl": {
 		answer_almost: "Bijna! Verwachte antwoord: <b>%s</b> (%s letter(s) verschil)",
@@ -179,6 +181,7 @@ define({
 		open_dropfile: "Sleep hieronder een bestand van het type XLSX / XLSM / XLSB / ODS / XLS / XML:",
 		open_headerenterinformation: "Geef informatie op voor de dataset",
 		open_headerselectfile: "Selecteer een dataset-bestand",
+		open_whatfile: "Wat voor bestand kan ik openen?",
 		placeholder_customsubject: "Aan een nieuw vak toevoegen",
 		placeholder_datasetname: "Naam van de dataset",
 		placeholder_gender: "Selecteer je geslacht",
@@ -203,7 +206,8 @@ define({
 		success_register: "De registratie is voltooid. Je kunt je hieronder aanmelden.",
 		tutorial_datasetlanguage: "Bij taalvakken: Kies de taal waarin de vraag moet worden vertaald.<br><br>Bij andere vakken: Kies de taal waarin de vraag wordt gesteld, en het antwoord moet worden gegeven.",
 		tutorial_datasetsubject: "Bij taalvakken: Kies de taal waarin de vraag wordt gesteld.<br><br>Bij andere vakken: Kies het vak, bijvoorbeeld 'Biologie' of 'Aardrijkskunde'.",
-		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s"
+		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s",
+		tutorial_whatfile: "In het spreadsheet-bestand dienen alleen de eerste drie kolommen inhoud te bevatten. De eerste kolom bevat de vragen, de tweede de antwoorden, en de derde de hints. De hints zijn optioneel. De eerste regel moet altijd de woorden 'question', 'answer' en 'hint' bevatten. Het begin van het bestand zou er ongeveer zo uit moeten zien in je spreadsheet-leesprogramma:",
 	},
 	"ar": {
 		answer_almost: "تقريبا! الإجابة المتوقعة: <b>%s</b> (الفرق  %s  حرف )",
@@ -277,6 +281,7 @@ define({
 		open_dropfile: "ضع ملف XLSX / XLSM / XLSB / ODS / XLS / XML أسفله:",
 		open_headerenterinformation: "إدخال المعلومات المتعلقة بمجموعة البيانات",
 		open_headerselectfile: "إختر ملف مجموعة البيانات",
+		open_whatfile: "What files can I open?",
 		placeholder_datasetname: "إسم مجموعة البيانات",
 		placeholder_gender: "اختر جنسك",
 		placeholder_subject: "اختيار موضوع",
@@ -299,6 +304,7 @@ define({
 		success_register: "لقد سجلت حسابا جديدا بنجاح. يمكنك تسجيل الدخول  أدناه..",
 		tutorial_datasetlanguage: "For language learning: Please select the language to which the learner must translate the question.<br><br>For non-language learning: Please select the language in which the question is asked, and in which the answer should be given.",
 		tutorial_datasetsubject: "For language learning: Please select the language in which the questions are asked.<br><br>For non-language learning: Please select the subject, such as 'Biology' or 'Geography'.",
-		tutorial_typeanswer: "<b>أكتب الإجابة التالية:</b> %s"
+		tutorial_typeanswer: "<b>أكتب الإجابة التالية:</b> %s",
+		tutorial_whatfile: "You should select a spreadsheet file containing text in only the first three columns. The first columns contains the questions, the second the answers, and the third the hints. Notice that hints are optional. The first row should always contain the words 'question', 'answer' and 'hint'. The top of the file should look like this in your spreadsheet editor of preference:",
 	}
 });

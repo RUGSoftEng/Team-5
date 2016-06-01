@@ -62,7 +62,7 @@
 						  <input id="datasetname" type="text" class="form-control" name="name" required="" data-parsley-dataset-name="1" />
 							
 							<!--button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button-->
-						  <label for="subject"><span id="popoverSubject" class="tooltipped" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_subject"></span></span>:</label>
+						  <label for="subject"><span id="popoverSubject" class="tooltipped" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_subject"></span></span>:</label>
               <select id="datasetsubject" class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5">
                 <!-- Items are loaded in selectSubject.js -->
               </select>
@@ -72,7 +72,7 @@
 								<input id="customsubject" type="text" class="form-control" name="customsubject" data-parsley-subject-name="1" />
 							</div>
 							
-							<label for="language"><span id="popoverLanguage" class="tooltipped" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_language"></span></span>:</label>
+							<label for="language"><span id="popoverLanguage" class="tooltipped" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_language"></span></span>:</label>
               <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
                 <!-- Items are loaded in selectLanguage.js  -->
               </select>
@@ -81,6 +81,7 @@
   						<h1><span class="text_open_headerselectfile"></span></h1>
   						<p><span class="text_open_dropfile"></span></p>
   						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
+							<span id="popoverWhatfile" class="tooltipped" data-trigger="hover" data-toggle="popover" data-placement="left" data-html="true"><span class="text_open_whatfile"></span></span>
 							<input id="buttonsave" type="submit" name="upload" class="btn btn-lg btn-success right opendataset"/>
   					</div>
           </form>

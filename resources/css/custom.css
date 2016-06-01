@@ -6,8 +6,8 @@
 .right { float: right; }
 .clear { clear: both; }
 
-.opendataset{
-	 margin-top: 15px;
+#xlf {
+	margin-bottom: 10px;
 }
 
 .popover-title {
@@ -15,6 +15,10 @@
 }
 .popover-content {
     color: black;
+}
+
+.popoverwide {
+	max-width: 566px;
 }
 
 .tooltipped {

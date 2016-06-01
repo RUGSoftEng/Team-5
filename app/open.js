@@ -35,6 +35,8 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		$("#popoverSubject").data("content", lang("tutorial_datasetsubject"));
 		$("#popoverLanguage").prop("title", lang("label_language"));
 		$("#popoverLanguage").data("content", lang("tutorial_datasetlanguage"));
+		$("#popoverWhatfile").prop("title", lang("open_whatfile"));
+		$("#popoverWhatfile").data("content", lang("tutorial_whatfile") + "<br><br><img src='resources/images/inputfilelayout.png' />");
 	}
 	function getUserDataFromDatabase() {
 		$("span[data-replace]").each(function() {
@@ -188,8 +190,9 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		checkCorrectnessFile();
 		evaluateInputOfForm();
 		
-		$('#popoverSubject').popover({trigger: "hover"});
-		$('#popoverLanguage').popover({trigger: "hover"});
+		$('#popoverSubject').popover();
+		$('#popoverLanguage').popover();
+		$('#popoverWhatfile').popover({template: '<div class="popover popoverwide" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'});
 
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");
