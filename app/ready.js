@@ -1,24 +1,22 @@
-define(['jquery'], function($) {
-  // Initiate page and show loading
+define(['jquery', 'app/lang'], function($, lang) {
   var loadingPage;
+  var elementLoadFrame = "#loadFrame";
+
   return {
     on: function(callback) {
       loadingPage = setTimeout(function() {
-        // Remove load Page
-        console.log("After ready");
         callback();
-        $("#loadFrame").fadeOut(300);
+        $(elementLoadFrame).fadeOut(300);
       }, 1);
     }
     ,showLoading: function(message=false, callback) {
-      if (message)
-        $("#loadFrame").children("h1").html(message);
-  		$("#loadFrame").fadeIn(300, callback);
+      if (message) $(elementLoadFrame).children("h1").html(message);
+  		$(elementLoadFrame).fadeIn(300, callback);
     }, changeLoadMessage(message) {
-      $("#loadFrame").children("h1").html(message);
+      $(elementLoadFrame).children("h1").html(message);
     },
     hideLoading: function() {
-      $("#loadFrame").hide();
+      $(elementLoadFrame).hide();
     }
   };
 });
