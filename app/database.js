@@ -94,12 +94,12 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 					lastId = localsubjects[i].subject_id;
 				}
 			}
-			if (lastId==0) {
+			if (lastId===0) {
 				callback();
 			}
 
 			// Compare local with online
-			for (var i=0; i< localsubjects.length; i++) {
+			for (i=0; i< localsubjects.length; i++) {
 				if (!localsubjects[i].subject_online) {
 					pushSubjectOnline(localsubjects[i], callback);
 				}

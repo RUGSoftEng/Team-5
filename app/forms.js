@@ -59,7 +59,7 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
       var currentdate = new Date();
 			
 			// Create custom subject if appropriate
-			if (subject == 0) {
+			if (subject === 0) {
 				subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
 				var newsubjectname = $("#customsubject").val();
 				db.executeQuery('addSubject' , [subject, newsubjectname]);
