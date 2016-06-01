@@ -19,12 +19,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 
 		return JSON.stringify(dataset_items);
 	}
-	// Function for showing the user the system is loading
-	function showLoading(onSuccess) {
-		$("#loadFrame").children("h1").html(lang("open_busysaving"));
-		$("#loadFrame").fadeIn(300, onSuccess);
-	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#datasetname").prop("placeholder", lang("placeholder_datasetname"));
@@ -52,7 +47,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 			}
 		});
 	}
-	
+
 	function handleCustomSubject() {
 		window.Parsley.addValidator('subjectName', {
 			validateString: function(value, requirement) {
@@ -63,7 +58,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				en: lang("error_subjectnamenotunique")
 			}
 		});
-		
+
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
 			var id = forms.getFormVal("#uploadForm", "select", "subject");
@@ -117,7 +112,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		var form = '#uploadForm';
 		forms.initialize(form);
 		forms.onSuccess(form, function() {
-			showLoading(function () {
+			ready.showLoading(lang("open_busysaving"), function () {
 				var form = '#uploadForm';
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");

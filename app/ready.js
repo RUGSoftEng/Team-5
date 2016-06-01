@@ -8,11 +8,12 @@ define(['jquery', 'app/lang'], function($, lang) {
         callback();
         $(elementLoadFrame).fadeOut(300);
       }, 1);
-    }
-    ,showLoading: function(message=false, callback) {
+    },
+    showLoading: function(message=false, callback) {
       if (message) $(elementLoadFrame).children("h1").html(message);
   		$(elementLoadFrame).fadeIn(300, callback);
-    }, changeLoadMessage(message) {
+    },
+    changeLoadMessage(message) {
       $(elementLoadFrame).children("h1").html(message);
     },
     hideLoading: function() {

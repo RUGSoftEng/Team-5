@@ -89,30 +89,44 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	function synchronizeSubjects(userId, callback) {
 		var localsubjects = database.getQuery('getUserSubjects',[userId]);
 		database.getOnlineQuery('getUserSubjects', [userId], function(remotesubjects) {
-			for (var i=0; i<localsubjects.length;i++) {
-				if (!localsubjects[i].subject_online) {
-					lastId = localsubjects[i].subject_id;
-				}
-			}
-			if (lastId==0) {
+			lastId = getLatestNonSynchronizedSubjectId(localsubjects);
+			if (lastId === 0) {
 				callback();
 			}
 
-			// Compare local with online
-			for (var i=0; i< localsubjects.length; i++) {
-				if (!localsubjects[i].subject_online) {
-					pushSubjectOnline(localsubjects[i], callback);
-				}
-			}
-			// Compare online with local
-			for (var j=0 ;j<remotesubjects.length; j++){
-				var remote = $.grep(localsubjects, function(e) { return e.subject_id === remotesubjects[j].subject_id; });
-				if (remote.length === 0) {
-					pushSubjectLocal(remotesubjects[j]);
-				}
-			}
+			synchronizeLocalSubjects(localsubjects, callback);
+			synchronizeOnlineSubjects(localsubjects, remotesubjects);
 			database.close();
 		});
+	}
+
+	function getLatestNonSynchronizedSubjectId(localsubjects) {
+		var last = 0;
+		for (var i=0; i<localsubjects.length;i++) {
+			if (!localsubjects[i].subject_online) {
+				last = localsubjects[i].subject_id;
+			}
+		}
+		return last;
+	}
+
+	function synchronizeLocalSubjects(localsubjects, callback) {
+		for (var i=0; i< localsubjects.length; i++) {
+			if (!localsubjects[i].subject_online) {
+				pushSubjectOnline(localsubjects[i], callback);
+			}
+		}
+	}
+
+	function synchronizeOnlineSubjects(localsubjects, remotesubjects) {
+		var j;
+		var getRemoteFromLocal = function(e) { return e.subject_id === remotesubjects[j].subject_id; };
+		for (j = 0 ;j<remotesubjects.length; j++){
+			var remote = $.grep(localsubjects, getRemoteFromLocal);
+			if (remote.length === 0) {
+				pushSubjectLocal(remotesubjects[j]);
+			}
+		}
 	}
 
 	function pushSubjectOnline(subject, callback) {
@@ -133,7 +147,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		subject = $.map(subject, function(val) { return val; });
 		database.executeQuery('addSubject', subject, true, false);
 	}
-	
+
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
