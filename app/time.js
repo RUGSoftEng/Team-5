@@ -11,6 +11,9 @@ define([], function () {
     minutesToSeconds: function(time){
       return time*60;
     },
+		secondsToMinutes: function(time) {
+			return time/60;
+		},
     start: function(){
       return "00:00";
     },

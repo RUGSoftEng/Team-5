@@ -8,6 +8,16 @@
  */
 define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready'], function ($, config, db, user, lang, string, messages, parsley, forms, hash, ready) {
 
+	function showPermissionsMessage() {
+		if (navigator.appVersion.indexOf("Mac")!=-1) {
+			   if (localStorage.done=='no') {
+       				localStorage.done = 'yes';
+       				alert(lang("message_permission"));
+   				}
+
+		}
+	}
+
 	function getPermissionsForDatabase() {
 		if (navigator.appVersion.indexOf("Mac")!=-1){
 			var options = {
@@ -43,51 +53,71 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		var username = $("#username").val().toLowerCase();
 		var password = $("#password").val();
 		var field;
-		if (db.online()) {
-			db.getOnlineQuery("getUserbyUsername", [username], function(result) {
-				field = $("#username").parsley();
-				if (result.length !== 0) {
-					field.removeError('error');
-					field = $("#password").parsley();
-					if (hash.verify(password,result[0].user_password) ) {
-						user.setCookie(result);
-						db.synchronize(user.getCookie('user_id'), function() {
-							db.close();
-							window.location = "index.html?message=login";
-						});
-					} else {
-						field.removeError('error');
-						field.addError('error', {message: lang("error_passwordincorrect")});
+		ready.showLoading(lang("login_checking"), function() {
+			if (db.online()) {
+				db.getOnlineQuery("getUserbyUsername", [username], function(result) {
+					if (checkUsername(result)) {
+						if (checkPassword(password, result)) {
+							ready.changeLoadMessage(lang("login_synchronizing"));
+							user.setCookie(result);
+							synchronizeAndLogin();
+						}
 					}
-				} else {
-					field.removeError('error');
-					field.addError('error', {message: lang("error_usernameincorrect")});
-				}
-			});
-		} else {
-			var result = db.getQuery("getUserbyUsername", [username]);
-			field = $("#username").parsley();
-			if (result.length !== 0) {
-				field.removeError('error');
-				field = $("#password").parsley();
-				if (hash.verify(password,result[0].user_password) ) {
-					user.setCookie(result);
-					window.location = "index.html?message=login";
-				} else {
-					field.removeError('error');
-					field.addError('error', {message: lang("error_passwordincorrect")});
-				}
+				});
 			} else {
-				field.removeError('error');
-				field.addError('error', {message: lang("error_usernameincorrect")});
+				var result = db.getQuery("getUserbyUsername", [username]);
+				if (checkUsername(result)) {
+					if (checkPassword(password, result)) {
+						user.setCookie(result);
+						login();
+					}
+				}
 			}
+		});
+	}
+
+	function checkUsername(result) {
+		field = $("#username").parsley();
+		if (result.length !== 0) {
+			return true;
+		} else {
+			ready.hideLoading();
+			field.removeError('error');
+			field.addError('error', {message: lang("error_usernameincorrect")});
+			return false;
 		}
 	}
 
-	forms.initializeForm('#loginForm', handleLogin);
+	function checkPassword(password, result) {
+		field.removeError('error');
+		field = $("#password").parsley();
+		if (hash.verify(password,result[0].user_password) ) {
+			return true;
+		} else {
+			ready.hideLoading();
+			field.removeError('error');
+			field.addError('error', {message: lang("error_passwordincorrect")});
+			return false;
+		}
+	}
+
+	function synchronizeAndLogin() {
+		db.synchronize(user.getCookie('user_id'), function() {
+			db.close();
+			login();
+		});
+	}
+
+	function login() {
+		window.location = "index.html?message=success_login";
+	}
+
+	var form = '#loginForm';
+	forms.initialize(form);
+	forms.onSuccess(form, handleLogin);
 
 	if ($_GET('message')) {
-		messages.show(config.constant("MESSAGES"), $_GET('message'));
+		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
 	}
 
 	// if (user.check()) {
@@ -100,6 +130,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	$("#password").prop("placeholder", lang("label_password"));
 
 	ready.on(function() {
+		showPermissionsMessage();
 		getPermissionsForDatabase();
 	});
 

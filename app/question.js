@@ -15,7 +15,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   var startTime = new Date();
   var firstKeyPress = 0;
 	var presentationDuration = 0;
-  var responseList ;
+  var responseList=[] ;
 
   // Calculate the time difference in milliseconds
   function measureTime(start) {
@@ -185,6 +185,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     initialize: function(factList, responselist) {
 
         if(config.ALGORITHM === 'slimpstampen'){
+          console.log(responselist);
           responseList = responselist;
         }
 

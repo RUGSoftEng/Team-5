@@ -6,10 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript">var fs = require("fs");</script>
+    <script type="text/javascript">var XLSX = require("xlsx");</script>
     <script data-main="app/openpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
     <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+    <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
     <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
     <!-- Javascript libraries are added before the </body> tag  -->
   </head>
@@ -51,6 +53,12 @@
           <div class="alert alert-danger bs-callout-warning hidden" role="alert">
             <span class="text_error_notenteredallfields"></span>
           </div>
+          <div id="messages" class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div id="errors" class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
           <form id="uploadForm" data-parsley-validate="">
             <div class="col-md-6">
   						<h1><span class="text_open_headerselectfile"></span></h1>
@@ -85,6 +93,8 @@
 				</div>
 			</div>
 		</div>
-    <div id='loadFrame'><h1>Loading...</h1></div>
+    <div id='loadFrame'>
+      <h1><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></h1>
+    </div>
 	</body>
 </html>

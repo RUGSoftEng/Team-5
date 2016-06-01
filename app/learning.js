@@ -61,6 +61,13 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     return newList;
   }
 
+	// Function for obtaining the GET data from the url
+  function $_GET(q,s) {
+    s = (s) ? s : window.location.search;
+    var re = new RegExp(q+'=([^&]*)','i');
+    return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
+  }
+
 	// Write localisable text to the page
 	string.fillinTextClasses();
 	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
@@ -80,13 +87,18 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   return datasetId;
 	}
 
+	function retrieveDataSet(datasetId) {
+  var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+  return factList;
+	}
+
 	function addTemporaryHintButton() {
-    if (questions.hint()==="" || questions.hint()===undefined) {
-      $("#hintButton").hide();
-    } else {
+    if (questions.hint()) {
       $("#hintButton").click(function() {
           messages.showHint(questions.hint());
   	  });
+    } else {
+      $("#hintButton").hide();
     }
 	}
 
@@ -109,9 +121,11 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
-    var datasetId = url.substring(url.indexOf('?')+1);
-    var dataset_items = db.getQuery("getDatasetItems",[datasetId]);
+    var datasetId = $_GET('id');
+    console.log(datasetId);
+    var dataset_items = db.getQuery("getDatasetbyId",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
+    console.log(dataset_items[0].dataset_responselist);
     var responseList = JSON.parse(dataset_items[0].dataset_responselist);
     questions.initialize(factList,responseList);
   	questions.show();
@@ -119,7 +133,10 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     addTemporaryHintButton();
     startTimer(dataset_items,datasetId);
     $("#quit_session").click(function() {
+      console.log(config.constant("ALGORITHM"))
+      if(config.constant('ALGORITHM') === 'slimstampen'){
         updateResponseList(dataset_items,datasetId);
+      }
     });
   });
 
@@ -127,7 +144,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     timer.startTimer(".timer", config.constant("TIME_LIMIT"), function(){
       alert(lang('learning_timeup'));
       $('.timer').css("color", "red");
-      if(config.ALGORITHM === 'slimstampen'){
+      if(config.constant('ALGORITHM') === 'slimstampen'){
         updateResponseList(dataset_items,datasetId);
       }else{
         window.location = "index.html";
@@ -143,5 +160,4 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
       handleEnter();
   	}
   });
-
 });

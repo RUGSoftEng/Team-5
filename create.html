@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
     <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+    <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
     <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   </head>
 	<body>
@@ -50,8 +51,35 @@
           <div class="alert alert-danger bs-callout-warning hidden" role="alert">
             <span class="text_error_notenteredallfields"></span>
           </div>
+          <div id="messages" class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div id="errors" class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
           <form id="createForm" data-parsley-validate="">
+						<div class="col-md-8">
+              <h1><span class="text_create_header"></span></h1>
+              <div id="items">
+                <table class="table">
+                  <tr>
+                    <th><span class="text_label_question"></span></th>
+                    <th><span class="text_label_answer"></span></th>
+                    <th><span class="text_label_hint"></span></th>
+                    <th><span class="text_create_remove"></span></th>
+                  </tr>
+                  <tr id="layout">
+                    <td><input id="inputquestion" type="text" class="form-control" name="question{i}" {required} data-parsley-errors-messages-disabled /></td>
+                    <td><input id="inputanswer" type="text" class="form-control" name="answer{i}" {required} data-parsley-errors-messages-disabled /></td>
+                    <td><input id="inputhint" type="text" class="form-control" name="hint{i}" /></td>
+                    <td><span class="glyphicon glyphicon-remove remove"></span></td>
+                  </tr>
+                </table>
+              </div>
+              <button class="btn btn-lg add btn-warning"><span class="text_create_additem"></span></button>
+            </div>
             <div class="col-md-4">
+							<h1><span class="text_open_headerenterinformation"></span></h1>
               <label for="name"><span class="text_label_name"></span>:</label>
               <input id="datasetname" type="text" class="form-control" name="name" required=""  data-parsley-dataset-name="1" />
               <label for="language"><span class="text_label_language"></span>:</label>
@@ -73,30 +101,12 @@
               <input id="buttoncreate" type="submit" name="create" class="btn btn-lg btn-success submit createdataset"/>
               <div class="clear"></div>
             </div>
-            <div class="col-md-8">
-              <h1><span class="text_create_header"></span></h1>
-              <div id="items">
-                <table class="table">
-                  <tr>
-                    <th><span class="text_label_question"></span></th>
-                    <th><span class="text_label_answer"></span></th>
-                    <th><span class="text_label_hint"></span></th>
-                    <th><span class="text_create_remove"></span></th>
-                  </tr>
-                  <tr id="layout">
-                    <td><input id="inputquestion" type="text" class="form-control" name="question{i}" {required} data-parsley-errors-messages-disabled /></td>
-                    <td><input id="inputanswer" type="text" class="form-control" name="answer{i}" {required} data-parsley-errors-messages-disabled /></td>
-                    <td><input id="inputhint" type="text" class="form-control" name="hint{i}" /></td>
-                    <td><span class="glyphicon glyphicon-remove remove"></span></td>
-                  </tr>
-                </table>
-              </div>
-              <button class="btn btn-lg add btn-warning"><span class="text_create_additem"></span></button>
-            </div>
           </form>
 				</div>
 			</div>
 		</div>
-    <div id='loadFrame'><h1>Loading...</h1></div>
+    <div id='loadFrame'>
+      <h1><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></h1>
+    </div>
 	</body>
 </html>

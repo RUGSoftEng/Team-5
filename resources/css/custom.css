@@ -23,8 +23,9 @@ nav { }
   nav .center-menu { display:flex; justify-content: center; }
   nav .right-menu { display:flex;position:absolute;right:0px;top:0px; }
 
-#loadFrame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: 0.9; z-index:1000; }
+#loadFrame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; opacity: 0.7; z-index:10000; }
 	#loadFrame h1 { text-align: center; margin-top: 25%; }
+	#loadFrame i { margin: 0 auto;  }
 #content { margin-top: 100px; }
   #content h1 { margin-bottom: 30px; }
   #content h2 span { font-size: 16px; }
@@ -40,6 +41,7 @@ nav { }
   .stats { margin: 0 0 50px 0; }
   #question { font-size: 16px; margin: 0 0 15px 0; height: 50px; }
 	#learnForm .input-group { width: 100%; }
+	#learningTimeInput { color:black;width:100%; }
 
   form { }
    /* form input[type="submit"], form button {}
