@@ -8,6 +8,16 @@
  */
 define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready'], function ($, config, db, user, lang, string, messages, parsley, forms, hash, ready) {
 
+	function showPermissionsMessage() {
+		if (navigator.appVersion.indexOf("Mac")!=-1) {
+			   if (!localStorage['done']) {
+       				localStorage['done'] = 'yes';
+       				alert(lang("message_permission"));
+   				}
+
+		}
+	}
+
 	function getPermissionsForDatabase() {
 		if (navigator.appVersion.indexOf("Mac")!=-1){
 			var options = {
@@ -120,6 +130,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	$("#password").prop("placeholder", lang("label_password"));
 
 	ready.on(function() {
+		showPermissionsMessage();
 		getPermissionsForDatabase();
 	});
 
