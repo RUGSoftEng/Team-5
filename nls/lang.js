@@ -66,6 +66,7 @@ define({
 		login_welcome: "Welcome to the SlimStampen application.",
 		message_default: "Unknown message",
 		message_enterorwait: "Press Enter to continue or wait %s seconds.",
+		message_permission: "SlimStampen needs your permission to save user information.\n\n Please enter the username and password of your computer.",
 		navigation_download: "Download",
 		navigation_new: "New",
 		navigation_open: "Open",
@@ -73,7 +74,7 @@ define({
 		open_busysaving: "Saving dataset...",
 		open_buttonsave: "Save dataset",
 		open_dropfile: "Drop a XLSX / XLSM / XLSB / ODS / XLS / XML file below:",
-		open_headerenterinformation: "Enter the dataset information",
+		open_headerenterinformation: "Dataset information",
 		open_headerselectfile: "Select a dataset file",
 		placeholder_customsubject: "Add to a new subject",
 		placeholder_datasetname: "Name of the dataset",
@@ -97,8 +98,9 @@ define({
 		success_logout: "You have been signed out.",
 		success_opendataset: "You have succesfully loaded a new dataset into the system.",
 		success_register: "You have succesfully registered a new account. You can sign in here below.",
-		tutorial_typeanswer: "<b>Type the answer:</b> %s",
-		message_permission: "SlimStampen needs your permission to save user information.\n\n Please enter the username and password of your computer."
+		tutorial_datasetlanguage: "For language learning: Please select the language to which the learner must translate the question.<br><br>For non-language learning: Please select the language in which the question is asked, and in which the answer should be given.",
+		tutorial_datasetsubject: "For language learning: Please select the language in which the question is asked.<br><br>For non-language learning: Please select the subject, such as 'Biology' or 'Geography'.",
+		tutorial_typeanswer: "<b>Type the answer:</b> %s"
 	},
 	"nl": {
 		answer_almost: "Bijna! Verwachte antwoord: <b>%s</b> (%s letter(s) verschil)",
@@ -162,11 +164,12 @@ define({
 		login_loggingin: "Inloggen...",
 		login_needhelp: "Hulp nodig?",
 		login_pleaselogin: "Je kunt je hier aanmelden.",
-		login_synchronizing: "Account synchroniseren...",
 		login_register: "Ik wil een nieuwe gebruiker registeren.",
+		login_synchronizing: "Account synchroniseren...",
 		login_welcome: "Welkom bij de SlimStampen-applicatie",
 		message_default: "Onbekend bericht",
 		message_enterorwait: "Druk op Enter of wacht %s seconden.",
+		message_permission: "SlimStampen heeft toestemming nodig om gebruikersinformatie op te slaan.\n\n Voer de gebruikersnaam en het wachtwoord van je computer in.",
 		navigation_download: "Downloaden",
 		navigation_new: "Nieuw",
 		navigation_open: "Openen",
@@ -198,8 +201,9 @@ define({
 		success_logout: "Je bent succesvol afgemeld.",
 		success_opendataset: "De nieuwe dataset is succesvol in het systeem geladen.",
 		success_register: "De registratie is voltooid. Je kunt je hieronder aanmelden.",
-		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s",
-		message_permission: "SlimStampen heeft uw toestemming nodig om gebruikersinformatie op te slaan.\n\n Voer de gebruikersnaam en het wachtwoord van uw computer in."
+		tutorial_datasetlanguage: "Bij taalvakken: Kies de taal waarin de vraag moet worden vertaald.<br><br>Bij andere vakken: Kies de taal waarin de vraag wordt gesteld, en het antwoord moet worden gegeven.",
+		tutorial_datasetsubject: "Bij taalvakken: Kies de taal waarin de vraag wordt gesteld.<br><br>Bij andere vakken: Kies het vak, bijvoorbeeld 'Biologie' of 'Aardrijkskunde'.",
+		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s"
 	},
 	"ar": {
 		answer_almost: "تقريبا! الإجابة المتوقعة: <b>%s</b> (الفرق  %s  حرف )",
@@ -218,9 +222,9 @@ define({
 		error_datasetnamenotunique: "هذا الإسم مستختدم من قبل مجموعة بيانات أخرى",
 		error_emailnotunique: "هذا  البريد الإلكتروني  مسجل ",
 		error_logout: "حدث خطأ ما، لذلك كنت قد تم تسجيل الخروج. اتصل بالإدارة اذا استمر هذا الخطأ في الحدوث",
-		error_notenteredallfields: "لم يتم إدخال كافة المعلومات المطلوبة.",
 		error_nointernet: "Couldn't connect to the internet, please reconnect and try again.",
 		error_nointernet_register: "You cannot register offline.\n please check your internet connection",
+		error_notenteredallfields: "لم يتم إدخال كافة المعلومات المطلوبة.",
 		error_passwordincorrect: "كلمة المرور غير صحيحة.",
 		error_unsupportedfiletype: " هذا النوع من الملفات ليس معتمد",
 		error_usernameincorrect: "هذا الإسم غير موجود.",
@@ -263,6 +267,7 @@ define({
 		login_welcome: "مرحبا بك في تطبيق سليمستامبن.",
 		message_default: "رسالة مجهولة",
 		message_enterorwait: "اضغط على زر الإدخال  للمتابعة أو انتظر %s ثواني",
+		message_permission: "SlimStampen needs your permission to save user information.\n\n Please enter the username and password of your computer.",
 		navigation_download: "تنزيل",
 		navigation_new: "جديد",
 		navigation_open: "فتح",
@@ -292,6 +297,8 @@ define({
 		success_logout: "لقد تم تسجيل خروجك.",
 		success_opendataset: "لقد تحميل مجموعة بيانات جديدة إلى البرنامج بنجاح.",
 		success_register: "لقد سجلت حسابا جديدا بنجاح. يمكنك تسجيل الدخول  أدناه..",
+		tutorial_datasetlanguage: "For language learning: Please select the language to which the learner must translate the question.<br><br>For non-language learning: Please select the language in which the question is asked, and in which the answer should be given.",
+		tutorial_datasetsubject: "For language learning: Please select the language in which the questions are asked.<br><br>For non-language learning: Please select the subject, such as 'Biology' or 'Geography'.",
 		tutorial_typeanswer: "<b>أكتب الإجابة التالية:</b> %s"
 	}
 });
