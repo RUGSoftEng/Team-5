@@ -22,7 +22,7 @@ function createWindow () {
 
   const page = mainWindow.webContents;
   // Open the DevTools.
-  // page.openDevTools();
+  page.openDevTools();
   // Enable navigation
   page.on('will-navigate', function (e, url) {
     page.loadURL('file://' + __dirname + '/' + url)

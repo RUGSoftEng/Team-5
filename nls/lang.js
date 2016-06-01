@@ -97,7 +97,8 @@ define({
 		success_logout: "You have been signed out.",
 		success_opendataset: "You have succesfully loaded a new dataset into the system.",
 		success_register: "You have succesfully registered a new account. You can sign in here below.",
-		tutorial_typeanswer: "<b>Type the answer:</b> %s"
+		tutorial_typeanswer: "<b>Type the answer:</b> %s",
+		message_permission: "SlimStampen needs your permission to save user information.\n\n Please enter the username and password of your computer."
 	},
 	"nl": {
 		answer_almost: "Bijna! Verwachte antwoord: <b>%s</b> (%s letter(s) verschil)",
@@ -197,7 +198,8 @@ define({
 		success_logout: "Je bent succesvol afgemeld.",
 		success_opendataset: "De nieuwe dataset is succesvol in het systeem geladen.",
 		success_register: "De registratie is voltooid. Je kunt je hieronder aanmelden.",
-		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s"
+		tutorial_typeanswer: "<b>Typ het antwoord:</b> %s",
+		message_permission: "SlimStampen heeft uw toestemming nodig om gebruikersinformatie op te slaan.\n\n Voer de gebruikersnaam en het wachtwoord van uw computer in."
 	},
 	"ar": {
 		answer_almost: "تقريبا! الإجابة المتوقعة: <b>%s</b> (الفرق  %s  حرف )",
