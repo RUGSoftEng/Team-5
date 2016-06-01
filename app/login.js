@@ -10,8 +10,8 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 
 	function showPermissionsMessage() {
 		if (navigator.appVersion.indexOf("Mac")!=-1) {
-			   if (localStorage['done']=='no') {
-       				localStorage['done'] = 'yes';
+			   if (localStorage.done=='no') {
+       				localStorage.done = 'yes';
        				alert(lang("message_permission"));
    				}
 

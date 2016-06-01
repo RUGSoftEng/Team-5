@@ -131,7 +131,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 		});
 		// When input field is left blank, reset
 		input.on('change', function() {
-			if (input.val() == "") {
+			if (input.val() === "") {
 				input.val(initialTime);
 				slider.val(input.val());
 			}
