@@ -5,15 +5,21 @@ define(['jquery', 'app/lang'], function($, lang) {
   return {
     on: function(callback) {
       loadingPage = setTimeout(function() {
-        // Remove load Page
-        console.log("After ready");
         callback();
         $(elementLoadFrame).fadeOut(300);
       }, 1);
+<<<<<<< HEAD
+    },
+    showLoading: function(message=false, callback) {
+      if (message)
+        $("#loadFrame").children("h1").html(message);
+  		$("#loadFrame").fadeIn(300, callback);
+=======
     }
     ,showLoading: function(message=false, callback) {
       if (message) $(elementLoadFrame).children("h1").html(message);
   		$(elementLoadFrame).fadeIn(300, callback);
+>>>>>>> bebb5bd41ce6d38dedab7ea1c3ba522b54fb8bf5
     }, changeLoadMessage(message) {
       $(elementLoadFrame).children("h1").html(message);
     },
