@@ -104,12 +104,12 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				}
 				dataset_items = JSON.stringify(dataset_items);
 	      if (db.online()) {
-	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,''], false, true);
+	        db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], false, true);
 	        db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,''], form);
+						saveDatasetsLocal([id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], form);
 	        });
 	      } else {
-	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items,''], form);
+	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items,'[]'], form);
 	      }
 			});
 		});

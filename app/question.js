@@ -15,7 +15,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   var startTime = new Date();
   var firstKeyPress = 0;
 	var presentationDuration = 0;
-  var responseList = [];
+  var responseList ;
 
   // Calculate the time difference in milliseconds
   function measureTime(start) {
@@ -182,7 +182,9 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
   return {
-    initialize: function(factList) {
+    initialize: function(factList, responselist) {
+        responseList = responselist;
+        console.log(responseList);
         items = factList;
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));

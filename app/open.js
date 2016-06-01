@@ -108,14 +108,14 @@ define(['app/database', 'jquery', 'bootstrap', 'xlsx', 'parsley', 'app/select', 
 				var dataset_items = createDatasetItems(saveData);
 
 				if (db.online()) {
-					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,''], false, true);
+					db.executeQuery("addDataset", [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], false, true);
 					db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,''], true, false);
+						db.executeQuery("addDatasetAll", [id, user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], true, false);
 						db.close();
 						window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 					});
 				} else {
-					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items,''], true, false);
+					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items,'[]'], true, false);
 					db.close();
 					window.location = "index.html?message=open_dataset&language="+language+"&subject="+subject;
 				}

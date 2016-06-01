@@ -13,7 +13,7 @@ define(function (require) {
 		MARGIN_OF_ERROR: 0.2,
 		TUTORIAL_MODE: true,
 		/* Time limit for learning sessions in seconds */
-		TIME_LIMIT: 600,
+		TIME_LIMIT: 20,
 		/* Time before the next item is presented while learning */
 		FEEDBACK_DELAY_CORRECT: 1,
 		FEEDBACK_DELAY_INCORRECT: 10,
@@ -21,7 +21,7 @@ define(function (require) {
 		DATABASE_USER: "/database/user.sqlite",
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: "/database/slimstampen.sqlite",
-		ALGORITHM: "slimstampen", // flashcard; slimstampen;
+		ALGORITHM: "flashcard", // flashcard; slimstampen;
 		LANGUAGE: "en",
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
