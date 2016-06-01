@@ -98,12 +98,12 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     }
 	}
 
-  function updateResponseList(dataset_items){
+  function updateResponseList(dataset_items,datasetId){
     var responseList = questions.getResponseList();
     if(responseList.length>0){
       responseList = dataset_items[0].dataset_responselist + JSON.stringify(responseList);
-      console.log(JSON.stringify(responseList));
-      db.executeQuery('updateDatasetResponseList',[responseList,dataset_items[0].dataset_id]);
+      db.executeQuery('updateDatasetResponseList', [responseList, datasetId]);
+      db.close();
     }
     window.location = "index.html";
   }
@@ -122,8 +122,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
     timer.startTimer(".timer", config.constant("TIME_LIMIT"));
     $("#quit_session").click(function() {
-        updateResponseList(dataset_items);
-        console.log('testing');
+        updateResponseList(dataset_items,datasetId);
     });
   });
   // Read the user input when the Enter key is pressed and evaluate it.

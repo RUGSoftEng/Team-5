@@ -5,17 +5,13 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   var backspaceUsed=0;
   var backspacedFirstLetter=0;
   var keyPressesCounter = 0;
-
   var itemsAnsweredCorrectly = 0;
   var answerWasCorrect;
   var timeCreated = 0;
-
   var correctAnswers = 0;
   var totalAnswers = 0;
-
   var tutorialLength;
   var inTutorial = config.constant("TUTORIAL_MODE");
-
   var startTime = new Date();
   var firstKeyPress = 0;
 	var presentationDuration = 0;
@@ -151,17 +147,14 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 			backspaceUsed: backspaceUsed,
 			backspacedFirstLetter: backspacedFirstLetter,
 		};
-		console.log("time created, firstkeypress, presentationDuration");
-		console.log(timeCreated, firstKeyPress, presentationDuration);
+
 		newResponse = slimstampen.createResponse(items, responseList, responseInput)
 		responseList.push(newResponse);
     resetTimers();
 		// Use slimstampen method to determine next question
 		var newQuestion = slimstampen.getNextFact(timeCreated, items, responseList);
-    console.log(newQuestion);
 		currentItemIndex = items.indexOf(newQuestion);
-    console.log(items);
-    console.log(currentItemIndex);
+
 
   }
 
@@ -173,7 +166,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     keyPressesCounter++;
     backspaceUsed = (e.keyCode === keys.BACKSPACE);
     backspacedFirstLetter = (e.keyCode=== keys.BACKSPACE && keyPressesCounter===2);
-    console.log(backspaceUsed+" "+ backspacedFirstLetter);
+
 		if (firstKeyPress===0 && e.keyCode !== keys.ENTER) {
 			start = startTime.getTime() + timeCreated;
 			firstKeyPress = time.measureWithoutDate(start);
@@ -187,16 +180,6 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     backspaceUsed = 0;
     backspacedFirstLetter = 0;
   }
-
-  function updateResponseList(){
-    db.getQuery();
-  }
-
-  ready.on(function(){
-    $("#quit_session").click(function() {
-        console.log('testing');
-    });
-  });
 
   return {
     initialize: function(factList) {
@@ -253,9 +236,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     hint: function() {
         return items[currentItemIndex].hint;
     },
-		printTimers: function() {
-			console.log(firstKeyPress);
-		},
+
     calculatePresentationDuration(){
       start = startTime.getTime() + timeCreated;
       presentationDuration = time.measureWithoutDate(start);
