@@ -39,7 +39,7 @@ define(function (require) {
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: addDirectory() + "/database/slimstampen.sqlite",
 		ALGORITHM: "slimstampen", // flashcard; slimstampen;
-		LANGUAGE: "en",
+		LANGUAGE: "ar",
 		ENGLISH: 1, // id of the english language
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
