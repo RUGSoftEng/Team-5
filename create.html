@@ -17,7 +17,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
      <div class="navbar-header" >
        <ul class="nav navbar-nav " id="nav-left">
-         <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" >SlimStampen</a></li>
+         <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" ><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> SlimStampen</a></li>
        </ul>
 
        <div class="btn-group center-menu" role="group">
@@ -39,9 +39,6 @@
 					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalProfile">
 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span data-replace="user_firstname"></span> <span data-replace="user_lastname"></span>
 					</button>
-          <a href="index.html" class="btn btn-warning" title="Back to main screen">
-						<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
-					</a>
        </div>
      </div>
     </nav>
@@ -58,6 +55,26 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
           <form id="createForm" data-parsley-validate="">
+					  <div class="col-md-4">
+							<h1><span class="text_open_headerenterinformation"></span></h1>
+              <label for="name"><span class="text_label_name"></span>:</label>
+              <input id="datasetname" type="text" class="form-control" name="name" required=""  data-parsley-dataset-name="1" />
+
+              <label for="subject"><span id="popoverSubject" class="tooltipped" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_subject"></span></span>:</label>
+              <select id="datasetsubject" class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5">
+                <!-- Items are loaded in selectSubject.js  -->
+              </select>
+
+							<div id="newsubject" hidden="true">
+								<span class="text_label_customsubject"></span>:
+								<input id="customsubject" type="text" class="form-control" name="customsubject" data-parsley-subject-name="1" />
+							</div>
+							
+							<label for="language"><span id="popoverLanguage" class="tooltipped" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_language"></span></span>:</label>
+              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
+                <!-- Items are loaded in selectLanguage.js  -->
+              </select>
+            </div>
 						<div class="col-md-8">
               <h1><span class="text_create_header"></span></h1>
               <div id="items">
@@ -76,30 +93,8 @@
                   </tr>
                 </table>
               </div>
-              <button class="btn btn-lg add btn-warning"><span class="text_create_additem"></span></button>
-            </div>
-            <div class="col-md-4">
-							<h1><span class="text_open_headerenterinformation"></span></h1>
-              <label for="name"><span class="text_label_name"></span>:</label>
-              <input id="datasetname" type="text" class="form-control" name="name" required=""  data-parsley-dataset-name="1" />
-              <label for="language"><span class="text_label_language"></span>:</label>
-              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
-                <!-- Items are loaded in selectLanguage.js  -->
-              </select>
-              <div class="clear"></div>
-
-              <label for="subject"><span class="text_label_subject"></span>:</label>
-              <select id="datasetsubject" class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5">
-                <!-- Items are loaded in selectSubject.js  -->
-              </select>
-
-							<div id="newsubject" hidden="true">
-								<span class="text_label_customsubject"></span>:
-								<input id="customsubject" type="text" class="form-control" name="customsubject" data-parsley-subject-name="1" />
-							</div>
-
-              <input id="buttoncreate" type="submit" name="create" class="btn btn-lg btn-success submit createdataset"/>
-              <div class="clear"></div>
+							<button class="left btn btn-lg add btn-warning"><span class="text_create_additem"></span></button>
+							<input id="buttoncreate" type="submit" name="create" class="right btn btn-lg btn-success submit createdataset"/>
             </div>
           </form>
 				</div>

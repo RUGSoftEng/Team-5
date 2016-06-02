@@ -1,4 +1,4 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages', 'app/ready'], function ($, config, db, parsley, lang, string,hash,date, async, messages, ready) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages', 'bootstrap', 'app/select', 'app/forms', 'app/ready'], function ($, config, db, parsley, lang, string,hash,date, async, messages, bootstrap, select, forms, ready) {
 
   $("form").submit(function(e){
     e.preventDefault();
@@ -80,14 +80,28 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 		$("#lastname").prop("placeholder", lang("label_lastname"));
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+		$("#button_savesettings").prop("value", lang("settings_buttonsave"));
 	}
 
   function inputFieldExists(result) {
     return (result.length === 0);
   }
+	
+	function initialiseLanguageSettings() {
+		select.initiate("gui_languages", ".selectLanguage");
+		
+		var form = '#settingsForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
+  		var newLanguage = $("#language").val();
+			document.cookie = 'user_language='+newLanguage;
+    	window.location = "register.html"; // refresh
+  	});
+	}
 
-  ready.on(function() {
+  $(document).ready(function(){
   	localisePage();
+		initialiseLanguageSettings();
 
     if (!db.online()) {
       messages.show("#errors", lang("error_nointernet_register"));

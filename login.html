@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./resources/css/custom.css">
     <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
     <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+		<link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   </head>
   <body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -21,7 +22,9 @@
 				</ul>
 
 				<div class="btn-group right-menu" role="group">
-
+					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalSettings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+          </button>
 				</div>
 			</div>
 		</nav>
@@ -74,6 +77,38 @@
 					</div>
 					<div class="col-lg-2 col-xl-3"></div>
 				</div>
+      </div>
+    </div>
+		<!-- Language setting popup -->
+    <div id="modalSettings" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><span class="text_settings_header"></span></h4>
+          </div>
+          <div class="modal-body">
+            <form id="settingsForm" role="form">
+              <div class="form-group">
+								<p><span class="text_settings_changelanguage"></span>:</p>
+                <div class="row">
+                  <div class="col-sm-6">
+										<select id="language" class="selectpicker selectLanguage" name="language" data-live-search="true">
+											<!-- Items are loaded in select.js  -->
+										</select>
+										<div class="clear"></div>
+                  </div>
+                  <div class="col-sm-6"></div>
+                </div>
+              </div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
+							<input id="button_savesettings" type="submit" name="save" class="btn btn-success submit saveSettings"/>
+						</div>
+					</form>
+        </div>
       </div>
     </div>
     <div id='loadFrame'>

@@ -26,6 +26,12 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		$("#datasetsubject").prop("title", lang("placeholder_subject"));
 		$("#customsubject").prop("placeholder", lang("label_customsubject"));
 		$("#buttonsave").prop("value", lang("open_buttonsave"));
+		$("#popoverSubject").prop("title", lang("label_subject"));
+		$("#popoverSubject").data("content", lang("tutorial_datasetsubject"));
+		$("#popoverLanguage").prop("title", lang("label_language"));
+		$("#popoverLanguage").data("content", lang("tutorial_datasetlanguage"));
+		$("#popoverWhatfile").prop("title", lang("open_whatfile"));
+		$("#popoverWhatfile").data("content", lang("tutorial_whatfile") + "<br><br><img src='resources/images/inputfilelayout.png' />");
 	}
 	function getUserDataFromDatabase() {
 		$("span[data-replace]").each(function() {
@@ -64,7 +70,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 			var id = forms.getFormVal("#uploadForm", "select", "subject");
 			$("#datasetsubject").data("subject", id);
 
-			if (id === 0) {
+			if (id == 0) {
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
 				$("#customsubject").attr("data-parsley-subject-name", "1");
@@ -178,6 +184,10 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		handleCustomSubject();
 		checkCorrectnessFile();
 		evaluateInputOfForm();
+		
+		$('#popoverSubject').popover();
+		$('#popoverLanguage').popover();
+		$('#popoverWhatfile').popover({template: '<div class="popover popoverwide" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'});
 
 		// Initiate select boxes
 		select.initiate("languages", ".selectLanguage");

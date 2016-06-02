@@ -6,8 +6,24 @@
 .right { float: right; }
 .clear { clear: both; }
 
-.createdataset{
-	 margin-top: 15px;
+#xlf {
+	margin-bottom: 10px;
+}
+
+.popover-title {
+    color: black;
+}
+.popover-content {
+    color: black;
+}
+
+.popoverwide {
+	max-width: 566px;
+}
+
+.tooltipped {
+  border-bottom: 2px dashed #FFFFFF;
+  display: inline;
 }
 
 /*p,h1,h2,h3,h4,h5,h6,a,span,input {
@@ -48,7 +64,6 @@ nav { }
     form label { margin: 15px 0 0; }*/
     form #xlf { border: 2px dashed #bbb; width: 100%; padding: 25px; }
 		form label { margin-top: 15px; }
-		form input[type="submit"] { margin-top: 15px; }
 		form input[type="file"].dragging { background-color: #5f6ceb; }
     .bootstrap-select { width: 100% !important; }
     .dropdown-header { color: #555 !important;  }

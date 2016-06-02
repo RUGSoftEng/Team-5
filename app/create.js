@@ -62,6 +62,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 		$("#inputquestion").prop("placeholder", lang("label_question"));
 		$("#inputanswer").prop("placeholder", lang("label_answer"));
 		$("#inputhint").prop("placeholder", lang("label_hint"));
+		$("#popoverSubject").prop("title", lang("label_subject"));
+		$("#popoverSubject").data("content", lang("tutorial_datasetsubject"));
+		$("#popoverLanguage").prop("title", lang("label_language"));
+		$("#popoverLanguage").data("content", lang("tutorial_datasetlanguage"));
 	}
 	// Replace user data in view from database
 	$("span[data-replace]").each(function() {
@@ -101,6 +105,9 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	ready.on(function() {
 		localisePage();
 		handleCustomSubject();
+		
+		$('#popoverSubject').popover();
+		$('#popoverLanguage').popover();
 		// Add the first element
 		addElementToForm();
 		$(".add").click(function() {
