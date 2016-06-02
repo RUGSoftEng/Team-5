@@ -49,7 +49,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 
 		var language = forms.getFormVal(form, "select", "language");
 		var subject = forms.getFormVal(form, "select", "subject");
-		window.location = "index.html?message=success_createdataset&language="+language+"&subject="+subject;
+		//window.location = "index.html?message=success_createdataset&language="+language+"&subject="+subject;
 	}
 
 	function localisePage() {
