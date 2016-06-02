@@ -23,14 +23,16 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var datetime = date.formatDatetime(new Date(), true);
     var field;
 
-    db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
-      if (checkUsername(rows)) {
-        db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
-          if (checkEmail(rows)) {
-            addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
-          }
-        });
-      }
+    ready.showLoading(false, function() {
+      db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
+        if (checkUsername(rows)) {
+          db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
+            if (checkEmail(rows)) {
+              addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
+            }
+          });
+        }
+      });
     });
   }
 
@@ -54,6 +56,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
       field.removeError('error');
       return true;
     } else {
+      ready.hideLoading();
       field.removeError('error');
       field.addError('error', {message: lang("error_usernamenotunique")});
       return false;
@@ -66,6 +69,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
       field.removeError('error');
       return true;
     } else {
+      ready.hideLoading();
       field.removeError('error');
       field.addError('error', {message: lang("error_emailnotunique")});
       return false;

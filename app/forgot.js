@@ -57,7 +57,21 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     return (result.length === 0);
   }
 
+  function initialiseLanguageSettings() {
+		select.initiate("gui_languages", ".selectLanguage");
+
+		var form = '#settingsForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
+  		var newLanguage = $("#language").val();
+			document.cookie = 'user_language='+newLanguage;
+    	window.location = "register.html"; // refresh
+  	});
+	}
+
   ready.on(function() {
+    initialiseLanguageSettings();
+    
     var form = "#forgotForm";
     forms.initialize(form);
     forms.onSuccess(form, function() {
@@ -67,7 +81,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
         alert(lang("error_nointernet_forgot"));
       }
     });
-    
+
   	localisePage();
 
     if (!db.online()) {

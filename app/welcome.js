@@ -145,13 +145,15 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
   	var form = '#settingsForm';
 		forms.initialize(form);
 		forms.onSuccess(form, function() {
-  		var newLanguage = $("#language").val();
-  		var userid = user.getCookie("user_id");
-      var currentdate = date.formatDatetime(new Date(), true);
-  		db.executeQuery("updateGUILanguage", [newLanguage, currentdate, userid], true, true, function() {
-        user.setCookie(db.getQuery("getUser", [userid]));
-    		db.close();
-    		window.location = "index.html?message=success_change_language"; // refresh
+      ready.showLoading(false, function() {
+        var newLanguage = $("#language").val();
+    		var userid = user.getCookie("user_id");
+        var currentdate = date.formatDatetime(new Date(), true);
+    		db.executeQuery("updateGUILanguage", [newLanguage, currentdate, userid], true, true, function() {
+          user.setCookie(db.getQuery("getUser", [userid]));
+      		db.close();
+      		window.location = "index.html?message=success_change_language"; // refresh
+        });
       });
   	});
   	localisePage();
