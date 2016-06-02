@@ -57,7 +57,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
         hint: items[i].hint
       };
       newList.push(newItem);
-    };
+    }
     return newList;
   }
 
@@ -123,7 +123,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     var url = window.location.href;
     var datasetId = $_GET('id');
     console.log(datasetId);
-    var dataset_items = db.getQuery("getDatasetbyId",[datasetId]);
+    var dataset_items = db.getQuery("getDatasetById",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
     console.log(dataset_items[0].dataset_responselist);
     var responseList = JSON.parse(dataset_items[0].dataset_responselist);
@@ -141,7 +141,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
   });
 
   function startTimer(dataset_items,datasetId){
-    timer.startTimer(".timer", config.constant("TIME_LIMIT"), function(){
+    timer.startTimer(".timer", $_GET('timelimit'), function(){
       alert(lang('learning_timeup'));
       $('.timer').css("color", "red");
       if(config.constant('ALGORITHM') === 'slimstampen'){

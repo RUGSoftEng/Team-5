@@ -13,16 +13,16 @@ var mysql = require('mysql');
 
 define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function (sqlite, config, $, date, messages) {
 	var queries = {
+		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		addSubject : "INSERT INTO tblsubjects (subject_id, subject_name, subject_user, subject_online) VALUES (?, ?, ?, ?)",
 		addSubjectOnline : "INSERT INTO tblsubjects (subject_name, subject_user, subject_online) VALUES (?, ?, ?)",
 		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id=?",
 		deleteDatasets: "DELETE FROM tbldatasets WHERE 1",
-		updateDatasetResponseList: "UPDATE tbldatasets SET dataset_responselist=?, dataset_lastedited=? WHERE dataset_id=?",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
 		updateDatasetSubjectId : "UPDATE tbldatasets SET dataset_subject=? WHERE dataset_subject=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
@@ -30,7 +30,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		updateSubjectId : "UPDATE tblsubjects SET subject_id=?, subject_online=1 WHERE subject_id=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
-		getDatasetById : "SELECT * FROM tbldatasets WHERE dataset_id=?" ,
+		getDatasetItems : "SELECT dataset_items FROM tbldatasets WHERE dataset_id=?" ,
 		getGUILanguages : "SELECT * FROM tbllanguages WHERE language_gui=1",
     getUser : "SELECT * FROM tblusers WHERE user_id=? ",
 		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
@@ -89,6 +89,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	function synchronizeSubjects(userId, callback) {
 		var localsubjects = database.getQuery('getUserSubjects',[userId]);
 		database.getOnlineQuery('getUserSubjects', [userId], function(remotesubjects) {
+<<<<<<< HEAD
 			lastId = getLatestNonSynchronizedSubjectId(localsubjects);
 			if (lastId === 0) {
 				callback();
@@ -96,6 +97,30 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 
 			synchronizeLocalSubjects(localsubjects, callback);
 			synchronizeOnlineSubjects(localsubjects, remotesubjects);
+=======
+			for (var i=0; i<localsubjects.length;i++) {
+				if (!localsubjects[i].subject_online) {
+					lastId = localsubjects[i].subject_id;
+				}
+			}
+			if (lastId===0) {
+				callback();
+			}
+
+			// Compare local with online
+			for (i=0; i< localsubjects.length; i++) {
+				if (!localsubjects[i].subject_online) {
+					pushSubjectOnline(localsubjects[i], callback);
+				}
+			}
+			// Compare online with local
+			for (var j=0 ;j<remotesubjects.length; j++){
+				var remote = $.grep(localsubjects, function(e) { return e.subject_id === remotesubjects[j].subject_id; });
+				if (remote.length === 0) {
+					pushSubjectLocal(remotesubjects[j]);
+				}
+			}
+>>>>>>> b545ea6c27792282ebd2235e5199e02245fb9674
 			database.close();
 		});
 	}
