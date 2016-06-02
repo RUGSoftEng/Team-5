@@ -3,7 +3,7 @@ define(['jquery'], function ($) {
     show: function(name, message) {
       var element = $(name);
       if (element.length) {
-        element.append(message).show();
+        element.append(message+"<br>").show();
       }
     },
     hide: function(name) {

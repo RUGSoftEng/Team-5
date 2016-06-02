@@ -116,13 +116,10 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     }
     window.location = "index.html";
   }
-
-
-  // When the page is loaded we get the datasetId from the page url and load the dataset from the database
+  
   ready.on(function() {
     var url = window.location.href;
     var datasetId = $_GET('id');
-    console.log(datasetId);
     var dataset_items = db.getQuery("getDatasetById",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
     console.log(dataset_items[0].dataset_responselist);
@@ -133,7 +130,6 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     addTemporaryHintButton();
     startTimer(dataset_items,datasetId);
     $("#quit_session").click(function() {
-      console.log(config.constant("ALGORITHM"))
       if(config.constant('ALGORITHM') === 'slimstampen'){
         updateResponseList(dataset_items,datasetId);
       }
