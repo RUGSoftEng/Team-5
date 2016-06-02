@@ -48,7 +48,7 @@
 	.removebutton {
 		position: absolute;
 		top:5px;
-		right:20px;			
+		right:20px;
 		opacity: 0;
 		transition: opacity 0.5s ease;
 	}
@@ -75,21 +75,16 @@
 #sidebar-wrapper,
 #sidebar-logos {
   z-index: 1000;
-  left: 250px;
+  left: 0;
   width: 0;
   position: fixed;
-  margin-left: -250px;
   overflow-x: hidden;
   background: #000;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
 }
 
 #sidebar-wrapper {
   margin-top: -10px;
-  height: calc(100% - 265px);
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -100,10 +95,6 @@
 #sidebar-logos img {
   border-radius: 5px;
   margin: 5px 5px 0 5px;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    width: 200px;
 }
 
 #page-content-wrapper {
@@ -188,12 +179,8 @@
 
     #sidebar-wrapper,
     #sidebar-logos
-        {
+    {
         width: 200px;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        width: 0;
     }
 
     #page-content-wrapper {
@@ -205,6 +192,10 @@
         position: relative;
         margin-right: 0;
     }
+}
+
+@media(max-width: 1000px) {
+  .center-menu span:not(.glyphicon) { display: none; }
 }
 
 .hidden{

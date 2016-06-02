@@ -1,4 +1,4 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages'], function ($, config, db, parsley, lang, string,hash,date, async, messages) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages', 'app/ready'], function ($, config, db, parsley, lang, string,hash,date, async, messages, ready) {
 
   $("form").submit(function(e){
     e.preventDefault();
@@ -83,10 +83,10 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 	}
 
   function inputFieldExists(result) {
-    return (result.length===0);
+    return (result.length === 0);
   }
 
-  $(document).ready(function(){
+  ready.on(function() {
   	localisePage();
 
     if (!db.online()) {

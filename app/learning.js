@@ -59,14 +59,14 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     }
     return newList;
   }
-	
+
 	// Function for obtaining the GET data from the url
   function $_GET(q,s) {
     s = (s) ? s : window.location.search;
     var re = new RegExp(q+'=([^&]*)','i');
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
-	
+
 	// Write localisable text to the page
 	string.fillinTextClasses();
 	$("#answer").prop("placeholder", lang("placeholder_typeanswerhere"));
@@ -92,12 +92,12 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 	}
 
 	function addTemporaryHintButton() {
-    if (questions.hint()) {
+    if (questions.hint()==="" || questions.hint()===undefined) {
+      $("#hintButton").hide();
+    } else {
       $("#hintButton").click(function() {
           messages.showHint(questions.hint());
   	  });
-    } else {
-      $("#hintButton").hide();
     }
 	}
 

@@ -27,6 +27,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		updateDatasetSubjectId : "UPDATE tbldatasets SET dataset_subject=? WHERE dataset_subject=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
 		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
+		updateUserPassword : "UPDATE tblusers SET user_password=?, user_lastedited=? WHERE user_id=?",
 		updateSubjectId : "UPDATE tblsubjects SET subject_id=?, subject_online=1 WHERE subject_id=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
@@ -147,7 +148,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		subject = $.map(subject, function(val) { return val; });
 		database.executeQuery('addSubject', subject, true, false);
 	}
-	
+
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {

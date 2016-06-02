@@ -9,11 +9,15 @@ requirejs.config({
         xlsx: {
             deps: ['jszip'],
             exports: "XLSX"
+        },
+        "jquery-ui": {
+          deps: ['jquery']
         }
     },
     paths: {
       app: "../app",
       jquery : "jquery/dist/jquery.min",
+      "jquery-ui": "jquery-ui/jquery-ui",
       bootstrap :  "../lib/bootstrap.min",
       sqlite : "../lib/sql",
       xlsx : "xlsx/xlsx",

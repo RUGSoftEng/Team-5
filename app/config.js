@@ -47,7 +47,8 @@ define(function (require) {
 		ONLINE_PASSWORD: "exVhqZJas",
 		MESSAGES: "#messages",
 		ERRORS: "#errors",
-		CONTACT: "d.h.van.rijn@rug.nl"
+		CONTACT: "d.h.van.rijn@rug.nl",
+		CONTACT_NOREPLY: "no-reply@slimstampen.com"
 	};
 
 	return {

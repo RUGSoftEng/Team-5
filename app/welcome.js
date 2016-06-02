@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready', 'app/time'], function ($, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready, time) {
+define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready', 'app/time'], function ($, ui, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready, time) {
 	//check if the user is logged in
   if (!user.check()) {
     logout("error_logout");
@@ -14,6 +14,7 @@ define(['jquery', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/l
 
   $("#menu-toggle").click(function (e) {
     e.preventDefault();
+    $("#sidebar-wrapper").toggle("slide");
     $("#wrapper").toggleClass("toggled");
   });
 
