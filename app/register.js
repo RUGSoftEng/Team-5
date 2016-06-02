@@ -86,10 +86,10 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
   function inputFieldExists(result) {
     return (result.length === 0);
   }
-	
+
 	function initialiseLanguageSettings() {
 		select.initiate("gui_languages", ".selectLanguage");
-		
+
 		var form = '#settingsForm';
 		forms.initialize(form);
 		forms.onSuccess(form, function() {
@@ -99,7 +99,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
   	});
 	}
 
-  $(document).ready(function(){
+  ready.on(function() {
   	localisePage();
 		initialiseLanguageSettings();
 
