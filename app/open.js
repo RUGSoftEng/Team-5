@@ -104,7 +104,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 			data.unshift(id);
 			db.executeQuery("addDatasetAll", data, true, false);
 			db.close();
-			window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+		//	window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
 		});
 	}
 
