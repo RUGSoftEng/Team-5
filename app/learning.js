@@ -8,7 +8,7 @@
  */
 
 /*jshint esversion: 6 */
-define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys) {
+define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys', 'app/date'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys, date) {
   var waitingForEnter = false;
 
   function disableAutocomplete() {
@@ -39,6 +39,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     if (waitingForEnter) {
       nextQuestion();
     } else if (!inputIsEmpty()) {
+      questions.calculatePresentationDuration();
       $( "#answer" ).prop("disabled", true);
       questions.checkAnswer();
       waitingForEnter = true;
@@ -101,19 +102,57 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     }
 	}
 
+  function updateResponseList(dataset_items,datasetId){
+    var responseList = questions.getResponseList();
+    if(responseList.length>0){
+      var currentdate = date.formatDatetime(new Date(), true);
+      var newResponse = JSON.stringify(responseList);
+      newResponse = newResponse.slice(1);
+      var oldResponse = dataset_items[0].dataset_responselist;
+      oldResponse = oldResponse.length > 2 ? (oldResponse.slice(0,-1)+',') : '[';
+      responseList = oldResponse + newResponse;
+      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
+      db.close();
+    }
+    window.location = "index.html";
+  }
+
+
   // When the page is loaded we get the datasetId from the page url and load the dataset from the database
   ready.on(function() {
     var url = window.location.href;
     var datasetId = $_GET('id');
-    var dataset_items = db.getQuery("getDatasetItems",[datasetId]);
+    console.log(datasetId);
+    var dataset_items = db.getQuery("getDatasetById",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
-    questions.initialize(factList);
+    console.log(dataset_items[0].dataset_responselist);
+    var responseList = JSON.parse(dataset_items[0].dataset_responselist);
+    questions.initialize(factList,responseList);
   	questions.show();
 
     addTemporaryHintButton();
-
-    timer.startTimer(".timer", $_GET('timelimit'));
+    startTimer(dataset_items,datasetId);
+    $("#quit_session").click(function() {
+      console.log(config.constant("ALGORITHM"))
+      if(config.constant('ALGORITHM') === 'slimstampen'){
+        updateResponseList(dataset_items,datasetId);
+      }
+    });
   });
+
+  function startTimer(dataset_items,datasetId){
+    timer.startTimer(".timer", $_GET('timelimit'), function(){
+      alert(lang('learning_timeup'));
+      $('.timer').css("color", "red");
+      if(config.constant('ALGORITHM') === 'slimstampen'){
+        updateResponseList(dataset_items,datasetId);
+      }else{
+        window.location = "index.html";
+      }
+
+    });
+  }
+
   // Read the user input when the Enter key is pressed and evaluate it.
   // Then show the next question.
   $(document).bind("keypress", function (e) {

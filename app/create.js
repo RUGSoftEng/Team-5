@@ -143,10 +143,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
 						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
 							db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
-							saveDatasetOnline([user_id, name, language, subject_id, 0, 0, 1, currentdate, currentdate, dataset_items], form, subject_id);
+							saveDatasetOnline([user_id, name, language, subject_id, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], form, subject_id);
 						});
 					} else {
-						saveDatasetOnline([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items], form, subject);
+						saveDatasetOnline([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], form, subject);
 					}
 	      } else {
 					if (subject === 0) {
@@ -154,7 +154,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);
 					}
-	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], form, subject);
+	        saveDatasetsLocal([null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items,'[]'], form, subject);
 	      }
 			});
 		});

@@ -22,6 +22,10 @@ define([], function () {
       var end = new Date();
       return end.getTime() - start.getTime();
     },
+    measureWithoutDate: function(start) {
+      var end = new Date();
+      return end.getTime() - start;
+    },      
     // Create a string representation of time (mm:ss) for easy display
     toString: function(time) {
         minutes = Math.floor(time/60);
