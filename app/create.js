@@ -38,6 +38,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	function saveDatasetOnline(data, form, subject) {
 		db.executeQuery("addDataset", data, false, true);
 		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+      console.log(id);
 			data.unshift(id);
 			saveDatasetsLocal(data, form, subject);
 		});
@@ -49,7 +50,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 
 		var language = forms.getFormVal(form, "select", "language");
 		var subject = forms.getFormVal(form, "select", "subject");
-		//window.location = "index.html?message=success_createdataset&language="+language+"&subject="+subject;
+		window.location = "index.html?message=success_createdataset&language="+language+"&subject="+subject;
 	}
 
 	function localisePage() {

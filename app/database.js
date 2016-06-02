@@ -15,7 +15,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	var queries = {
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		addSubject : "INSERT INTO tblsubjects (subject_id, subject_name, subject_user, subject_online) VALUES (?, ?, ?, ?)",
 		addSubjectOnline : "INSERT INTO tblsubjects (subject_name, subject_user, subject_online) VALUES (?, ?, ?)",

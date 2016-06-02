@@ -104,7 +104,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 			data.unshift(id);
 			db.executeQuery("addDatasetAll", data, true, false);
 			db.close();
-		//	window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+			window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
 		});
 	}
 
@@ -128,10 +128,10 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
 						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
 							db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
-							saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items]);
+							saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
 						});
 					} else {
-						saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items]);
+						saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
 					}
 				} else {
 					if (subject === 0) {
@@ -139,7 +139,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);
 					}
-					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items], true, false);
+					db.executeQuery("addDatasetAll", [null, user_id, name, language, subject, 0, 0, 0, currentdate, currentdate, dataset_items,'[]'], true, false);
 					db.close();
 					window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
 				}
