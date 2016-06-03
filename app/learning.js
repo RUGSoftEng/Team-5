@@ -107,15 +107,14 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     if(responseList.length>0){
       var currentdate = date.formatDatetime(new Date(), true);
       var newResponse = JSON.stringify(responseList);
-    //  newResponse = newResponse.slice(1);
-      /*var oldResponse = dataset_items[0].dataset_responselist;
+      /*newResponse = newResponse.slice(1);
+      var oldResponse = dataset_items[0].dataset_responselist;
       if (oldResponse !== null) {
         oldResponse = oldResponse.length > 2 ? (oldResponse.slice(0,-1)+',') : '[';
       } else {
         oldResponse = '[';
       }
-      responseList = oldResponse + newResponse;
-      */
+      responseList = oldResponse + newResponse;*/
       db.executeQuery('updateDatasetResponseList', [newResponse, currentdate, datasetId]);
       db.close();
     }

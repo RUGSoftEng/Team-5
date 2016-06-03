@@ -90,7 +90,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 			var id = forms.getFormVal("#createForm", "select", "subject");
 			$("#datasetsubject").data("subject", id);
 
-			if (id === 0) {
+			if (id == 0) {
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
 				$("#customsubject").attr("data-parsley-subject-name", "1");
@@ -105,7 +105,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	ready.on(function() {
 		localisePage();
 		handleCustomSubject();
-		
+
 		$('#popoverSubject').popover();
 		$('#popoverLanguage').popover();
 		// Add the first element
