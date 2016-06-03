@@ -83,13 +83,13 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 	$("span[data-username]").html(user.get("user_firstname")+" "+user.get("user_lastname"));
 
   function getDatasetIdFromURL(url) {
-  var datasetId = url.substring(url.indexOf('?')+1);
-  return datasetId;
+    var datasetId = url.substring(url.indexOf('?')+1);
+    return datasetId;
 	}
 
 	function retrieveDataSet(datasetId) {
-  var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
-  return factList;
+    var factList = formatFactList(db.getQuery("getDatasetItems",[datasetId]));
+    return factList;
 	}
 
 	function addTemporaryHintButton() {
