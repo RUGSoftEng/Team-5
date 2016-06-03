@@ -28,14 +28,14 @@
 	 min-width: 310px;
 }
 
- .mybutton {
+ .datasetButton {
 	width:100%;
 	margin-bottom:40px;
 	background-color: #222222;
 	border-color: #191919;
   }
 
- .mybutton:hover {
+ .datasetButton:hover {
 	color: #fff;
 	background-color: #000;
   }

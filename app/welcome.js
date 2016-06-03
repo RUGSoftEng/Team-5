@@ -49,7 +49,7 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 	}
 
   function navigateToLearn(newElement) {
-    newElement.on("click", ".mybutton", function() {
+    newElement.on("click", ".datasetButton", function() {
       var id = $(this).data("id");
 			var dataset = db.getQuery("getRecentDataset", [id, 1, 0])[0];
 
