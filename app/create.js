@@ -85,10 +85,10 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
-			var id = forms.getFormVal("#createForm", "select", "subject");
+			var id = parseInt(forms.getFormVal("#createForm", "select", "subject"));
 			$("#datasetsubject").data("subject", id);
 
-			if (id == 0) {
+			if (id === 0) {
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
 				$("#customsubject").attr("data-parsley-subject-name", "1");
@@ -129,7 +129,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				var form = "#createForm";
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
-	      var subject = $("#datasetsubject").data("subject");
+	      var subject = parseInt($("#datasetsubject").data("subject"));
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = date.formatDatetime(new Date(), true);
 
@@ -144,7 +144,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 				dataset_items = JSON.stringify(dataset_items);
 				ready.changeLoadMessage(lang("create_adding_items"));
 	      if (db.online()) {
-					if (subject == 0) {
+					if (subject === 0) {
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
 						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
@@ -155,7 +155,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 						saveDatasetOnline([user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]'], form, subject);
 					}
 	      } else {
-					if (subject == 0) {
+					if (subject === 0) {
 						subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);

@@ -67,10 +67,10 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 
 		// Display the input for custom subject only if appropriate
 		$("#datasetsubject").change(function() {
-			var id = forms.getFormVal("#uploadForm", "select", "subject");
+			var id = parseInt(forms.getFormVal("#uploadForm", "select", "subject"));
 			$("#datasetsubject").data("subject", id);
 
-			if (id == 0) {
+			if (id === 0) {
 				$("#newsubject").attr("hidden", false);
 				$("#customsubject").attr("required", "");
 				$("#customsubject").attr("data-parsley-subject-name", "1");
@@ -122,14 +122,14 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				var form = '#uploadForm';
 				var name = forms.getFormVal(form, "input", "name");
 	      var language = forms.getFormVal(form, "select", "language");
-	      var subject = $("#datasetsubject").data("subject");
+	      var subject = parseInt($("#datasetsubject").data("subject"));
 	      var user_id = user.getCookie('user_id');
 	      var currentdate = date.formatDatetime(new Date(), true);
 
 				var dataset_items = createDatasetItems(saveData);
 
 				if (db.online()) {
-					if (subject == 0) {
+					if (subject === 0) {
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
 						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
@@ -140,7 +140,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 						saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
 					}
 				} else {
-					if (subject == 0) {
+					if (subject === 0) {
 						subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);

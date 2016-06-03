@@ -39,7 +39,6 @@ define(function (require) {
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: addDirectory() + "/database/slimstampen.sqlite",
 		ALGORITHM: "slimstampen", // flashcard; slimstampen;
-		LANGUAGE: "ar",
 		ENGLISH: 1, // id of the english language
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
@@ -48,7 +47,10 @@ define(function (require) {
 		MESSAGES: "#messages",
 		ERRORS: "#errors",
 		CONTACT: "d.h.van.rijn@rug.nl",
-		CONTACT_NOREPLY: "no-reply@slimstampen.com"
+		CONTACT_NOREPLY: "no-reply@slimstampen.com",
+		/* Strength bar percentage colour limits */
+		STRENGTH_RED_UPPERLIMIT: 20,
+		STRENGTH_GREEN_LOWERLIMIT: 60
 	};
 
 	return {

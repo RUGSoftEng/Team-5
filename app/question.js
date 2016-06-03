@@ -60,13 +60,28 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
      }
      return d[m][n];
   }
-
+	
+	function strengthColour(percentage) {
+		if (percentage < config.constant("STRENGTH_RED_UPPERLIMIT")) {
+			return "danger";		// red
+		} else if (percentage >= config.constant("STRENGTH_GREEN_LOWERLIMIT")) {
+			return "success";		// green
+		} else {
+			return "warning";		// yellow
+		}
+	}
+	
   function showProgress() {
     $( "#progress-number" ).html( "<p>" + correctAnswers + "/" + totalAnswers + " " + lang("general_words") + "</p>" );
     var percentageVal = math.percentage(correctAnswers, totalAnswers);
+		var colour = strengthColour(percentageVal);
     $( "#progress-bar" ).html(percentageVal + "%")
       .attr("aria-valuenow", percentageVal)
-      .css("width", percentageVal+"%");
+      .css("width", percentageVal+"%")
+			.removeClass("progress-bar-success")
+			.removeClass("progress-bar-warning")
+			.removeClass("progress-bar-danger")
+			.addClass("progress-bar-" + colour);
   }
 
   function isWithinMarginOfError(answer, difference) {
@@ -97,7 +112,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       itemsAnsweredCorrectly++;
     }
     showProgress();
-
+		
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
       alert(lang("learning_done"));
       window.location = 'index.html';
@@ -230,8 +245,10 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
         handleScoreIncrease();
         messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
+				showProgress();
         messages.show( constructMessage('warning',answer, difference), 'warning', config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
+				showProgress();
         messages.show( constructMessage('danger',answer,difference), 'danger', config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
     },

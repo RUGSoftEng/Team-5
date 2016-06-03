@@ -63,7 +63,17 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 			});
    	});
   }
-
+	
+	function strengthColour(percentage) {
+		if (percentage < config.constant("STRENGTH_RED_UPPERLIMIT")) {
+			return "danger";		// red
+		} else if (percentage >= config.constant("STRENGTH_GREEN_LOWERLIMIT")) {
+			return "success";		// green
+		} else {
+			return "warning";		// yellow
+		}
+	}
+	
 	function createDatasetsGrid(subjectid, languageid) {
     // Clear dataset grid
     $("#container .dataset_item").not("#layout").remove();
@@ -71,7 +81,8 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#container').cloneLayout();
       var strength = calculateStrength(rows[i].dataset_responselist);
-      newElement.replaceClone(["dataset_id", "dataset_name", "dataset_strength"], [rows[i].dataset_id, rows[i].dataset_name, strength]);
+			var colour = strengthColour(strength);
+      newElement.replaceClone(["dataset_id", "dataset_name", "dataset_strength", "dataset_colour"], [rows[i].dataset_id, rows[i].dataset_name, strength, colour]);
       navigateToLearn(newElement);
       deleteDataset(newElement);
     }
