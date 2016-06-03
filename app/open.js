@@ -129,18 +129,18 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				var dataset_items = createDatasetItems(saveData);
 
 				if (db.online()) {
-					if (subject === 0) {
+					if (subject == 0) {
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
 						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
 							db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
-							saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
+							saveDatasetOnlineAndLocal(language, subject_id, [user_id, name, language, subject_id, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
 						});
 					} else {
 						saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
 					}
 				} else {
-					if (subject === 0) {
+					if (subject == 0) {
 						subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
 						var newsubjectname = $("#customsubject").val();
 						db.executeQuery('addSubject' , [subject, newsubjectname, user.getCookie("user_id"), 0]);
@@ -184,7 +184,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 		handleCustomSubject();
 		checkCorrectnessFile();
 		evaluateInputOfForm();
-		
+
 		$('#popoverSubject').popover();
 		$('#popoverLanguage').popover();
 		$('#popoverWhatfile').popover({template: '<div class="popover popoverwide" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'});
