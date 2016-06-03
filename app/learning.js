@@ -109,14 +109,18 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
       var newResponse = JSON.stringify(responseList);
       newResponse = newResponse.slice(1);
       var oldResponse = dataset_items[0].dataset_responselist;
-      oldResponse = oldResponse.length > 2 ? (oldResponse.slice(0,-1)+',') : '[';
+      if (oldResponse !== null) {
+        oldResponse = oldResponse.length > 2 ? (oldResponse.slice(0,-1)+',') : '[';
+      } else {
+        oldResponse = '[';
+      }
       responseList = oldResponse + newResponse;
       db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
       db.close();
     }
     window.location = "index.html";
   }
-  
+
   ready.on(function() {
     var url = window.location.href;
     var datasetId = $_GET('id');

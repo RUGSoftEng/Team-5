@@ -70,11 +70,27 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 		var rows = db.getQuery('getUserDatasetsByModule', [user.getCookie('user_id'), languageid, subjectid]);
 		for (var i = 0; i < rows.length; i++) {
       var newElement = $('#container').cloneLayout();
-      newElement.replaceClone(["dataset_id", "dataset_name"], [rows[i].dataset_id, rows[i].dataset_name]);
+      var strength = calculateStrength(rows[i].dataset_responselist);
+      newElement.replaceClone(["dataset_id", "dataset_name", "dataset_strength"], [rows[i].dataset_id, rows[i].dataset_name, strength]);
       navigateToLearn(newElement);
       deleteDataset(newElement);
     }
 	}
+
+  function calculateStrength(dataset_responselist) {
+    var responseList = JSON.parse(dataset_responselist);
+    var strength = 0;
+    if (responseList !== null) {
+      var total = 0;
+      var correct = 0;
+      for (var i = 0; i < responseList.length; i++) {
+        if (responseList[i].correct) correct++;
+        total++;
+      }
+      strength = correct/total*100;
+    }
+    return strength;
+  }
 
   // Function for obtaining the GET data from the url
   function $_GET(q,s) {
