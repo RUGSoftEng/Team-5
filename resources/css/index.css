@@ -28,12 +28,20 @@
 	 min-width: 310px;
 }
 
- .datasetButton {
+.datasetButton {
 	width:100%;
 	margin-bottom:40px;
+	padding-top:10px;
 	background-color: #222222;
 	border-color: #191919;
-  }
+}
+
+.datasetButton h3 {
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
  .datasetButton:hover {
 	color: #fff;
