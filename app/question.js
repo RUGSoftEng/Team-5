@@ -15,7 +15,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   var startTime = new Date();
   var firstKeyPress = 0;
 	var presentationDuration = 0;
-  var responseList=[] ;
+  var responseList ;
 
   // Calculate the time difference in milliseconds
   function measureTime(start) {
@@ -76,6 +76,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   // Handle how to move to the next question
   // depending on the tutorial status and algorithm.
   function nextQuestion() {
+    console.log('next question')
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
         nextQuestionFlashcard();
@@ -136,6 +137,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
   // Update the response list in order to determine next question
   function nextQuestionSlimStampen(){
+    console.log(responseList);
 		responseInput = {
 			presentationStartTime: timeCreated,
 			reactionTime: firstKeyPress,
@@ -184,8 +186,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   return {
     initialize: function(factList, responselist) {
 
-        if(config.ALGORITHM === 'slimpstampen'){
-          console.log(responselist);
+        if(config.constant('ALGORITHM') === 'slimstampen'){
           responseList = responselist;
         }
 

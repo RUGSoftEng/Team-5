@@ -104,17 +104,11 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   function updateResponseList(dataset_items,datasetId){
     var responseList = questions.getResponseList();
+    console.log(responseList);
+    console.log(JSON.stringify(responseList));
     if(responseList.length>0){
       var currentdate = date.formatDatetime(new Date(), true);
-      var newResponse = JSON.stringify(responseList);
-      newResponse = newResponse.slice(1);
-      var oldResponse = dataset_items[0].dataset_responselist;
-      if (oldResponse !== null) {
-        oldResponse = oldResponse.length > 2 ? (oldResponse.slice(0,-1)+',') : '[';
-      } else {
-        oldResponse = '[';
-      }
-      responseList = oldResponse + newResponse;
+      var responseList = JSON.stringify(responseList);
       db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
       db.close();
     }
@@ -126,7 +120,6 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     var datasetId = $_GET('id');
     var dataset_items = db.getQuery("getDatasetById",[datasetId]);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
-    console.log(dataset_items[0].dataset_responselist);
     var responseList = JSON.parse(dataset_items[0].dataset_responselist);
     questions.initialize(factList,responseList);
   	questions.show();
