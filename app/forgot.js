@@ -1,4 +1,4 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages', 'app/ready', 'app/forms', 'app/email'], function ($, config, db, parsley, lang, string,hash,date, async, messages, ready, forms, email) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages', 'app/ready', 'app/forms', 'app/email', 'app/select'], function ($, config, db, parsley, lang, string,hash,date, async, messages, ready, forms, email, select) {
   function handleForgot() {
     var username = $("#username").val().toLowerCase();
     ready.showLoading(function() {
@@ -71,7 +71,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 
   ready.on(function() {
     initialiseLanguageSettings();
-    
+
     var form = "#forgotForm";
     forms.initialize(form);
     forms.onSuccess(form, function() {
