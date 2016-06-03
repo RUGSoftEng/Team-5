@@ -321,6 +321,7 @@ define({
 		register_header: "تسجيل حساب",
 		settings_buttonsave: "حفظ الإعدادات",
 		settings_changeinfo: "تغيير معلومات الحساب الشخصي",
+		settings_changelanguage: "تغيير لغة البرنامج",
 		settings_changepassword: "تغيير كلمة السر",
 		settings_header: "الإعدادات",
 		success_change_language: "تم حفظ إعدادات اللغة.",
