@@ -8,8 +8,8 @@
   },
   "scripts": {
     "start": "electron main.js",
-    "pretest": "jshint ./tests && jshint ./app",
-    "test": "intern-client config=tests/internLocal"
+    "test": "./node_modules/.bin/intern-runner config=tests/internLocal",
+    "posttest": "echo 'Hallo!' && pkill chromedriver"
   },
   "repository": {
     "type": "git",
