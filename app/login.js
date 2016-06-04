@@ -42,6 +42,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/la
     var re = new RegExp(q+'=([^&]*)','i');
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
+
 	function getUser() {
 		var user = $("#username").val().toLowerCase();
 		var query = user.indexOf("@") != -1 ? "getUserbyEmail" : "getUserbyUsername";
@@ -55,13 +56,16 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/la
 		var field;
 		ready.showLoading(lang("login_checking"), function() {
 			if (db.online()) {
-				db.getOnlineQuery("getUserbyUsername", [username], function(result) {
-					if (checkUsername(result)) {
-						if (checkPassword(password, result)) {
-							ready.changeLoadMessage(lang("login_synchronizing"));
-							user.setCookie(result);
-							synchronizeAndLogin();
-						}
+				db.setupOnlineConnection(username, password, function(obj) {
+					if (obj.hash) {
+						ready.changeLoadMessage(lang("login_synchronizing"));
+						user.setConnection(obj.hash);
+						user.setCookie(obj.user);
+						synchronizeAndLogin();
+					} else {
+						ready.hideLoading();
+						messages.removeAll();
+						messages.show(config.constant("ERRORS"), lang("error_usernamepassword_incorrect"));
 					}
 				});
 			} else {
@@ -91,7 +95,7 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/la
 	function checkPassword(password, result) {
 		field.removeError('error');
 		field = $("#password").parsley();
-		if (hash.verify(password,result[0].user_password) ) {
+		if (hash.verify(password,result.user_password) ) {
 			return true;
 		} else {
 			ready.hideLoading();
@@ -111,10 +115,10 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/la
 	function login() {
 		window.location = "index.html?message=success_login";
 	}
-	
+
 	function initialiseLanguageSettings() {
 		select.initiate("gui_languages", ".selectLanguage");
-		
+
 		var form = '#settingsForm';
 		forms.initialize(form);
 		forms.onSuccess(form, function() {
@@ -123,13 +127,13 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/la
     	window.location = "login.html"; // refresh
   	});
 	}
-	
+
 	function initialiseLoginForm() {
 		var form = '#loginForm';
 		forms.initialize(form);
 		forms.onSuccess(form, handleLogin);
 	}
-	
+
 	function localisePage() {
 		string.fillinTextClasses();
 		$("#username").prop("placeholder", lang("label_username"));

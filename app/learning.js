@@ -115,10 +115,13 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
         oldResponse = '[';
       }
       responseList = oldResponse + newResponse;
-      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
-      db.close();
+      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId], true, true, function() {
+        db.close();
+        window.location = "index.html";
+      });
+    } else {
+      window.location = "index.html";
     }
-    window.location = "index.html";
   }
 
   ready.on(function() {
