@@ -16,6 +16,8 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   var firstKeyPress = 0;
 	var presentationDuration = 0;
   var responseList ;
+	var dataset_subject;
+	var dataset_language;
 
   // Calculate the time difference in milliseconds
   function measureTime(start) {
@@ -114,8 +116,8 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     showProgress();
 		
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
-      alert(lang("learning_done"));
-      window.location = 'index.html';
+      alert(lang("learning_timeup"));
+      window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
     }
   }
 
@@ -265,8 +267,14 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       start = startTime.getTime() + timeCreated;
       presentationDuration = time.measureWithoutDate(start);
     },
+		
     getResponseList: function(){
       return responseList;
-    }
+    },
+		
+		setMetaInfo: function(subject, language) {
+			dataset_subject = subject;
+			dataset_language = language;
+		}
   };
 });

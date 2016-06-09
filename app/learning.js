@@ -10,6 +10,8 @@
 /*jshint esversion: 6 */
 define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/database', 'app/learningMessages', 'app/question', 'app/timer', 'app/ready', 'app/user', 'app/time', 'app/keys', 'app/date'], function ($, lang, string, bootstrap, config, db, messages, questions, timer, ready, user, time, keys, date) {
   var waitingForEnter = false;
+	var dataset_subject;
+	var dataset_language;
 
   function disableAutocomplete() {
     $('input').attr('autocomplete', 'off');
@@ -112,13 +114,16 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
       db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
       db.close();
     }
-    window.location = "index.html";
+    window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
   }
-
+	
   ready.on(function() {
     var url = window.location.href;
     var datasetId = $_GET('id');
     var dataset_items = db.getQuery("getDatasetById",[datasetId]);
+		dataset_subject = dataset_items[0].dataset_subject;
+		dataset_language = dataset_items[0].dataset_language;
+		questions.setMetaInfo(dataset_subject, dataset_language);
     var factList = formatFactList(JSON.parse(dataset_items[0].dataset_items));
     var responseList = JSON.parse(dataset_items[0].dataset_responselist);
     questions.initialize(factList,responseList);
@@ -129,7 +134,9 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     $("#quit_session").click(function() {
       if(config.constant('ALGORITHM') === 'slimstampen'){
         updateResponseList(dataset_items,datasetId);
-      }
+      } else {
+				window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
+			}
     });
   });
 
@@ -140,7 +147,7 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
       if(config.constant('ALGORITHM') === 'slimstampen'){
         updateResponseList(dataset_items,datasetId);
       }else{
-        window.location = "index.html";
+        window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
       }
 
     });
