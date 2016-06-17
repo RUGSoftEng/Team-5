@@ -36,8 +36,7 @@ define(['app/lang', 'app/string', 'app/config', 'app/database', 'jquery', 'boots
 	}
 
 	function saveDatasetOnline(data, form, subject) {
-		db.executeQuery("addDataset", data, false, true);
-		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+		db.executeQuery("addDataset", data, false, true, function(id) {
 			data.unshift(id);
 			saveDatasetsLocal(data, form, subject);
 		});

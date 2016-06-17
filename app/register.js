@@ -24,23 +24,20 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var field;
 
     ready.showLoading(false, function() {
-      db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
+      db.registerCheck(username, email, function(rows) {
         if (checkUsername(rows)) {
-          db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
-            if (checkEmail(rows)) {
-              addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
-            }
-          });
+          if (checkEmail(rows)) {
+            addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
+          }
         }
       });
     });
   }
 
   function addUserLocalAndOnline(username, data) {
-    db.executeQuery("addUser", data, false, true);
-    db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
-      if (db.online()) {
-        data[0] = rows[0].user_id;
+    db.registerUser(data, function(rows) {
+      if (rows.user && db.online()) {
+        data[0] = rows.user;
         db.executeQuery("addUser", data, true, false);
         db.close();
         window.location="login.html?message=success_register";
@@ -52,7 +49,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 
   function checkUsername(result) {
     field = $("#username").parsley();
-    if (result.length === 0) {
+    if (result.usernameExists == false) {
       field.removeError('error');
       return true;
     } else {
@@ -65,7 +62,7 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 
   function checkEmail(result) {
     field = $("#email").parsley();
-    if (result.length === 0) {
+    if (result.emailExists == false) {
       field.removeError('error');
       return true;
     } else {
@@ -110,26 +107,6 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     if (!db.online()) {
       messages.show("#errors", lang("error_nointernet_register"));
     }
-
-    window.Parsley.addValidator('userName', {
-      validateString: function(value, requirement) {
-        var result = db.getQuery("getUserIdbyUsername", [value]);
-        return inputFieldExists(result);
-      },
-      messages: {
-        en: lang("error_usernamenotunique")
-      }
-    });
-
-    window.Parsley.addValidator('emailName', {
-      validateString: function(value, requirement) {
-        var result = db.getQuery("getUserIdbyEmail", [value]);
-        return inputFieldExists(result);
-      },
-      messages: {
-        en: lang("error_emailnotunique")
-      }
-    });
 
   });
 

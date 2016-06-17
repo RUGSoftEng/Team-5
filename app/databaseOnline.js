@@ -31,9 +31,12 @@ define(['app/config', 'jquery'], function (config, $) {
       case "query":
         script = "query.php";
         break;
+      case "register":
+        script = "register.php";
+        break;
     }
     $.ajax({
-        url: 'http://www.codecentral.nl/slimstampen/'+script,
+        url: 'http://www.temporalcognition.nl/slimstampen/'+script,
         type: 'POST',
         data: function(){
             var formData = new FormData();
@@ -44,7 +47,6 @@ define(['app/config', 'jquery'], function (config, $) {
         }(),
         success: function (data) {
           if (data) {
-            console.log(data);
             var obj = $.parseJSON(data);
             if (!obj.error)
               callback(false, (type=="query") ? obj.data : obj);
@@ -80,6 +82,11 @@ define(['app/config', 'jquery'], function (config, $) {
       args = JSON.stringify(args);
       var data = [['query', query], ['args', args], ['hash', getHash()]];
       request("query", data, callback);
+    },
+    register: function(username, email, userData, callback) {
+      userData = JSON.stringify(userData);
+      var data = [['username', username], ['email', email], ['data', userData]];
+      request("register", data, callback);
     }
    };
    return db_online;

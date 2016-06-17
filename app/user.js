@@ -33,7 +33,7 @@ define(['app/database'], function (db) {
     check: function() {
       var user_name = user.getCookie("user_name");
       var result = db.getQuery("getUserbyUsername", [user_name]);
-      return true;//(result.length!==0 && user.getCookie('user_password') === result[0].user_password);
+      return (result.length!==0 && user.getCookie('user_password') === result[0].user_password);
     },
     getCookie:function(cname) {
        var name = cname + "=";
