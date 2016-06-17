@@ -63,7 +63,7 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 			});
    	});
   }
-	
+
 	function strengthColour(percentage) {
 		if (percentage < config.constant("STRENGTH_RED_UPPERLIMIT")) {
 			return "danger";		// red
@@ -73,7 +73,7 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 			return "warning";		// yellow
 		}
 	}
-	
+
 	function createDatasetsGrid(subjectid, languageid) {
     // Clear dataset grid
     $("#container .dataset_item").not("#layout").remove();
@@ -177,7 +177,8 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
     		var userid = user.getCookie("user_id");
         var currentdate = date.formatDatetime(new Date(), true);
     		db.executeQuery("updateGUILanguage", [newLanguage, currentdate, userid], true, true, function() {
-          user.setCookie(db.getQuery("getUser", [userid]));
+          var userData = db.getQuery("getUser", [userid]);
+          user.setCookie(userData[0]);
       		db.close();
       		window.location = "index.html?message=success_change_language"; // refresh
         });

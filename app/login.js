@@ -145,10 +145,6 @@ define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/la
 		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
 	}
 
-	// if (user.check()) {
-	// 	window.location = "index.html?message=login_automatic";
-	// }
-
 	ready.on(function() {
 		localisePage();
 		showPermissionsMessage();

@@ -44,8 +44,12 @@ define(['app/config', 'jquery'], function (config, $) {
         }(),
         success: function (data) {
           if (data) {
+            console.log(data);
             var obj = $.parseJSON(data);
-            callback(false, obj);
+            if (!obj.error)
+              callback(false, (type=="query") ? obj.data : obj);
+            else
+              callback(obj.error, false);
           } else {
             throw new Error("SOMETHING WENT WRONG WITH ONLINE DATABASE.");
           }

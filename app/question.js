@@ -62,7 +62,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
      }
      return d[m][n];
   }
-	
+
 	function strengthColour(percentage) {
 		if (percentage < config.constant("STRENGTH_RED_UPPERLIMIT")) {
 			return "danger";		// red
@@ -72,7 +72,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 			return "warning";		// yellow
 		}
 	}
-	
+
   function showProgress() {
     $( "#progress-number" ).html( "<p>" + correctAnswers + "/" + totalAnswers + " " + lang("general_words") + "</p>" );
     var percentageVal = math.percentage(correctAnswers, totalAnswers);
@@ -114,7 +114,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       itemsAnsweredCorrectly++;
     }
     showProgress();
-		
+
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
       alert(lang("learning_timeup"));
       window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
@@ -267,11 +267,10 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       start = startTime.getTime() + timeCreated;
       presentationDuration = time.measureWithoutDate(start);
     },
-		
+
     getResponseList: function(){
       return responseList;
     },
-		
 		setMetaInfo: function(subject, language) {
 			dataset_subject = subject;
 			dataset_language = language;
