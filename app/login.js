@@ -6,15 +6,12 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready', 'app/select'], function ($, bootstrap, config, db, user, lang, string, messages, parsley, forms, hash, ready, select) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready', 'app/select', 'electron-cookies'], function ($, bootstrap, config, db, user, lang, string, messages, parsley, forms, hash, ready, select, cookies) {
 
 	function showPermissionsMessage() {
-		if (navigator.appVersion.indexOf("Mac")!=-1) {
-			   if (localStorage.done=='no') {
-       				localStorage.done = 'yes';
-       				alert(lang("message_permission"));
-   				}
-
+		if (navigator.appVersion.indexOf("Mac")!=-1 && user.getCookie('visited') != 1) {
+			alert(lang("message_permission"));   
+			document.cookie = 'visited='+'1';   
 		}
 	}
 

@@ -23,7 +23,7 @@ define(['jquery', 'app/lang'], function ($, lang) {
       var inputs = $("input, select");
       inputs.each(function() {
         $(this).attr("data-parsley-required-message", lang("message_required"));
-      })
+      });
 		}
   };
 });

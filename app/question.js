@@ -93,7 +93,6 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   // Handle how to move to the next question
   // depending on the tutorial status and algorithm.
   function nextQuestion() {
-    console.log('next question')
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
         nextQuestionFlashcard();
@@ -167,7 +166,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 			backspacedFirstLetter: backspacedFirstLetter,
 		};
 
-		newResponse = slimstampen.createResponse(items, responseList, responseInput)
+		newResponse = slimstampen.createResponse(items, responseList, responseInput);
 		responseList.push(newResponse);
     resetTimers();
 		// Use slimstampen method to determine next question
