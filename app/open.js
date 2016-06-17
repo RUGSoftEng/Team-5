@@ -105,12 +105,13 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 	}
 
 	function saveDatasetOnlineAndLocal(language, subject, data) {
-		db.executeQuery("addDataset", data, false, true);
-		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
-			data.unshift(id);
-			db.executeQuery("addDatasetAll", data, true, false);
-			db.close();
-			window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+		db.executeQuery("addDataset", data, false, true, function() {
+			db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+				data.unshift(id);
+				db.executeQuery("addDatasetAll", data, true, false);
+				db.close();
+				window.location = "index.html?message=success_opendataset&language="+language+"&subject="+subject;
+			});
 		});
 	}
 
@@ -131,10 +132,11 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 				if (db.online()) {
 					if (subject === 0) {
 						var newsubjectname = $("#customsubject").val();
-						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true);
-						db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
-							db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
-							saveDatasetOnlineAndLocal(language, subject_id, [user_id, name, language, subject_id, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
+						db.executeQuery("addSubjectOnline", [newsubjectname, user.getCookie("user_id"), 1], false, true, function() {
+							db.lastInsertIdOnline('tblsubjects', 'subject_id', function (subject_id) {
+								db.executeQuery("addSubject", [subject_id, newsubjectname, user.getCookie("user_id"), 1], true, false);
+								saveDatasetOnlineAndLocal(language, subject_id, [user_id, name, language, subject_id, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);
+							});
 						});
 					} else {
 						saveDatasetOnlineAndLocal(language, subject, [user_id, name, language, subject, 0, 0, 1, currentdate, currentdate, dataset_items,'[]']);

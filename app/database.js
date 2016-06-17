@@ -11,7 +11,7 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function (sqlite, config, $, date, messages) {
+define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/databaseOnline'], function (sqlite, config, $, date, messages, db_online) {
 	var queries = {
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
@@ -50,7 +50,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	};
 
 	var lastId = 0;
-	var sql,db,db_online;
+	var sql,db;
 
 	function checkSqlite() {
 		if (typeof sqlite !== 'object') {
@@ -121,8 +121,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 
 	function synchronizeOnlineSubjects(localsubjects, remotesubjects) {
 		var j;
-		var getRemoteFromLocal = function(e) { return e.subject_id === remotesubjects[j].subject_id; };
-		for (j = 0 ;j<remotesubjects.length; j++){
+		var getRemoteFromLocal = function(e) { return e.subject_id == remotesubjects[j].subject_id; };
+		for (j = 0; j<remotesubjects.length; j++){
 			var remote = $.grep(localsubjects, getRemoteFromLocal);
 			if (remote.length === 0) {
 				pushSubjectLocal(remotesubjects[j]);
@@ -152,7 +152,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	function synchronizeUser(userId, callback) {
 		var local_user = database.getQuery('getUser',[userId]);
 		database.getOnlineQuery("getUser", [userId], function(online_user) {
-
 			if (local_user.length === 0) {
 				saveUserOnline(online_user[0]);
 			} else {
@@ -215,7 +214,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 
 	function synchronizeLocalDatasets(localdatasets, remotedatasets, callback) {
 		var i;
-		var getLocalFromRemote = function(e) { return e.dataset_id === localdatasets[i].dataset_id; };
+		var getLocalFromRemote = function(e) { return e.dataset_id == localdatasets[i].dataset_id; };
 		for (i = 0; i< localdatasets.length; i++) {
 			if (!localdatasets[i].dataset_online) {
 				pushDatasetOnline(localdatasets[i], callback);
@@ -230,7 +229,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 
 	function synchronizeOnlineDatasets(localdatasets, remotedatasets) {
 		var j;
-		var getRemoteFromLocal = function(e) { return e.dataset_id === remotedatasets[j].dataset_id; };
+		var getRemoteFromLocal = function(e) { return e.dataset_id == remotedatasets[j].dataset_id; };
 		for (j = 0; j<remotedatasets.length; j++){
 			var remote = $.grep(localdatasets, getRemoteFromLocal);
 			if (remote.length === 0) {
@@ -280,30 +279,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		database.executeQuery('addDatasetAll', remote, true, false);
 	}
 
-	function initOnlineDBIfRequired() {
-		if(db_online===undefined){
-			initOnlineDB();
-		}
-	}
-
-	function initOnlineDB(){
-		if (database.online()) {
-			db_online = mysql.createConnection({
-				host     : config.constant("ONLINE_HOST"),
-				user     : config.constant("ONLINE_USER"),
-				password : config.constant("ONLINE_PASSWORD"),
-				database : config.constant("ONLINE_DATABASE")
-			});
-
-			db_online.connect(function(err) {
-				if (err) {
-					messages.show("Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+ err.stack);
-					return;
-				}
-			});
-		}
-	}
-
 	var database = {
 		online: function() {
 			return navigator.onLine;
@@ -329,6 +304,12 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		},
+		setupOnlineConnection: function (username, password, callback) {
+			db_online.connect(username, password, function(err, obj) {
+				console.log(obj);
+				callback(obj);
+			});
+		},
 		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
 			if (local) {
 				database.executeQueryLocal(queryname, args);
@@ -351,12 +332,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		},
 		executeQueryOnline(queryname, args, callback) {
 			var query = queries[queryname];
-			initOnlineDBIfRequired();
 			db_online.query(query, args, function(err, result) {
 				if (err) throw onError(err);
-				if (callback) {
-					callback();
-				}
+				if (callback) callback();
 			});
 		},
 		getQuery: function(queryname, args) {
@@ -372,9 +350,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			return queryResult;
 		},
 		getOnlineQuery: function(queryname, args, callback) {
-			initOnlineDBIfRequired();
 			var query = queries[queryname];
-			db_online.query(query, args, function(err, rows, fields) {
+			db_online.query(query, args, function(err, rows) {
 				if (err) throw onError(err);
 				callback(rows);
 			});
@@ -405,9 +382,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			return queryResult;
 		},
 		lastInsertIdOnline: function(table_name, row_id, callback) {
-			initOnlineDBIfRequired();
 			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
-			db_online.query(query, function(err, rows, fields) {
+			db_online.query(query, [], function(err, rows) {
 				if (err) throw onError(err);
 				callback(rows[0][row_id]);
 			});
@@ -421,7 +397,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			}
 		},
 		synchronize : function(userId, callback){
-			initOnlineDBIfRequired();
 			synchronizeSubjects(userId, function() {
 				synchronizeDatasets(userId, function() {
 					synchronizeUser(userId, callback);

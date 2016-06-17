@@ -8,44 +8,48 @@
 require('electron-cookies');
 define(['app/database'], function (db) {
   var user = {
-  setCookie: function(result){
-    document.cookie = 'user_name='+result[0].user_name;
-    document.cookie = 'user_id='+result[0].user_id;
-    document.cookie = 'user_password='+result[0].user_password;
-		document.cookie = 'user_language='+result[0].user_language;
-  },
-  removeCookie: function() {
-    document.cookie = "user_name=''";
-    document.cookie = "user_id=''";
-    document.cookie = "user_password=''";
-  },
-  get: function (item){
-    var result = db.getQuery("getUserbyUsername", [user.getCookie('user_name')]);
-    if (typeof item === 'undefined') {
-      return result;
-    } else {
-      return (result.length!==0) ? result[0][item] : result;
-    }
-  },
-  check: function() {
-    var user_name = user.getCookie("user_name");
-    var result = db.getQuery("getUserbyUsername", [user_name]);
-    return (result.length!==0 && user.getCookie('user_password') === result[0].user_password);
-  },
-  getCookie:function(cname) {
-     var name = cname + "=";
-     var cookies = document.cookie.split(';');
-     for(var i = 0; i < cookies.length; i++) {
-       var c = cookies[i];
-       while (c.charAt(0) == ' ') {
-         c = c.substring(1);
+    setCookie: function(result){
+      document.cookie = 'user_name='+result.user_name;
+      document.cookie = 'user_id='+result.user_id;
+      document.cookie = 'user_password='+result.user_password;
+  		document.cookie = 'user_language='+result.user_language;
+    },
+    removeCookie: function() {
+      document.cookie = "user_name=''";
+      document.cookie = "user_id=''";
+      document.cookie = "user_password=''";
+    },
+    setConnection: function(connectionHash) {
+      document.cookie = "user_connection='"+connectionHash+"'";
+    },
+    get: function (item){
+      var result = db.getQuery("getUserbyUsername", [user.getCookie('user_name')]);
+      if (typeof item === 'undefined') {
+        return result;
+      } else {
+        return (result.length!==0) ? result[0][item] : result;
+      }
+    },
+    check: function() {
+      var user_name = user.getCookie("user_name");
+      var result = db.getQuery("getUserbyUsername", [user_name]);
+      return (result.length!==0 && user.getCookie('user_password') === result[0].user_password);
+    },
+    getCookie:function(cname) {
+       var name = cname + "=";
+       var cookies = document.cookie.split(';');
+       for(var i = 0; i < cookies.length; i++) {
+         var c = cookies[i];
+         while (c.charAt(0) == ' ') {
+           c = c.substring(1);
+         }
+         if (c.indexOf(name) === 0) {
+           var cookie = c.substring(name.length, c.length);
+           return (cname=="user_id") ? parseInt(cookie) : cookie;
+         }
        }
-       if (c.indexOf(name) === 0) {
-         return c.substring(name.length, c.length);
-       }
+       return "";
      }
-     return "";
-   }
- };
- return user;
+   };
+   return user;
 });

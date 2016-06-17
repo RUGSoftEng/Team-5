@@ -106,8 +106,17 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
 
   function updateResponseList(dataset_items,datasetId){
     var responseList = questions.getResponseList();
+    console.log(responseList);
+    console.log(JSON.stringify(responseList));
     if(responseList.length>0){
       var currentdate = date.formatDatetime(new Date(), true);
+<<<<<<< HEAD
+      var responseList = JSON.stringify(responseList);
+      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
+      db.close();
+    }
+    window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
+=======
       var newResponse = JSON.stringify(responseList);
       newResponse = newResponse.slice(1);
       var oldResponse = dataset_items[0].dataset_responselist;
@@ -117,10 +126,14 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
         oldResponse = '[';
       }
       responseList = oldResponse + newResponse;
-      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
-      db.close();
+      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId], true, true, function() {
+        db.close();
+        window.location = "index.html";
+      });
+    } else {
+      window.location = "index.html";
     }
-    window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
+>>>>>>> phpserver
   }
 	
   ready.on(function() {
