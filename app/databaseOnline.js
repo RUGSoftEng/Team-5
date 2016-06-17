@@ -7,6 +7,21 @@
  */
 
 define(['app/config', 'jquery'], function (config, $) {
+  function getHash() {
+    var name = "user_connection=";
+     var cookies = document.cookie.split(';');
+     for(var i = 0; i < cookies.length; i++) {
+       var c = cookies[i];
+       while (c.charAt(0) == ' ') {
+         c = c.substring(1);
+       }
+       if (c.indexOf(name) === 0) {
+         return c.substring(name.length+1, c.length-1);
+       }
+     }
+     return "";
+  }
+
   function request(type, data, callback) {
     var script;
     switch (type) {
@@ -57,8 +72,9 @@ define(['app/config', 'jquery'], function (config, $) {
     },
     query: function(query, args, callback) {
       var i = 0;
-      query = query.replace(/\?/g,function(){ return escapeQuotes(args[i++]); });
-      var data = [['query', query]];
+      //query = query.replace(/\?/g,function(){ return escapeQuotes(args[i++]); });
+      args = JSON.stringify(args);
+      var data = [['query', query], ['args', args], ['hash', getHash()]];
       request("query", data, callback);
     }
    };

@@ -44,7 +44,8 @@ define(['app/database'], function (db) {
            c = c.substring(1);
          }
          if (c.indexOf(name) === 0) {
-           return c.substring(name.length, c.length);
+           var cookie = c.substring(name.length, c.length);
+           return (cname=="user_id") ? parseInt(cookie) : cookie;
          }
        }
        return "";
