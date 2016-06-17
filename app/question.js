@@ -92,14 +92,13 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
   // Handle how to move to the next question
   // depending on the tutorial status and algorithm.
-  function nextQuestion() {
-    console.log('next question')
+function nextQuestion(firstQuestion = false) {
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
-        nextQuestionFlashcard();
+        nextQuestionFlashcard(firstQuestion);
         break;
       case "slimstampen":
-        nextQuestionSlimStampen();
+        nextQuestionSlimStampen(firstQuestion);
         break;
     }
     timeCreated = time.measure(startTime);
@@ -140,7 +139,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
   // Use flaschcard method to determine next question
-  function nextQuestionFlashcard(){
+  function nextQuestionFlashcard(firstQuestion){
     if (inTutorial) {
       currentItemIndex++;
       inTutorial = checkTutorialStatus();
@@ -153,28 +152,29 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
   // Update the response list in order to determine next question
-  function nextQuestionSlimStampen(){
-    console.log(responseList);
-		responseInput = {
-			presentationStartTime: timeCreated,
-			reactionTime: firstKeyPress,
-			presentationDuration: presentationDuration,
-			factId: items[currentItemIndex].id,
-			correct: answerWasCorrect,
-			givenResponse: items[currentItemIndex].answer,
-			numberOfOptions: 0,
-			backspaceUsed: backspaceUsed,
-			backspacedFirstLetter: backspacedFirstLetter,
-		};
+  function nextQuestionSlimStampen(firstQuestion){
+    if (!firstQuestion) {
+  		responseInput = {
+  			presentationStartTime: timeCreated,
+  			reactionTime: firstKeyPress,
+  			presentationDuration: presentationDuration,
+  			factId: items[currentItemIndex].id,
+  			correct: answerWasCorrect,
+  			givenResponse: items[currentItemIndex].answer,
+  			numberOfOptions: 0,
+  			backspaceUsed: backspaceUsed,
+  			backspacedFirstLetter: backspacedFirstLetter,
+  		};
 
-		newResponse = slimstampen.createResponse(items, responseList, responseInput)
-		responseList.push(newResponse);
+      console.log(responseList);
+
+  		newResponse = slimstampen.createResponse(items, responseList, responseInput);
+  		responseList.push(newResponse);
+    }
     resetTimers();
 		// Use slimstampen method to determine next question
 		var newQuestion = slimstampen.getNextFact(timeCreated, items, responseList);
 		currentItemIndex = items.indexOf(newQuestion);
-
-
   }
 
   function  isAlphanumeric(key){
@@ -211,6 +211,10 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
         timeCreated = time.measure(startTime);
+
+        if(config.constant('ALGORITHM') === 'slimstampen'){
+          nextQuestion(true);
+        }
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed

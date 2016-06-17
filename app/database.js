@@ -306,7 +306,16 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 		},
 		setupOnlineConnection: function (username, password, callback) {
 			db_online.connect(username, password, function(err, obj) {
-				console.log(obj);
+				callback(obj);
+			});
+		},
+		registerCheck: function(username, email, callback) {
+			db_online.register(username, email, false, function(err, obj) {
+				callback(obj);
+			});
+		},
+		registerUser: function(userData, callback) {
+			db_online.register(false, false, userData, function(err, obj) {
 				callback(obj);
 			});
 		},
@@ -380,13 +389,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 				onError(e);
 			}
 			return queryResult;
-		},
-		lastInsertIdOnline: function(table_name, row_id, callback) {
-			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
-			db_online.query(query, [], function(err, rows) {
-				if (err) throw onError(err);
-				callback(rows[0][row_id]);
-			});
 		},
 		each : function(queryname, args, func) {
 			var query = queries[queryname];

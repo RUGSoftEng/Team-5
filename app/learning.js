@@ -108,11 +108,14 @@ define(['jquery', 'app/lang', 'app/string', 'bootstrap', 'app/config', 'app/data
     var responseList = questions.getResponseList();
     if(responseList.length>0){
       var currentdate = date.formatDatetime(new Date(), true);
-      var newResponse = JSON.stringify(responseList);
-      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId]);
-      db.close();
+      responseList = JSON.stringify(responseList);
+      db.executeQuery('updateDatasetResponseList', [responseList, currentdate, datasetId], true, true, function() {
+        db.close();
+        window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
+      });
+    } else {
+      window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
     }
-    window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
   }
 
   ready.on(function() {
