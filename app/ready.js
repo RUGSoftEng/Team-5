@@ -1,7 +1,7 @@
 define(['jquery', 'app/lang'], function($, lang) {
   var loadingPage;
   var elementLoadFrame = "#loadFrame";
-  var nomessage = false;
+  var message = false;
 
   return {
     on: function(callback) {
@@ -12,7 +12,7 @@ define(['jquery', 'app/lang'], function($, lang) {
         $(elementLoadFrame).fadeOut(300);
       }, 1);
     },
-    showLoading: function(nomessage, callback) {
+    showLoading: function(message, callback) {
       if (message) $(elementLoadFrame).children("h1").html(message);
   		$(elementLoadFrame).fadeIn(300, callback);
     },
