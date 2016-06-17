@@ -1,6 +1,3 @@
 node_modules
 database/user.sqlite
 .DS_Store
-model.js
-underscore.js
-utils.js
