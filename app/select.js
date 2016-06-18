@@ -7,9 +7,9 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select', 'app/user'], f
     });
   }
 
-  function loadGUILanguages(item){
+  function loadGUILanguages(item, selected){
     db.each("getGUILanguages", "", function (row,err) {
-      $(item).append($("<option></option>")
+      $(item).append($((selected == row.language_short) ? "<option selected></option>" : "<option></option>")
         .attr("value",row.language_short)
         .text(row.language_name));
     });
@@ -35,13 +35,13 @@ define(['app/lang', 'app/database', 'jquery', 'bootstrap-select', 'app/user'], f
   }
 
   return {
-    initiate: function(name, item) {
+    initiate: function(name, item, selected = false) {
       switch (name) {
         case 'languages':
           loadLanguages(item);
           break;
 				case 'gui_languages':
-					loadGUILanguages(item);
+					loadGUILanguages(item, selected);
 					break;
         case 'subjects':
           loadSubjects(item);

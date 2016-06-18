@@ -5,13 +5,15 @@
     <title>SlimStampen Learning App</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script data-main="app/welcomepage" src="lib/require.js"></script>
+    <script type="text/javascript">var bcrypt = require('bcryptjs');</script>
     <script type="text/javascript">var fs = require("fs");</script>
+    <script data-main="app/welcomepage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
   	<link rel="stylesheet" href="./resources/css/custom.css">
   	<link rel="stylesheet" href="./resources/css/index.css">
     <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+		<link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -42,6 +44,9 @@
           </button>
           <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalSettings">
             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalLanguage">
+            <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
           </button>
           <button type="button" class="btn  btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
@@ -153,12 +158,46 @@
               <li><span class="text_label_firstname"></span>: <span data-replace="user_firstname"></span></li>
               <li><span class="text_label_lastname"></span>: <span data-replace="user_lastname"></span></li>
               <li><span class="text_label_emailaddress"></span>: <span data-replace="user_email"></span></li>
-              <li><span class="text_label_dateofbirth"></span>: <span data-replace="user_bday"></span></li>
+              <li><span class="text_label_dateofbirth"></span>: <span data-replace="user_bday" data-format="birthdate"></span></li>
             </ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><span class="text_general_close"></span></button>
           </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Language -->
+    <div id="modalLanguage" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><span class="text_settings_language_header"></span></h4>
+          </div>
+          <div class="modal-body">
+            <form id="languageForm" role="form">
+              <div class="form-group">
+								<p><span class="text_settings_changelanguage"></span>:</p>
+                <div class="row">
+                  <div class="col-sm-6">
+										<select id="language" class="selectpicker selectLanguage" name="language" data-live-search="true">
+											<!-- Items are loaded in select.js  -->
+										</select>
+										<div class="clear"></div>
+                  </div>
+                  <div class="col-sm-6"></div>
+                </div>
+              </div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default left" data-dismiss="modal"><span class="text_general_close"></span></button>
+							<!--button type="button" class="btn btn-success" data-dismiss="modal"><span class="text_settings_buttonsave"></span></button-->
+							<input id="button_save_languagesettings" type="submit" name="save" class="btn btn-success submit saveSettings"/>
+						</div>
+					</form>
         </div>
 
       </div>
@@ -173,40 +212,31 @@
             <h4 class="modal-title"><span class="text_settings_header"></span></h4>
           </div>
           <div class="modal-body">
-            <form id="settingsForm" role="form">
+            <form id="settingsForm" role="form" data-parsley-validate="">
               <div class="form-group">
-								<p><span class="text_settings_changelanguage"></span>:</p>
-                <div class="row">
-                  <div class="col-sm-6">
-										<select id="language" class="selectpicker selectLanguage" name="language" data-live-search="true">
-											<!-- Items are loaded in select.js  -->
-										</select>
-										<div class="clear"></div>
-                  </div>
-                  <div class="col-sm-6"></div>
-                </div>
-								<!--
-								<hr>
                 <p><span class="text_settings_changeinfo"></span>:</p>
                 <div class="row">
                   <div class="col-sm-6">
-                    <label for="username"><span class="text_label_username"></span></label>
-                    <input type="text" class="form-control" id="username" data-parsley-user-name="1" data-parsley-required = "true">
+                    <label for="firstname"><span class="text_label_firstname"></span></label>
+                    <input type="text" class="form-control" id="firstname" data-value="user_firstname" data-parsley-user-name="1" data-parsley-required = "true">
                   </div>
-
+                  <div class="col-sm-6">
+                    <label for="lastname"><span class="text_label_lastname"></span></label>
+                    <input type="text" class="form-control" id="lastname" data-value="user_lastname" data-parsley-user-name="1" data-parsley-required = "true">
+                  </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-6">
                     <label for="gender"><span class="text_label_gender"></span></label>
                     <select class="form-control" id="gender" data-parsley-required = "true">
                       <option selected disabled class="text_placeholder_gender"></option>
-                      <option value="male" class="text_label_gendermale"></option>
-                      <option value="female" class="text_label_genderfemale"></option>
+                      <option value="male" class="text_label_gendermale" data-selected="user_gender" data-format="gender"></option>
+                      <option value="female" class="text_label_genderfemale" data-selected="user_gender" data-format="gender"></option>
                     </select>
                   </div>
                   <div class="col-sm-6">
                     <label for="dateofbirth"><span class="text_label_dateofbirth"></span></label>
-                    <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
+                    <input type="date" class="form-control" id="dateofbirth" data-value="user_bday" data-format="birthdate" data-parsley-required="true">
                   </div>
                 </div>
                 <hr>
@@ -214,14 +244,13 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <label for="password"><span class="text_label_password"></span></label>
-                    <input type="password" class="form-control" id="password" required="">
+                    <input type="password" class="form-control" id="password" data-parsley-equalto="#confirm_password" data-parsley-error-message="Passwords must be the same">
                   </div>
                   <div class="col-sm-6">
                     <label for="confirm_password"><span class="text_label_passwordconfirm"></span></label>
-                    <input type="password" class="form-control" id="confirm_password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
+                    <input type="password" class="form-control" id="confirm_password" data-parsley-equalto="#password" data-parsley-error-message="Passwords must be the same">
                   </div>
                 </div>
-								-->
               </div>
 						</div>
 						<div class="modal-footer">

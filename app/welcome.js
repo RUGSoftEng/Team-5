@@ -6,7 +6,7 @@
  * Description:
  * Main script for initiating the welcome page.
  */
-define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready', 'app/time'], function ($, ui, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready, time) {
+define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/clone', 'app/lang', 'app/string', 'app/messages', 'app/user', 'app/select', 'app/forms', 'app/date', 'app/ready', 'app/time', 'app/saltedhash'], function ($, ui, db, config, bootstrap, clone, lang, string, messages, user, select, forms, date, ready, time, hash) {
 	//check if the user is logged in
   if (!user.check()) {
     logout("error_logout");
@@ -116,6 +116,7 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
     $("#button_savesettings").prop("value", lang("settings_buttonsave"));
+    $("#button_save_languagesettings").prop("value", lang("settings_language_buttonsave"));
 		$("#startLearning").prop("value", lang("dataset_startlearning"));
 	}
 
@@ -123,7 +124,28 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
     $("span[data-replace]").each(function() {
       var user_info = $(this).data("replace");
       var text = user.get(user_info);
+      var format = $(this).data("format");
+      if (format == "birthdate")
+        text = date.formatBirthdate(text);
       $(this).html(text);
+    });
+    $("input[data-value]").each(function() {
+      var user_info = $(this).data("value");
+      var text = user.get(user_info);
+      var format = $(this).data("format");
+      if (format == "birthdate")
+        $(this).attr("value", date.formatBirthdate(text));
+      else
+        $(this).attr("value", text);
+    });
+    $("option[data-selected]").each(function() {
+      var user_info = $(this).data("selected");
+      var text = user.get(user_info);
+      var format = $(this).data("format");
+      if (format === "gender")
+        text = (text === 1) ? "male" : "female";
+      if (text == $(this).attr("value"))
+        $(this).attr("selected", true);
     });
 	}
 
@@ -166,10 +188,7 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
 		});
 	}
 
-  ready.on(function() {
-  	select.initiate("gui_languages", ".selectLanguage");
-
-  	var form = '#settingsForm';
+  function languageForm(form) {
 		forms.initialize(form);
 		forms.onSuccess(form, function() {
       ready.showLoading(false, function() {
@@ -184,6 +203,47 @@ define(['jquery', 'jquery-ui', 'app/database', 'app/config', 'bootstrap', 'app/c
         });
       });
   	});
+  }
+
+  function settingsForm(form) {
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
+      ready.showLoading(false, function() {
+        var firstname = $("#firstname").val();
+        var lastname = $("#lastname").val();
+        var password = $("#password").val();
+        var confirm_password = $("#confirm_password").val();
+        var gender = $("#gender").val();
+        var gen = (gender === "male") ? 1:0;
+        var dateofbirth = $("#dateofbirth").val();
+
+    		var userid = user.getCookie("user_id");
+        var currentdate = date.formatDatetime(new Date(), true);
+    		db.executeQuery("updateUserSettings", [firstname, lastname, gen, dateofbirth, currentdate, userid], true, true, function() {
+          if (password) {
+            var hashed_password = hash.generate(password);
+            db.executeQuery("updateUserPassword", [hashed_password, currentdate, userid], true, true, function() {
+              var userData = db.getQuery("getUser", [userid]);
+              user.setCookie(userData[0]);
+              db.close();
+              window.location = "index.html?message=success_savesettings_with_password"; // refresh
+            });
+          } else {
+            var userData = db.getQuery("getUser", [userid]);
+            user.setCookie(userData[0]);
+            db.close();
+            window.location = "index.html?message=success_savesettings"; // refresh
+          }
+        });
+      });
+  	});
+  }
+
+  ready.on(function() {
+  	select.initiate("gui_languages", ".selectLanguage", user.getCookie("user_language"));
+
+  	languageForm('#languageForm');
+    settingsForm('#settingsForm');
   	localisePage();
 		initialiseLearningTimeInput();
 

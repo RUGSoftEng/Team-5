@@ -28,6 +28,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
 		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
 		updateUserPassword : "UPDATE tblusers SET user_password=?, user_lastedited=? WHERE user_id=?",
+		updateUserSettings : "UPDATE tblusers SET user_firstname=?, user_lastname=?, user_gender=?, user_bday=?, user_lastedited=? WHERE user_id=?",
 		updateSubjectId : "UPDATE tblsubjects SET subject_id=?, subject_online=1 WHERE subject_id=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
