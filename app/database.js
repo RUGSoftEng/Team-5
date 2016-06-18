@@ -72,6 +72,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 	}
 
 	function onError(error) {
+		$("#loadFrame").hide();
 		if (error.message !== undefined) {
 			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error.message);
 		} else {
@@ -135,8 +136,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 		var local_id = subject.subject_id;
 		subject.subject_online = 1;
 		var subject = $.map(subject, function(val, key) { if (key!="subject_id") { return val; } });
-		database.executeQuery('addSubjectOnline', subject, false, true);
-		database.lastInsertIdOnline('tblsubjects', 'subject_id', function (id) {
+		database.executeQuery('addSubjectOnline', subject, false, true, function (id) {
 			database.executeQuery('updateSubjectId', [id, local_id], true, false);
 			database.executeQuery('updateDatasetSubjectId', [id, local_id], true, false);
 			if (local_id==lastId) {
@@ -243,8 +243,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 		var local_id = dataset.dataset_id;
 		dataset.dataset_online = 1;
 		dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
-		database.executeQuery('addDataset', dataset, false, true);
-		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+		database.executeQuery('addDataset', dataset, false, true, function(id) {
 			database.executeQuery('updateDatasetId', [id, local_id], true, false);
 			if (local_id==lastId) {
 				callback();
@@ -344,7 +343,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/datab
 			var query = queries[queryname];
 			db_online.query(query, args, function(err, result) {
 				if (err) throw onError(err);
-				if (callback) callback();
+				if (callback) callback(result);
 			});
 		},
 		getQuery: function(queryname, args) {

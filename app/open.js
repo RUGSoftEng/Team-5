@@ -83,8 +83,7 @@ define(['app/database', 'jquery', 'bootstrap', 'parsley', 'app/select', 'app/for
 	}
 
 	function saveDatasetOnline(data, language, subject) {
-		db.executeQuery("addDataset", data, false, true);
-		db.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+		db.executeQuery("addDataset", data, false, true, function (id) {
 			data.unshift(id);
 			db.executeQuery("addDatasetAll", data, true, false);
 			db.close();

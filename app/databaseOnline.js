@@ -48,6 +48,7 @@ define(['app/config', 'jquery'], function (config, $) {
         success: function (data) {
           if (data) {
             var obj = $.parseJSON(data);
+            console.log(data);
             if (!obj.error)
               callback(false, (type=="query") ? obj.data : obj);
             else
