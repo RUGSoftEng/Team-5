@@ -6,7 +6,14 @@
  * Description:
  * Main script for initiating the welcome  page.
  */
-define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready'], function ($, config, db, user, lang, string, messages, parsley, forms, hash, ready) {
+define(['jquery', 'bootstrap', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/string', 'app/messages', 'parsley', 'app/forms', 'app/saltedhash', 'app/ready', 'app/select', 'electron-cookies'], function ($, bootstrap, config, db, user, lang, string, messages, parsley, forms, hash, ready, select, cookies) {
+
+	function showPermissionsMessage() {
+		if (navigator.appVersion.indexOf("Mac")!=-1 && user.getCookie('visited') != 1) {
+			alert(lang("message_permission"));   
+			document.cookie = 'visited='+'1';   
+		}
+	}
 
 	function getPermissionsForDatabase() {
 		if (navigator.appVersion.indexOf("Mac")!=-1){
@@ -32,6 +39,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
     var re = new RegExp(q+'=([^&]*)','i');
     return (s=s.replace(/^\?/,'&').match(re)) ?s=s[1] :s='';
   }
+
 	function getUser() {
 		var user = $("#username").val().toLowerCase();
 		var query = user.indexOf("@") != -1 ? "getUserbyEmail" : "getUserbyUsername";
@@ -43,24 +51,30 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		var username = $("#username").val().toLowerCase();
 		var password = $("#password").val();
 		var field;
-		if (db.online()) {
-			db.getOnlineQuery("getUserbyUsername", [username], function(result) {
+		ready.showLoading(lang("login_checking"), function() {
+			if (db.online()) {
+				db.setupOnlineConnection(username, password, function(obj) {
+					if (obj.hash) {
+						ready.changeLoadMessage(lang("login_synchronizing"));
+						user.setConnection(obj.hash);
+						user.setCookie(obj.user);
+						synchronizeAndLogin();
+					} else {
+						ready.hideLoading();
+						messages.removeAll();
+						messages.show(config.constant("ERRORS"), lang("error_usernamepassword_incorrect"));
+					}
+				});
+			} else {
+				var result = db.getQuery("getUserbyUsername", [username]);
 				if (checkUsername(result)) {
 					if (checkPassword(password, result)) {
 						user.setCookie(result);
-						synchronizeAndLogin();
+						login();
 					}
 				}
-			});
-		} else {
-			var result = db.getQuery("getUserbyUsername", [username]);
-			if (checkUsername(result)) {
-				if (checkPassword(password, result)) {
-					user.setCookie(result);
-					login();
-				}
 			}
-		}
+		});
 	}
 
 	function checkUsername(result) {
@@ -68,6 +82,7 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		if (result.length !== 0) {
 			return true;
 		} else {
+			ready.hideLoading();
 			field.removeError('error');
 			field.addError('error', {message: lang("error_usernameincorrect")});
 			return false;
@@ -77,9 +92,10 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 	function checkPassword(password, result) {
 		field.removeError('error');
 		field = $("#password").parsley();
-		if (hash.verify(password,result[0].user_password) ) {
+		if (hash.verify(password,result.user_password) ) {
 			return true;
 		} else {
+			ready.hideLoading();
 			field.removeError('error');
 			field.addError('error', {message: lang("error_passwordincorrect")});
 			return false;
@@ -97,25 +113,41 @@ define(['jquery', 'app/config', 'app/database', 'app/user', 'app/lang', 'app/str
 		window.location = "index.html?message=success_login";
 	}
 
-	var form = '#loginForm';
-	forms.initialize(form);
-	forms.onSuccess(form, handleLogin);
+	function initialiseLanguageSettings() {
+		select.initiate("gui_languages", ".selectLanguage");
+
+		var form = '#settingsForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
+  		var newLanguage = $("#language").val();
+			document.cookie = 'user_language='+newLanguage;
+    	window.location = "login.html"; // refresh
+  	});
+	}
+
+	function initialiseLoginForm() {
+		var form = '#loginForm';
+		forms.initialize(form);
+		forms.onSuccess(form, handleLogin);
+	}
+
+	function localisePage() {
+		string.fillinTextClasses();
+		$("#username").prop("placeholder", lang("label_username"));
+		$("#password").prop("placeholder", lang("label_password"));
+		$("#button_savesettings").prop("value", lang("settings_buttonsave"));
+	}
 
 	if ($_GET('message')) {
 		messages.show(config.constant("MESSAGES"), lang($_GET('message')));
 	}
 
-	// if (user.check()) {
-	// 	window.location = "index.html?message=login_automatic";
-	// }
-
-	// Write localisable text to the page
-	string.fillinTextClasses();
-	$("#username").prop("placeholder", lang("label_username"));
-	$("#password").prop("placeholder", lang("label_password"));
-
 	ready.on(function() {
+		localisePage();
+		showPermissionsMessage();
 		getPermissionsForDatabase();
+		initialiseLoginForm();
+		initialiseLanguageSettings();
 	});
 
 });

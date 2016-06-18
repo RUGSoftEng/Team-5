@@ -11,32 +11,39 @@
 
 var mysql = require('mysql');
 
-define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function (sqlite, config, $, date, messages) {
+define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages', 'app/databaseOnline'], function (sqlite, config, $, date, messages, db_online) {
 	var queries = {
-		addDatasetItem : "INSERT INTO tblitems (item_dataset_id,item_question,item_answer,item_hint) VALUES (?, ?, ?, ?)",
 		addUserItem : "INSERT OR IGNORE INTO tbluser_items (user_item_id,user_item_user,user_item_strength) VALUES (?, ?, ?)",
 		addModule :  "INSERT OR IGNORE INTO tblusersubjects  (user_id, subject_id, subject_name, VALUES (?, ?, ?)",
-		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDataset : "INSERT INTO tbldatasets (dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addDatasetAll: "INSERT INTO tbldatasets (dataset_id, dataset_user, dataset_name, dataset_language, dataset_subject, dataset_official, dataset_published, dataset_online, dataset_date, dataset_lastedited, dataset_items,dataset_responselist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		addSubject : "INSERT INTO tblsubjects (subject_id, subject_name, subject_user, subject_online) VALUES (?, ?, ?, ?)",
+		addSubjectOnline : "INSERT INTO tblsubjects (subject_name, subject_user, subject_online) VALUES (?, ?, ?)",
 		addUser:  "INSERT INTO tblusers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		deleteDatasetbyId: "DELETE FROM tbldatasets WHERE dataset_id=?",
 		deleteDatasets: "DELETE FROM tbldatasets WHERE 1",
+		updateDatasetResponseList: "UPDATE tbldatasets SET dataset_responselist=?, dataset_lastedited=? WHERE dataset_id=?",
 		updateDatasetId : "UPDATE tbldatasets SET dataset_id=?, dataset_online=1 WHERE dataset_id=?",
+		updateDatasetSubjectId : "UPDATE tbldatasets SET dataset_subject=? WHERE dataset_subject=?",
 		updateItemStrength : "UPDATE  tbluser_items SET user_item_strength=? WHERE id=? ",
 		updateGUILanguage : "UPDATE tblusers SET user_language=?, user_lastedited=? WHERE user_id=?",
-		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
-		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
+		updateUserPassword : "UPDATE tblusers SET user_password=?, user_lastedited=? WHERE user_id=?",
+		updateUserSettings : "UPDATE tblusers SET user_firstname=?, user_lastname=?, user_gender=?, user_bday=?, user_lastedited=? WHERE user_id=?",
+		updateSubjectId : "UPDATE tblsubjects SET subject_id=?, subject_online=1 WHERE subject_id=?",
 		getRecentDataset : "SELECT * FROM tbldatasets WHERE dataset_id=? AND ? > ?",
     getDatasetByName : "SELECT * FROM tbldatasets WHERE dataset_name=?",
-		getDatasetItems : "SELECT dataset_items FROM tbldatasets WHERE dataset_id=?" ,
+		getDatasetById : "SELECT * FROM tbldatasets WHERE dataset_id=?" ,
 		getGUILanguages : "SELECT * FROM tbllanguages WHERE language_gui=1",
-		getUserSubjects : "SELECT * FROM tblsubjects",
     getUser : "SELECT * FROM tblusers WHERE user_id=? ",
+		getUserDatasets : "SELECT * FROM tbldatasets WHERE dataset_user=?",
+		getUserDatasetsByModule : "SELECT * FROM tbldatasets WHERE dataset_user=? AND dataset_language=? AND dataset_subject=?",
     getUserbyEmail : "SELECT * FROM tblusers WHERE user_email=?",
     getUserbyUsername : "SELECT * FROM tblusers WHERE user_name=?",
 		getUserIdbyUsername : "SELECT user_id, user_password FROM tblusers WHERE user_name=?",
 		getUserIdbyEmail : "SELECT user_id FROM tblusers WHERE user_email=?",
+		getUserSubjects : "SELECT * FROM tblsubjects WHERE subject_user=0 OR subject_user=?",
     getLanguages: "SELECT * FROM tbllanguages",
+		getLanguageByName: "SELECT * FROM tbllanguages WHERE language_short=?",
 		getModules: "SELECT language_id, language_name, subject_id, subject_name FROM tbldatasets,tbllanguages,tblsubjects WHERE dataset_language=language_id AND dataset_subject=subject_id AND dataset_user=?",
 		replaceUser: "REPLACE INTO tblusers VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		lastInsertedId: "SELECT ? FROM ? ORDER BY ? DESC LIMIT 1",
@@ -44,7 +51,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	};
 
 	var lastId = 0;
-	var sql,db,db_online;
+	var sql,db;
 
 	function checkSqlite() {
 		if (typeof sqlite !== 'object') {
@@ -65,6 +72,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	}
 
 	function onError(error) {
+		$("#loadFrame").hide();
 		if (error.message !== undefined) {
 			messages.show(config.constant("ERRORS"), "Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+error.message);
 		} else {
@@ -79,6 +87,67 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 	      }
 	    }
 	    return true;
+	}
+
+	function synchronizeSubjects(userId, callback) {
+		var localsubjects = database.getQuery('getUserSubjects',[userId]);
+		database.getOnlineQuery('getUserSubjects', [userId], function(remotesubjects) {
+			lastId = getLatestNonSynchronizedSubjectId(localsubjects);
+			if (lastId === 0) {
+				callback();
+			}
+
+			synchronizeLocalSubjects(localsubjects, callback);
+			synchronizeOnlineSubjects(localsubjects, remotesubjects);
+			database.close();
+		});
+	}
+
+	function getLatestNonSynchronizedSubjectId(localsubjects) {
+		var last = 0;
+		for (var i=0; i<localsubjects.length;i++) {
+			if (!localsubjects[i].subject_online) {
+				last = localsubjects[i].subject_id;
+			}
+		}
+		return last;
+	}
+
+	function synchronizeLocalSubjects(localsubjects, callback) {
+		for (var i=0; i< localsubjects.length; i++) {
+			if (!localsubjects[i].subject_online) {
+				pushSubjectOnline(localsubjects[i], callback);
+			}
+		}
+	}
+
+	function synchronizeOnlineSubjects(localsubjects, remotesubjects) {
+		var j;
+		var getRemoteFromLocal = function(e) { return e.subject_id == remotesubjects[j].subject_id; };
+		for (j = 0; j<remotesubjects.length; j++){
+			var remote = $.grep(localsubjects, getRemoteFromLocal);
+			if (remote.length === 0) {
+				pushSubjectLocal(remotesubjects[j]);
+			}
+		}
+	}
+
+	function pushSubjectOnline(subject, callback) {
+		var local_id = subject.subject_id;
+		subject.subject_online = 1;
+		var subject = $.map(subject, function(val, key) { if (key!="subject_id") { return val; } });
+		database.executeQuery('addSubjectOnline', subject, false, true, function (id) {
+			database.executeQuery('updateSubjectId', [id, local_id], true, false);
+			database.executeQuery('updateDatasetSubjectId', [id, local_id], true, false);
+			if (local_id==lastId) {
+				callback();
+			}
+		});
+	}
+
+	function pushSubjectLocal(subject) {
+		subject = $.map(subject, function(val) { return val; });
+		database.executeQuery('addSubject', subject, true, false);
 	}
 
 	function synchronizeUser(userId, callback) {
@@ -146,7 +215,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 
 	function synchronizeLocalDatasets(localdatasets, remotedatasets, callback) {
 		var i;
-		var getLocalFromRemote = function(e) { return e.dataset_id === localdatasets[i].dataset_id; };
+		var getLocalFromRemote = function(e) { return e.dataset_id == localdatasets[i].dataset_id; };
 		for (i = 0; i< localdatasets.length; i++) {
 			if (!localdatasets[i].dataset_online) {
 				pushDatasetOnline(localdatasets[i], callback);
@@ -161,7 +230,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 
 	function synchronizeOnlineDatasets(localdatasets, remotedatasets) {
 		var j;
-		var getRemoteFromLocal = function(e) { return e.dataset_id === remotedatasets[j].dataset_id; };
+		var getRemoteFromLocal = function(e) { return e.dataset_id == remotedatasets[j].dataset_id; };
 		for (j = 0; j<remotedatasets.length; j++){
 			var remote = $.grep(localdatasets, getRemoteFromLocal);
 			if (remote.length === 0) {
@@ -174,8 +243,7 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		var local_id = dataset.dataset_id;
 		dataset.dataset_online = 1;
 		dataset = $.map(dataset, function(val, key) { if (key!="dataset_id") { return val; } });
-		database.executeQuery('addDataset', dataset, false, true);
-		database.lastInsertIdOnline('tbldatasets', 'dataset_id', function (id) {
+		database.executeQuery('addDataset', dataset, false, true, function(id) {
 			database.executeQuery('updateDatasetId', [id, local_id], true, false);
 			if (local_id==lastId) {
 				callback();
@@ -211,30 +279,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		database.executeQuery('addDatasetAll', remote, true, false);
 	}
 
-	function initOnlineDBIfRequired() {
-		if(db_online===undefined){
-			initOnlineDB();
-		}
-	}
-
-	function initOnlineDB(){
-		if (database.online()) {
-			db_online = mysql.createConnection({
-				host     : config.constant("ONLINE_HOST"),
-				user     : config.constant("ONLINE_USER"),
-				password : config.constant("ONLINE_PASSWORD"),
-				database : config.constant("ONLINE_DATABASE")
-			});
-
-			db_online.connect(function(err) {
-				if (err) {
-					messages.show("Something went wrong, please contact the administrator <strong>"+config.constant("CONTACT")+"</strong> with the following error: <br />"+ err.stack);
-					return;
-				}
-			});
-		}
-	}
-
 	var database = {
 		online: function() {
 			return navigator.onLine;
@@ -260,6 +304,21 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			fs.writeFileSync(config.constant("DATABASE_USER"), buffer);
 			console.log("Closed connection");
 		},
+		setupOnlineConnection: function (username, password, callback) {
+			db_online.connect(username, password, function(err, obj) {
+				callback(obj);
+			});
+		},
+		registerCheck: function(username, email, callback) {
+			db_online.register(username, email, false, function(err, obj) {
+				callback(obj);
+			});
+		},
+		registerUser: function(userData, callback) {
+			db_online.register(false, false, userData, function(err, obj) {
+				callback(obj);
+			});
+		},
 		executeQuery : function (queryname, args, local = true, remote = true, callback = false) {
 			if (local) {
 				database.executeQueryLocal(queryname, args);
@@ -282,12 +341,9 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 		},
 		executeQueryOnline(queryname, args, callback) {
 			var query = queries[queryname];
-			initOnlineDBIfRequired();
 			db_online.query(query, args, function(err, result) {
 				if (err) throw onError(err);
-				if (callback) {
-					callback();
-				}
+				if (callback) callback(result);
 			});
 		},
 		getQuery: function(queryname, args) {
@@ -303,9 +359,8 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			return queryResult;
 		},
 		getOnlineQuery: function(queryname, args, callback) {
-			initOnlineDBIfRequired();
 			var query = queries[queryname];
-			db_online.query(query, args, function(err, rows, fields) {
+			db_online.query(query, args, function(err, rows) {
 				if (err) throw onError(err);
 				callback(rows);
 			});
@@ -335,14 +390,6 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			}
 			return queryResult;
 		},
-		lastInsertIdOnline: function(table_name, row_id, callback) {
-			initOnlineDBIfRequired();
-			var query = "SELECT "+row_id+" FROM "+table_name+" ORDER BY "+row_id+" DESC LIMIT 1";
-			db_online.query(query, function(err, rows, fields) {
-				if (err) throw onError(err);
-				callback(rows[0][row_id]);
-			});
-		},
 		each : function(queryname, args, func) {
 			var query = queries[queryname];
 			try {
@@ -352,9 +399,10 @@ define(['sqlite', 'app/config', 'jquery', 'app/date', 'app/messages'], function 
 			}
 		},
 		synchronize : function(userId, callback){
-			initOnlineDBIfRequired();
-			synchronizeDatasets(userId, function() {
-				synchronizeUser(userId, callback);
+			synchronizeSubjects(userId, function() {
+				synchronizeDatasets(userId, function() {
+					synchronizeUser(userId, callback);
+				});
 			});
 		}
 	};

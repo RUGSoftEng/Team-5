@@ -1,15 +1,13 @@
 define(['jquery','app/time', 'app/lang'], function($,time, lang) {
   UPDATE_INTERVAL = 1000;
-  function updateTimer(max_seconds) {
+  function updateTimer(max_seconds, callback) {
     currentTime = $(".timer .current").data("seconds");
     currentTime++;
     $(".timer .current").data("seconds", currentTime);
     $(".timer .current").html(time.toString(currentTime));
     if (currentTime>=max_seconds) {
       clearInterval(timer);
-      alert(lang("learning_timeup"));
-      $('.timer').css("color", "red");
-      window.location = 'index.html';
+      callback();
     }
   }
 
@@ -36,10 +34,12 @@ define(['jquery','app/time', 'app/lang'], function($,time, lang) {
 
   return {
     // Timer functions that initiates and updates the timer.
-    startTimer: function(timerid, max_seconds) {
-      timer = setInterval(function() { updateTimer(max_seconds); }, time.secondsToMilliseconds(1));
+    startTimer: function(timerid, max_seconds, callback) {
+
+      timer = setInterval(function() { updateTimer(max_seconds, callback); }, time.secondsToMilliseconds(1));
       $(timerid+" .max").html(time.toString(max_seconds));
       clearTimer(timerid);
+
     },
 
     startCountdown: function(timerid, seconds) {

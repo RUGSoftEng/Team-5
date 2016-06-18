@@ -13,7 +13,10 @@
 // Then, in the JS file for that page, run:
 //     string.fillinTextClasses();
 
-define(['i18n!nls', 'printf'], function (i18n, printf) {
+define(['i18n!nls', 'printf','app/user','jquery'], function (i18n, printf,user,$) {
+  if(user.getCookie("user_language") === 'ar'){
+    $('html, body').css('direction', 'rtl','text-align','right');
+  }
   return function() {
 		var string = arguments[0];
 		var varargs = [];

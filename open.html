@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
     <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
+    <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
     <link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
     <!-- Javascript libraries are added before the </body> tag  -->
   </head>
@@ -18,7 +19,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
      <div class="navbar-header" >
        <ul class="nav navbar-nav " id="nav-left">
-         <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" >SlimStampen</a></li>
+         <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" ><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> SlimStampen</a></li>
        </ul>
 
        <div class="btn-group center-menu" role="group">
@@ -28,21 +29,18 @@
          <button type="button" class="btn btn-default" onclick="window.location='open.html'">
            <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>&nbsp; <span class="text_navigation_open"></span>
          </button>
-         <button type="button" class="btn btn-default" disabled title="This option will be available on the next update.">
+         <!--button type="button" class="btn btn-default" disabled title="This option will be available on the next update.">
            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> <span class="text_navigation_download"></span>
          </button>
          <button type="button" class="btn btn-default" disabled title="This option will be available on the next update.">
            <span class="glyphicon glyphicon-open" aria-hidden="true"  ></span> <span class="text_navigation_upload"></span>
-         </button>
+         </button-->
        </div>
 
        <div class="btn-group right-menu" role="group">
          	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalProfile">
 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span data-replace="user_firstname"></span> <span data-replace="user_lastname"></span>
 					</button>
-					<a href="index.html" class="btn btn-warning" title="Back to main screen">
-						<span class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true"></span>
-					</a>
        </div>
      </div>
     </nav>
@@ -59,23 +57,13 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           </div>
           <form id="uploadForm" data-parsley-validate="">
-            <div class="col-md-6">
-  						<h1><span class="text_open_headerselectfile"></span></h1>
-  						<p><span class="text_open_dropfile"></span></p>
-  						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
-  					</div>
   					<div class="col-md-6">
   						<h1><span class="text_open_headerenterinformation"></span></h1>
 						  <label for="name"><span class="text_label_name"></span>:</label>
 						  <input id="datasetname" type="text" class="form-control" name="name" required="" data-parsley-dataset-name="1" />
-
-						  <label for="language"><span class="text_label_language"></span>:</label>
-              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
-                <!-- Items are loaded in selectLanguage.js  -->
-              </select>
-              <div class="clear"></div>
-
-						  <label for="subject"><span class="text_label_subject"></span>:</label>
+							
+							<!--button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button-->
+						  <label for="subject"><span id="popoverSubject" class="tooltipped" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_subject"></span></span>:</label>
               <select id="datasetsubject" class="selectpicker selectSubject" name="subject" required="" data-live-search="true" data-size="5">
                 <!-- Items are loaded in selectSubject.js -->
               </select>
@@ -84,14 +72,25 @@
 								<span class="text_label_customsubject"></span>:
 								<input id="customsubject" type="text" class="form-control" name="customsubject" data-parsley-subject-name="1" />
 							</div>
-
-              <input id="buttonsave" type="submit" name="upload" class="btn btn-lg btn-success right"/>
-  						<div class="clear"></div>
+							
+							<label for="language"><span id="popoverLanguage" class="tooltipped" data-trigger="hover" data-container="body" data-toggle="popover" data-placement="right" data-html="true"><span class="text_label_language"></span></span>:</label>
+              <select class="selectpicker selectLanguage" name="language" required="" data-live-search="true">
+                <!-- Items are loaded in selectLanguage.js  -->
+              </select>
             </div>
+						<div class="col-md-6">
+  						<h1><span class="text_open_headerselectfile"></span></h1>
+  						<p><span class="text_open_dropfile"></span></p>
+  						<input type="file" name="xlfile" id="xlf" required="" data-parsley-file-xlsx="42" />
+							<span id="popoverWhatfile" class="tooltipped" data-trigger="hover" data-toggle="popover" data-placement="left" data-html="true"><span class="text_open_whatfile"></span></span>
+							<input id="buttonsave" type="submit" name="upload" class="btn btn-lg btn-success right opendataset"/>
+  					</div>
           </form>
 				</div>
 			</div>
 		</div>
-    <div id='loadFrame'><h1>Loading...</h1></div>
+    <div id='loadFrame'>
+      <h2><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></h2><br><h1></h1>
+    </div>
 	</body>
 </html>

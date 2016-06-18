@@ -1,17 +1,23 @@
-define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang'], function ($, messages, config, string, slimstampen,time,math, lang) {
+define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slimstampen','app/time', 'app/math', 'app/lang', 'app/keys','app/ready','app/database'], function ($, messages, config, string, slimstampen,time,math, lang, keys,ready,db) {
   var items;
   var currentItemIndex = 0;
   var totalLength;
-
+  var backspaceUsed=0;
+  var backspacedFirstLetter=0;
+  var keyPressesCounter = 0;
   var itemsAnsweredCorrectly = 0;
   var answerWasCorrect;
-
+  var timeCreated = 0;
+  var correctAnswers = 0;
+  var totalAnswers = 0;
   var tutorialLength;
   var inTutorial = config.constant("TUTORIAL_MODE");
-
   var startTime = new Date();
   var firstKeyPress = 0;
-  var responseList = [];
+	var presentationDuration = 0;
+  var responseList ;
+	var dataset_subject;
+	var dataset_language;
 
   // Calculate the time difference in milliseconds
   function measureTime(start) {
@@ -57,12 +63,27 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
      return d[m][n];
   }
 
+	function strengthColour(percentage) {
+		if (percentage < config.constant("STRENGTH_RED_UPPERLIMIT")) {
+			return "danger";		// red
+		} else if (percentage >= config.constant("STRENGTH_GREEN_LOWERLIMIT")) {
+			return "success";		// green
+		} else {
+			return "warning";		// yellow
+		}
+	}
+
   function showProgress() {
-    $( "#progress-number" ).html( "<p>" + itemsAnsweredCorrectly + "/" + totalLength + " " + lang("general_words") + "</p>" );
-    var percentageVal = math.percentage(itemsAnsweredCorrectly, totalLength);
+    $( "#progress-number" ).html( "<p>" + correctAnswers + "/" + totalAnswers + " " + lang("general_words") + "</p>" );
+    var percentageVal = math.percentage(correctAnswers, totalAnswers);
+		var colour = strengthColour(percentageVal);
     $( "#progress-bar" ).html(percentageVal + "%")
       .attr("aria-valuenow", percentageVal)
-      .css("width", percentageVal+"%");
+      .css("width", percentageVal+"%")
+			.removeClass("progress-bar-success")
+			.removeClass("progress-bar-warning")
+			.removeClass("progress-bar-danger")
+			.addClass("progress-bar-" + colour);
   }
 
   function isWithinMarginOfError(answer, difference) {
@@ -71,17 +92,16 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
   // Handle how to move to the next question
   // depending on the tutorial status and algorithm.
-  function nextQuestion() {
+function nextQuestion(firstQuestion = false) {
     switch(config.constant("ALGORITHM")) {
       case "flashcard":
-        nextQuestionFlashcard();
+        nextQuestionFlashcard(firstQuestion);
         break;
       case "slimstampen":
-        nextQuestionSlimStampen();
+        nextQuestionSlimStampen(firstQuestion);
         break;
     }
     timeCreated = time.measure(startTime);
-    firstKeyPress = 0;
   }
 
   function showTutorialInstruction() {
@@ -95,8 +115,8 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
     showProgress();
 
     if (itemsAnsweredCorrectly == totalLength && config.constant("ALGORITHM")=="flashcard") {
-      alert(lang("learning_done"));
-      window.location = 'index.html';
+      alert(lang("learning_timeup"));
+      window.location = "index.html?language="+dataset_language+"&subject="+dataset_subject;
     }
   }
 
@@ -119,7 +139,7 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
   // Use flaschcard method to determine next question
-  function nextQuestionFlashcard(){
+  function nextQuestionFlashcard(firstQuestion){
     if (inTutorial) {
       currentItemIndex++;
       inTutorial = checkTutorialStatus();
@@ -132,29 +152,71 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
   }
 
   // Update the response list in order to determine next question
-  function nextQuestionSlimStampen(){
-    newResponse = {
-      factId: items[currentItemIndex].id,
-      timeCreated: timeCreated,
-      number: 0,
-      data : JSON.stringify({ reactionTime: firstKeyPress,sessionTime: 0, correct: answerWasCorrect })
-    };
-    responseList.push(newResponse);
-    // Use slimstampen method to determine next question
-    var newQuestion = slimstampen.getNextFact(firstKeyPress, items, responseList);
-    currentItemIndex = items.indexOf(newQuestion);
+  function nextQuestionSlimStampen(firstQuestion){
+    if (!firstQuestion) {
+  		responseInput = {
+  			presentationStartTime: timeCreated,
+  			reactionTime: firstKeyPress,
+  			presentationDuration: presentationDuration,
+  			factId: items[currentItemIndex].id,
+  			correct: answerWasCorrect,
+  			givenResponse: items[currentItemIndex].answer,
+  			numberOfOptions: 0,
+  			backspaceUsed: backspaceUsed,
+  			backspacedFirstLetter: backspacedFirstLetter,
+  		};
+
+      console.log(responseList);
+
+  		newResponse = slimstampen.createResponse(items, responseList, responseInput);
+  		responseList.push(newResponse);
+    }
+    resetTimers();
+		// Use slimstampen method to determine next question
+		var newQuestion = slimstampen.getNextFact(timeCreated, items, responseList);
+		currentItemIndex = items.indexOf(newQuestion);
+
+
   }
 
   function  isAlphanumeric(key){
     return key >= config.constant("0") && key <= config.constant("z");
   }
 
+	$('#answer').on('keyup', function(e) {
+    keyPressesCounter++;
+    backspaceUsed = (e.keyCode === keys.BACKSPACE);
+    backspacedFirstLetter = (e.keyCode=== keys.BACKSPACE && keyPressesCounter===2);
+
+		if (firstKeyPress===0 && e.keyCode !== keys.ENTER) {
+			start = startTime.getTime() + timeCreated;
+			firstKeyPress = time.measureWithoutDate(start);
+      keyPressesCounter = 1;
+		}
+	});
+
+  function resetTimers() {
+    firstKeyPress = 0;
+    presentationDuration = 0;
+    backspaceUsed = 0;
+    backspacedFirstLetter = 0;
+  }
+
   return {
-    initialize: function(factList) {
+    initialize: function(factList, responselist) {
+
+        if(config.constant('ALGORITHM') === 'slimstampen'){
+          responseList = responselist;
+        }
+
         items = factList;
         totalLength = items.length;
         tutorialLength = Math.min(totalLength, config.constant("NUMBER_TUTORIAL_QUESTIONS"));
         timeCreated = time.measure(startTime);
+
+        if(config.constant('ALGORITHM') === 'slimstampen'){
+          nextQuestion(true);
+        }
 
         window.onkeyup = function(e) {
           // Measure first key press if a letter or number was pressed
@@ -179,16 +241,22 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
       * is smaller that the allowed margin of error, then the user gets the feedback
       * that it was almost correct.
       */
+
       var input = document.getElementById("answer").value;
       var answer = items[currentItemIndex].answer;
       var difference = levenstein(input,answer);
       answerWasCorrect = (difference === 0);
+      totalAnswers++;
+
       if (answerWasCorrect) {
+        correctAnswers++;
         handleScoreIncrease();
         messages.show( constructMessage('success',answer,difference), 'success', config.constant("FEEDBACK_DELAY_CORRECT") );
       } else if (isWithinMarginOfError(answer, difference)) {
+				showProgress();
         messages.show( constructMessage('warning',answer, difference), 'warning', config.constant("FEEDBACK_DELAY_INCORRECT") );
       } else {
+				showProgress();
         messages.show( constructMessage('danger',answer,difference), 'danger', config.constant("FEEDBACK_DELAY_INCORRECT") );
       }
     },
@@ -199,6 +267,19 @@ define(['jquery', 'app/learningMessages', 'app/config', 'app/string', 'app/slims
 
     hint: function() {
         return items[currentItemIndex].hint;
-    }
+    },
+
+    calculatePresentationDuration(){
+      start = startTime.getTime() + timeCreated;
+      presentationDuration = time.measureWithoutDate(start);
+    },
+
+    getResponseList: function(){
+      return responseList;
+    },
+		setMetaInfo: function(subject, language) {
+			dataset_subject = subject;
+			dataset_language = language;
+		}
   };
 });

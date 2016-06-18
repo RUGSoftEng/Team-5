@@ -13,6 +13,9 @@ define(['app/config'], function (config) {
   return {
     getNextFact: function (currentTime, factList, responseList) {
       return slimstampen.getNextFact(currentTime, factList, responseList);
+    },
+    createResponse: function (factList, responseList, responseInput) {  
+    	return slimstampen.createResponse(factList, responseList, responseInput);
     }
   };
 });

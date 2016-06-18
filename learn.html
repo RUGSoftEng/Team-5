@@ -9,12 +9,13 @@
     <script data-main="app/learningpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
+    <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
      <div class="navbar-header" >
        <ul class="nav navbar-nav " id="nav-left">
-         <li><a class="navbar-brand" href="#" onclick="location.href='index.html';" >SlimStampen</a></li>
+         <li class="navbar-brand">SlimStampen</li>
        </ul>
        <div class="center-menu">
          <div class="timer"><span class="glyphicon glyphicon-time"></span>&nbsp; <span class="current" data-seconds="0"></span> / <span class="max"></span></div>
@@ -28,9 +29,7 @@
            <span class="glyphicon glyphicon-off"></span> <span class="caret"></span>
          </button>
          <ul class="dropdown-menu dropdown-menu-right">
-           <li><a href="index.html"><span class="text_learning_stop"></span></a></li>
-           <li role="separator" class="divider"></li>
-           <li><a href="#"><span class="text_general_help"></span></a></li>
+           <li><a href="#" id="quit_session" ><span class="text_learning_stop"></span></a></li>
          </ul>
        </div>
      </div>
@@ -95,8 +94,8 @@
         </div>
       </div>
     </div>
-    <div id="loadFrame">
-      <h1>Loading...</h1>
+    <div id='loadFrame'>
+      <h2><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></h2><br><h1></h1>
     </div>
   </body>
 </html>

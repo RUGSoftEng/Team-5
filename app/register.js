@@ -1,4 +1,4 @@
-define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages'], function ($, config, db, parsley, lang, string,hash,date, async, messages) {
+define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/string','app/saltedhash','app/date', 'async', 'app/messages', 'bootstrap', 'app/select', 'app/forms', 'app/ready'], function ($, config, db, parsley, lang, string,hash,date, async, messages, bootstrap, select, forms, ready) {
 
   $("form").submit(function(e){
     e.preventDefault();
@@ -23,22 +23,21 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
     var datetime = date.formatDatetime(new Date(), true);
     var field;
 
-    db.getOnlineQuery("getUserIdbyUsername", [username], function(rows) {
-      if (checkUsername(rows)) {
-        db.getOnlineQuery("getUserIdbyEmail", [email], function(rows) {
+    ready.showLoading(false, function() {
+      db.registerCheck(username, email, function(rows) {
+        if (checkUsername(rows)) {
           if (checkEmail(rows)) {
             addUserLocalAndOnline(username, [null, email,username,gen,dateofbirth,hashed_password, datetime, firstname, lastname,datetime, null]);
           }
-        });
-      }
+        }
+      });
     });
   }
 
   function addUserLocalAndOnline(username, data) {
-    db.executeQuery("addUser", data, false, true);
-    db.getOnlineQuery('getUserbyUsername',[username], function(rows) {
-      if (db.online()) {
-        data[0] = rows[0].user_id;
+    db.registerUser(data, function(rows) {
+      if (rows.user && db.online()) {
+        data[0] = rows.user;
         db.executeQuery("addUser", data, true, false);
         db.close();
         window.location="login.html?message=success_register";
@@ -50,10 +49,11 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 
   function checkUsername(result) {
     field = $("#username").parsley();
-    if (result.length === 0) {
+    if (result.usernameExists == false) {
       field.removeError('error');
       return true;
     } else {
+      ready.hideLoading();
       field.removeError('error');
       field.addError('error', {message: lang("error_usernamenotunique")});
       return false;
@@ -62,10 +62,11 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 
   function checkEmail(result) {
     field = $("#email").parsley();
-    if (result.length === 0) {
+    if (result.emailExists == false) {
       field.removeError('error');
       return true;
     } else {
+      ready.hideLoading();
       field.removeError('error');
       field.addError('error', {message: lang("error_emailnotunique")});
       return false;
@@ -80,38 +81,32 @@ define(['jquery', 'app/config', 'app/database', 'parsley', 'app/lang', 'app/stri
 		$("#lastname").prop("placeholder", lang("label_lastname"));
 		$("#password").prop("placeholder", lang("label_password"));
 		$("#confirm_password").prop("placeholder", lang("label_passwordconfirm"));
+		$("#button_savesettings").prop("value", lang("settings_buttonsave"));
 	}
 
   function inputFieldExists(result) {
-    return (result.length===0);
+    return (result.length === 0);
   }
 
-  $(document).ready(function(){
+	function initialiseLanguageSettings() {
+		select.initiate("gui_languages", ".selectLanguage");
+
+		var form = '#settingsForm';
+		forms.initialize(form);
+		forms.onSuccess(form, function() {
+  		var newLanguage = $("#language").val();
+			document.cookie = 'user_language='+newLanguage;
+    	window.location = "register.html"; // refresh
+  	});
+	}
+
+  ready.on(function() {
   	localisePage();
+		initialiseLanguageSettings();
 
     if (!db.online()) {
       messages.show("#errors", lang("error_nointernet_register"));
     }
-
-    window.Parsley.addValidator('userName', {
-      validateString: function(value, requirement) {
-        var result = db.getQuery("getUserIdbyUsername", [value]);
-        return inputFieldExists(result);
-      },
-      messages: {
-        en: lang("error_usernamenotunique")
-      }
-    });
-
-    window.Parsley.addValidator('emailName', {
-      validateString: function(value, requirement) {
-        var result = db.getQuery("getUserIdbyEmail", [value]);
-        return inputFieldExists(result);
-      },
-      messages: {
-        en: lang("error_emailnotunique")
-      }
-    });
 
   });
 

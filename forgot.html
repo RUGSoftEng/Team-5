@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript">var bcrypt = require('bcryptjs');</script>
     <script type="text/javascript">var fs = require("fs");</script>
-    <script data-main="app/registerpage" src="lib/require.js"></script>
+    <script type="text/javascript">var sendgrid = require("sendgrid")("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");</script>
+    <script data-main="app/forgotpage" src="lib/require.js"></script>
     <link rel="stylesheet" href="./resources/css/bootstrap.css">
     <link rel="stylesheet" href="./resources/css/custom.css">
     <link rel="stylesheet" href="./resources/css/font-awesome.min.css">
     <link rel="stylesheet" href="./node_modules/parsleyjs/src/parsley.css">
-		<link rel="stylesheet" href="./node_modules/bootstrap-select/dist/css/bootstrap-select.min.css">
   </head>
   <body>
-		<nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-header" >
 				<ul class="nav navbar-nav " id="nav-left">
 					<li><a class="navbar-brand" href="#" onclick="location.href='login.html';" ><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> SlimStampen</a></li>
@@ -37,7 +37,7 @@
 						<div class="panel panel-default">
 							<div class="panel-heading text-center">
 								<p class="h1">
-									<span class="text_register_header"></span>
+									<span class="text_forgot_header"></span>
 								</p>
 							</div>
 							<div class="panel-body text-info">
@@ -47,60 +47,14 @@
                 <div id="errors" class="alert alert-danger" role="alert">
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <form role="form" data-parsley-validate="">
-                    <fieldset>
+                <form role="form" id="forgotForm" data-parsley-validate="">
   									<div class="form-group">
-  										<div class="row">
-  											<div class="col-sm-6">
-  												<label for="username"><span class="text_label_username"></span></label>
-                          <input type="text" class="form-control" id="username" data-parsley-user-name="1" data-parsley-required = "true">
-  											</div>
-  											<div class="col-sm-6">
-  												<label for="email"><span class="text_label_emailaddress"></span></label>
-                          <input type="email" class="form-control" id="email" data-parsley-email-name="1" data-parsley-required = "true">
-  											</div>
-  										</div>
-
-                      <div class="row">
-  											<div class="col-sm-6">
-  												<label for="firstname"><span class="text_label_firstname"></span></label>
-                          <input type="text" class="form-control" id="firstname" data-parsley-required="false">
-  											</div>
-  											<div class="col-sm-6">
-  												<label for="lastname"><span class="text_label_lastname"></span></label>
-                          <input type="text" class="form-control" id="lastname" data-parsley-required="false">
-  											</div>
-  										</div>
-
-  										<div class="row">
-  											<div class="col-sm-6">
-  												<label for="password"><span class="text_label_password"></span></label>
-                          <input type="password" class="form-control" id="password" required="">
-  											</div>
-  											<div class="col-sm-6">
-  												<label for="password"><span class="text_label_passwordconfirm"></span></label>
-                          <input type="password" class="form-control" id="confirm_password" data-parsley-required = "true" data-parsley-equalto = "#password" data-parsley-error-message = "Confirm Password must match Password">
-  											</div>
-  										</div>
-
-  										<div class="row">
-  											<div class="col-sm-6">
-  												<label for="gender"><span class="text_label_gender"></span></label>
-                          <select class="form-control" id="gender" data-parsley-required = "true">
-  													<option class="text_placeholder_gender" selected disabled></option>
-  													<option class="text_label_gendermale" value="male"></option>
-  													<option class="text_label_genderfemale" value="female"></option>
-  												</select>
-  											</div>
-  											<div class="col-sm-6">
-  												<label for="dateofbirth"><span class="text_label_dateofbirth"></span></label>
-                          <input type="date" class="form-control" id="dateofbirth" data-parsley-required = "true">
-  											</div>
-  										</div>
-  									</div>
-									  <button type="submit" class="btn btn-info btn-block"><span class="text_register_buttonregister"></span></button>
+                      <label for="username"><span class="text_label_username"></span></label>
+                      <input type="text" class="form-control" id="username" data-parsley-user-name="1" data-parsley-required = "true">
+										</div>
+									  <button type="submit" class="btn btn-info btn-block"><span class="text_forgot_buttonforgot"></span></button>
                   </form>
-                <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='login.html'"><span class="text_register_buttoncancel"></span></button>
+                <button type="button" class="btn btn-secondary btn-block" onclick="window.location.href='login.html'" style="margin-top:5px"><span class="text_register_buttoncancel"></span></button>
 							</div>
 							<div class="panel-footer">
 								<div class="row">
@@ -119,7 +73,7 @@
 				</div>
       </div>
     </div>
-		<!-- Language setting popup -->
+    <!-- Language setting popup -->
     <div id="modalSettings" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <!-- Modal content-->

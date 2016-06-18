@@ -38,15 +38,19 @@ define(function (require) {
 		DATABASE_USER: addDirectory() + "/database/user.sqlite",
 		/* Standard database when no user database is present */
 		DATABASE_SLIMSTAMPEN: addDirectory() + "/database/slimstampen.sqlite",
-		ALGORITHM: "flashcard", // flashcard; slimstampen;
-		LANGUAGE: "en",
+		ALGORITHM: "slimstampen", // flashcard; slimstampen;
+		ENGLISH: 1, // id of the english language
 		ONLINE_HOST: "db4free.net",
 		ONLINE_USER: "enricdz148_slim",
 		ONLINE_DATABASE: "enricdz148_slim",
 		ONLINE_PASSWORD: "exVhqZJas",
 		MESSAGES: "#messages",
 		ERRORS: "#errors",
-		CONTACT: "d.h.van.rijn@rug.nl"
+		CONTACT: "d.h.van.rijn@rug.nl",
+		CONTACT_NOREPLY: "no-reply@slimstampen.com",
+		/* Strength bar percentage colour limits */
+		STRENGTH_RED_UPPERLIMIT: 20,
+		STRENGTH_GREEN_LOWERLIMIT: 60
 	};
 
 	return {

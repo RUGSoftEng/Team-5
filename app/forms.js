@@ -54,10 +54,17 @@ define(['jquery', 'app/database', 'app/date', 'app/select', 'parsley', 'app/user
     saveDataset: function(formName, formItemId, callback) {
       var name = getFormVal(formName, "input", "name");
       var language = getFormVal(formName, "select", "language");
-      var subject = getFormVal(formName, "select", "subject");
+      var subject = $("#datasetsubject").data("subject");
       var user_id = user.getCookie('user_id');
       var currentdate = new Date();
-
+			
+			// Create custom subject if appropriate
+			if (subject === 0) {
+				subject = db.lastInsertRowId("tblsubjects", "subject_id") + 1;
+				var newsubjectname = $("#customsubject").val();
+				db.executeQuery('addSubject' , [subject, newsubjectname]);
+			}
+			
       if (db.online()) {
         saveDatasetOnlineAndLocal(formItemId, [user_id, name, language, subject, 0, 0, 1, date.dateToDATETIME(currentdate), date.dateToDATETIME(currentdate)]);
       } else {
